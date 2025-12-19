@@ -12,7 +12,10 @@
 <body>
     <table class="table table-light table-striped" id="tabella" border>
         <tr>
-            <!-- da mettere in tabella valori api -->
+            <th>Nome evento</th>
+            <th>Data</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
         </tr>
     </table>
     <button id="start"></button>
@@ -27,7 +30,26 @@
         btn.addEventListener("click", () => {
             btn.disabled = true;
             API().then(obj => {
-                console.log(obj);
+                obj.forEach(element => {
+                    let tr = document.createElement('tr');
+
+                    let td_nome = document.createElement('td');
+                    let td_data = document.createElement('td');
+                    let td_team1 = document.createElement('td');
+                    let td_team2 = document.createElement('td');
+
+                    td_nome.textContent = element.event.name;
+                    td_data.textContent = element.time;
+                    td_team1.textContent = element.teams[0].name;
+                    td_team2.textContent = element.teams[1].name;
+
+                    tr.appendChild(td_nome);
+                    tr.appendChild(td_data);
+                    tr.appendChild(td_team1);
+                    tr.appendChild(td_team2);
+
+                    tabella.appendChild(tr);
+                })
             });
         })
 

@@ -12,7 +12,7 @@
 <body>
     <table class="table table-light table-striped" id="tabella" border>
         <tr>
-            
+            <!-- da mettere in tabella valori api -->
         </tr>
     </table>
     <button id="start"></button>
@@ -33,7 +33,7 @@
 
 
         async function API() {
-            let url = "https://hltv-api.vercel.app/api/matches.json";
+            let url = "https://hltv-api.vercel.app/api/matchesByEvent.json";
             let httpRequest = await fetch(url);
             let obj = await httpRequest.json();
             return obj;

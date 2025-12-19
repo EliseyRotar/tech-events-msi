@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Storico</title>
+</head>
+
+<body>
+    <table class="table table-light table-striped" id="tabella" border>
+        <tr>
+            
+        </tr>
+    </table>
+    <button id="start"></button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        let tabella = document.getElementById("tabella");
+        let btn = document.getElementById("start");
+        btn.textContent = "test";
+        btn.addEventListener("click", () => {
+            btn.disabled = true;
+            API().then(obj => {
+                console.log(obj);
+            });
+        })
+
+
+        async function API() {
+            let url = "https://api.opendota.com/api/teams";
+            let httpRequest = await fetch(url);
+            let obj = await httpRequest.json();
+            return obj;
+        }
+
+    </script>
+</body>
+
+</html>

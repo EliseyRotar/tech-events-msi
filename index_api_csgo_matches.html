@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Storico</title>
+</head>
+
+<body>
+    <table class="table table-light table-striped" id="tabella" border>
+        <tr>
+            <th>Nome evento</th>
+            <th>Data</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
+        </tr>
+    </table>
+    <button id="start"></button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        let tabella = document.getElementById("tabella");
+        let btn = document.getElementById("start");
+        btn.textContent = "test";
+        btn.addEventListener("click", () => {
+            btn.disabled = true;
+            API().then(obj => {
+                obj.forEach(element => {
+                    let tr = document.createElement('tr');
+
+                    let td_nome = document.createElement('td');
+                    let td_data = document.createElement('td');
+                    let td_team1 = document.createElement('td');
+                    let td_team2 = document.createElement('td');
+
+                    td_nome.textContent = element.event.name;
+                    td_data.textContent = element.time;
+                    td_team1.textContent = element.teams[0].name;
+                    td_team2.textContent = element.teams[1].name;
+
+                    tr.appendChild(td_nome);
+                    tr.appendChild(td_data);
+                    tr.appendChild(td_team1);
+                    tr.appendChild(td_team2);
+
+                    tabella.appendChild(tr);
+                })
+            });
+        })
+
+
+        async function API() {
+            let url = "https://hltv-api.vercel.app/api/matchesByEvent.json";
+            let httpRequest = await fetch(url);
+            let obj = await httpRequest.json();
+            return obj;
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storico Tornei - EEM</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <nav>
+        <strong>EEM</strong>
+        <div>
+            <a href="../index.html">Home</a>
+            <a href="#" style="opacity: 0.3;">Tornei</a>
+            <a href="#" style="opacity: 0.3;">Biglietti</a>
+            <a href="#" style="opacity: 0.3;">Accedi</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-small">
+        <h1>Storico Tornei</h1>
+        <p>Consulta tutti i tornei completati e i risultati finali</p>
+    </section>
+
+    <!-- FILTRI -->
+    <section>
+        <div class="filter-bar">
+            <input type="text" placeholder="Cerca torneo...">
+            <select>
+                <option>Tutti i giochi</option>
+                <option>Valorant</option>
+                <option>League of Legends</option>
+                <option>CS2</option>
+            </select>
+            <select>
+                <option>Tutti gli anni</option>
+                <option>2026</option>
+                <option>2025</option>
+                <option>2024</option>
+            </select>
+        </div>
+
+        <!-- LISTA TORNEI -->
+        <div class="grid">
+
+            <!-- CS2 (HLTV API) -->
+            <a href="cs2.html" class="card-link">
+                <div class="card tournament-card">
+                    <h3>CS2 Matches (HLTV)</h3>
+                    <h4>Match professionali aggiornati</h4>
+                </div>
+            </a>
+
+            <!-- DOTA -->
+            <a href="dota.html" class="card-link">
+                <div class="card tournament-card">
+                    <h3>Dota 2 Teams</h3>
+                    <h4>Lista team professionali</h4>
+                </div>
+            </a>
+
+            <!-- VALORANT -->
+            <a href="valorant.html" class="card-link">
+                <div class="card tournament-card">
+                    <h3>Valorant Events</h3>
+                    <h4>Eventi completati</h4>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- STATS STORICO -->
+    <section>
+        <div class="stats">
+            <div class="stat">
+                <h3>120+</h3>
+                <p>Tornei completati</p>
+            </div>
+            <div class="stat">
+                <h3>5K+</h3>
+                <p>Match giocati</p>
+            </div>
+            <div class="stat">
+                <h3>300+</h3>
+                <p>Team partecipanti</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Vuoi creare il tuo torneo?</h2>
+        <p>Unisciti alla piattaforma e organizza eventi competitivi in pochi minuti.</p>
+    </section>
+
+    <footer>
+        © 2026 - Tech Dragons Events
+    </footer>
+
+</body>
+
+</html>

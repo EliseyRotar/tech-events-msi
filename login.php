@@ -1,7 +1,5 @@
 <?php
     require 'config.php';
-
-
 ?>
 
 
@@ -40,7 +38,7 @@
         $pswd = trim($_POST['pswdTxt']);
 
         
-        $sql = "SELECT idUtente, pswd FROM utenti where email = :e";
+        $sql = "SELECT idUtente, pswd, isAdmin FROM utenti where email = :e";
         $stm = $pdo -> prepare($sql);
         $stm -> bindParam('e', $email);
         $stm -> execute();
@@ -51,6 +49,7 @@
             foreach ($credentials as $elem){
                 $idUser = $elem['idUtente'];
                 $hashpass = $elem['userPassword'];
+                $isAdmin = $elem['isAdmin'];
             }
         }else{
             echo "accesso non andato a buon fine";
@@ -61,6 +60,7 @@
             $_SESSION["email"] = $email;
             $_SESSION["id"] = $idUser;
             $_SESSION["accept"] = "ACCEPT";
+            $_SESSION["admin"] = $isAdmin;
             header("location: showEvents.php");
         }else{
             echo('male non ti sei loggato');

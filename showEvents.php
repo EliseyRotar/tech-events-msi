@@ -1,5 +1,6 @@
 <?php
     require 'config.php';
+    session_start();
     
     $teamID = isset($_GET['id']) ? $_GET['id']:"";
     $TeamInfo = null;
@@ -22,7 +23,7 @@
         AND membri.idMembro = membri_ruoli.idMembro
         AND membri_ruoli.idRuolo = ruoli.idRuolo';
     $stm = $pdo->prepare($sql);
-    
+           
     $stm -> bindParam(':d', $teamID);
     $stm ->execute();
 
@@ -59,6 +60,10 @@
                 <td><?= $row['nPosti'] ?></td>
                 <td>
                     <a href="showEvents.php?id=<?= $row['idSquadra'] ?>"> info team </a>
+                    <!-- aggiungi visualizza tornei forse al posto di info team -->
+                    <?php if($_SESSION['admin'] == true): ?>
+                    <a href="">aggiungi torneo</a> <!-- fai sta funzione -->
+                    <? endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -80,6 +85,9 @@
             <?php endforeach; ?>
         </table>
     <?php endif; ?>
-    
+    <br>
+    <?php if($_SESSION['admin'] == true): ?>
+    <button><a href="createEvent.php">crea evento</a></button>
+    <?php endif ?>
 </body>
 </html>

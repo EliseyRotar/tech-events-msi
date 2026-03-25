@@ -12,11 +12,14 @@ CREATE TABLE evento (
     dataFine DATE NOT NULL                     -- ✅ Rinominato per coerenza (era data_fine)
 );
 
-CREATE TABLE spettatori (
-    codice_fiscale VARCHAR(16) PRIMARY KEY,    -- ✅ Aggiunta PRIMARY KEY (mancava!)
+CREATE TABLE utenti (
+    idUtente INT AUTO_INCREMENT PRIMARY KEY,
+    codice_fiscale VARCHAR(16),    -- ✅ Aggiunta PRIMARY KEY (mancava!)
     nome VARCHAR(50) NOT NULL,                 -- ✅ Aggiunto NOT NULL
     cognome VARCHAR(50) NOT NULL,              -- ✅ Aggiunto NOT NULL
-    dataNascita DATE NOT NULL                  
+    dataNascita DATE NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    pswd VARCHAR(100) NOT NULL                 
 );
 
 CREATE TABLE giochi (
@@ -63,13 +66,14 @@ CREATE TABLE squadre (
 
 CREATE TABLE membri (
     idMembro INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL,
-    cognome VARCHAR(50) NOT NULL,
     nickname VARCHAR(50) NOT NULL UNIQUE,      -- ✅ Aggiunto UNIQUE (nickname deve essere unico)
-    dataNascita DATE NOT NULL,
+    isAdmin tinyint not null,
     idSquadra INT NOT NULL,
-    FOREIGN KEY (idSquadra) REFERENCES squadre(idSquadra)  -- ✅ Corretta sintassi
+    idUtente INT NOT NULL,
+    FOREIGN KEY (idSquadra) REFERENCES squadre(idSquadra),  -- ✅ Corretta sintassi
+    FOREIGN KEY (idUtente) REFERENCES utenti(idUtente)
 );
+
 
 -- ============================================
 -- 3. TABELLE PONTE (relazioni N:N)
@@ -92,11 +96,11 @@ CREATE TABLE evento_sponsor (
     FOREIGN KEY (idEvento) REFERENCES evento(idEvento)     -- ✅ Corretta sintassi
 );
 
-CREATE TABLE evento_spettatori (
+CREATE TABLE evento_utenti (
     idEvento INT NOT NULL,
-    codice_fiscale VARCHAR(16) NOT NULL,
-    PRIMARY KEY (idEvento, codice_fiscale),    -- ✅ AGGIUNTA chiave primaria composta
-    FOREIGN KEY (codice_fiscale) REFERENCES spettatori(codice_fiscale), -- ✅ Corretta sintassi
+    idUtente int NOT NULL,
+    PRIMARY KEY (idEvento, idUtente),    -- ✅ AGGIUNTA chiave primaria composta
+    FOREIGN KEY (idUtente) REFERENCES utenti(idUtente), -- ✅ Corretta sintassi
     FOREIGN KEY (idEvento) REFERENCES evento(idEvento)
 );
 

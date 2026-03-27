@@ -1,5 +1,10 @@
 <?php 
     require 'config.php';
+
+    $sql = 'SELECT * FROM giochi';  
+    $stm = $pdo->prepare($sql);
+    $stm->execute();
+    $gamesInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -15,20 +20,17 @@
         <p>nome:</p>
         <input type="text" name="nameTxt" required>
         
-        <p>numero posti:</p>
+        <p>monte premi:</p>
         <input type="number" name="sitsTxt" required>
-        
-        <p>città:</p>
-        <input type="text" name="cityTxt" required>
-    
-        <p>paese:</p>
-        <input type="text" name="regionTxt" required>
-        
-        <p>data inizio:</p>
+                
+        <p>giorno svolgimento:</p>
         <input type="date" name="dateSTxt" required>
 
-        <p>data fine:</p>
-        <input type="date" name="dateETxt" required>
+        <select name="gioco">
+            <?php foreach($gamesInfo as $game): ?>
+                <option value="<?= $game["idGioco"] ?>"> <?= $game['nomeGioco']?></option>
+            <?php endforeach; ?>
+        </select>
 
         <br>
         <button>crea</button>
@@ -37,34 +39,29 @@
     <?php 
     
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $name = trim($_POST['nameTxt']);
-            $nSits = trim($_POST['sitsTxt']);
-            $city= trim($_POST['cityTxt']);
-            $region = trim($_POST['regionTxt']);
-            $dateS = trim($_POST['dateSTxt']);
-            $dateE = trim($_POST['dateETxt']);
+
             
             try{
                 $pdo -> exec("SET SESSION idle_transaction_timeout = 5");
                 $pdo -> exec("BEGIN WORK");
                 $pdo -> exec("LOCK TABLES evento WRITE");
     
-                $sql = 'INSERT INTO evento VALUES (null, :n, :s, :c, :r, :ds, :de)';
+                $sql = 'INSERT INTO tornei VALUES (null, )';
     
                 $stm = $pdo ->prepare($sql);
     
-                $stm -> bindParam(':n', $name);
-                $stm -> bindParam(':s', $nSits);
-                $stm -> bindParam(':c', $city);
-                $stm -> bindParam(':r', $region);
-                $stm -> bindParam(':ds', $dateS);
-                $stm -> bindParam(':de', $dateE);
+                $stm -> bindParam(':', $);
+                $stm -> bindParam(':', $);
+                $stm -> bindParam(':', $);
+                $stm -> bindParam(':', $);
+                $stm -> bindParam(':', $);
+                $stm -> bindParam(':', $);
     
                 $stm -> execute();
     
                 $pdo -> exec('COMMIT WORK');
 
-                header("location: showEvents.php");
+                header("location: showeventstest.php");
             } catch (PDOException $e) {
                 echo ''. $e -> getMessage() .'';
                 $pdo -> exec('ROLLBACK WORK');

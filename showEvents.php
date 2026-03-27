@@ -1,4 +1,5 @@
 <?php
+    // da cambiare in showeventstest.php
     require 'config.php';
     session_start();
     
@@ -40,6 +41,8 @@
     <title>Document</title>
 </head>
 <body>
+    <a href="sign_in.php">sign in</a>
+    <a href="login.php">log in</a>
     <table border>
         <tr>
             <th>eventi</th>
@@ -58,12 +61,12 @@
                 <td><?= $row['nomeGioco'] ?></td>
                 <td><?= $row['nomeSquadra'] ?></td>
                 <td><?= $row['nPosti'] ?></td>
-                <td>
+                <td>    
                     <a href="showEvents.php?id=<?= $row['idSquadra'] ?>"> info team </a>
                     <!-- aggiungi visualizza tornei forse al posto di info team -->
-                    <?php if($_SESSION['admin'] == true): ?>
+                    <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
                     <a href="">aggiungi torneo</a> <!-- fai sta funzione -->
-                    <? endif; ?>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -86,8 +89,10 @@
         </table>
     <?php endif; ?>
     <br>
-    <?php if($_SESSION['admin'] == true): ?>
+    <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
     <button><a href="createEvent.php">crea evento</a></button>
+    <button>termina sessione</button>
     <?php endif ?>
+
 </body>
 </html>

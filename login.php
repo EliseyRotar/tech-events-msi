@@ -35,27 +35,27 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $email = trim($_POST['emailTxt']);
-        $pswd = trim($_POST['pswdTxt']);
+        $passwd = trim($_POST['pswdTxt']);
 
         
         $sql = "SELECT idUtente, pswd, isAdmin FROM utenti where email = :e";
         $stm = $pdo -> prepare($sql);
         $stm -> bindParam('e', $email);
         $stm -> execute();
-
+        
         $credentials = $stm -> fetchAll();
 
         if ($credentials){
             foreach ($credentials as $elem){
                 $idUser = $elem['idUtente'];
-                $hashpass = $elem['userPassword'];
+                $hashpass = $elem['pswd'];
                 $isAdmin = $elem['isAdmin'];
             }
         }else{
             echo "accesso non andato a buon fine";
         }
-
-        if(password_verify($pswd, $hashpass)){
+        echo $passwd . " " . $hashpass ;
+        if(password_verify($passwd, $hashpass)){
             session_start();
             $_SESSION["email"] = $email;
             $_SESSION["id"] = $idUser;
@@ -67,8 +67,6 @@
         }
 
     }
-
-
     ?>
 
 

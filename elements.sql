@@ -1,79 +1,77 @@
 -- ============================================
--- 1. TABELLE BASE
+-- POPOLAMENTO DATABASE AGGIORNATO
 -- ============================================
 
+-- 1. EVENTI
 INSERT INTO evento (nome, nPosti, citta, paese, dataInizio, dataFine) VALUES
-('Gaming Expo', 500, 'Milano', 'Italia', '2026-06-10', '2026-06-12'),
-('Esports World Cup', 1000, 'Roma', 'Italia', '2026-07-01', '2026-07-05');
+('Gaming Fest', 500, 'Milano', 'Italia', '2026-06-10', '2026-06-12'),
+('Esports Arena', 300, 'Roma', 'Italia', '2026-07-05', '2026-07-07');
 
-INSERT INTO utenti (codice_fiscale, nome, cognome, dataNascita, email, pswd) VALUES
-('RSSMRA90A01H501Z', 'Mario', 'Rossi', '1990-01-01', 'mario.rossi@email.com', 'pass1'),
-('VRDLGI85B12F205X', 'Luigi', 'Verdi', '1985-02-12', 'luigi.verdi@email.com', 'pass2'),
-('BNCLRA95C23H501Y', 'Lara', 'Bianchi', '1995-03-23', 'lara.bianchi@email.com', 'pass3');
+-- 2. UTENTI (password già hashate di esempio)
+INSERT INTO utenti (codice_fiscale, nome, cognome, dataNascita, isAdmin, email, pswd) VALUES
+('RSSMRA90A01H501Z', 'Mario', 'Rossi', '1990-01-01', 1, 'mario@example.com', '$2y$10$abcdefghijklmnopqrstuv'),
+('VRDLGI95B12F205X', 'Luigi', 'Verdi', '1995-02-12', 0, 'luigi@example.com', '$2y$10$abcdefghijklmnopqrstuv'),
+('BNCLRA88C41D612Y', 'Laura', 'Bianchi', '1988-03-21', 0, 'laura@example.com', '$2y$10$abcdefghijklmnopqrstuv');
 
+-- 3. GIOCHI
 INSERT INTO giochi (nomeGioco, copyright) VALUES
 ('League of Legends', 'Riot Games'),
 ('FIFA 24', 'EA Sports'),
 ('Call of Duty', 'Activision');
 
+-- 4. RUOLI
 INSERT INTO ruoli (nomeRuolo, descrizione) VALUES
-('Player', 'Giocatore della squadra'),
-('Coach', 'Allenatore della squadra'),
-('Manager', 'Gestore della squadra');
+('Player', 'Giocatore attivo'),
+('Coach', 'Allenatore'),
+('Manager', 'Gestore del team');
 
+-- 5. SPONSOR
 INSERT INTO sponsor (nomeAzienda, nomeResponsabile, cognomeResponsabile, emailResponsabile) VALUES
-('RedBull', 'Marco', 'Neri', 'marco.neri@redbull.com'),
-('Intel', 'Anna', 'Blu', 'anna.blu@intel.com');
+('Red Bull', 'Marco', 'Neri', 'neri@redbull.com'),
+('Intel', 'Giulia', 'Ferrari', 'ferrari@intel.com');
 
+-- 6. TORNEI (aggiunto nomeTorneo)
+INSERT INTO tornei (nomeTorneo, montePremi, giornoSvolgimento, idEvento, idGioco) VALUES
+('LoL Championship', 10000.00, '2026-06-10', 1, 1),
+('FIFA Cup', 5000.00, '2026-07-05', 2, 2);
 
--- ============================================
--- 2. TABELLE CON DIPENDENZE
--- ============================================
-
-INSERT INTO tornei (montePremi, giornoSvolgimento, idEvento, idGioco) VALUES
-(10000.00, '2026-06-10', 1, 1),
-(5000.00, '2026-06-11', 1, 2),
-(20000.00, '2026-07-02', 2, 3);
-
+-- 7. SQUADRE
 INSERT INTO squadre (nomeSquadra, nComponenti, idSponsor) VALUES
 ('Team Alpha', 5, 1),
-('Team Beta', 4, 2),
+('Team Beta', 5, 2),
 ('Team Gamma', 3, NULL);
 
-INSERT INTO membri (nickname, isAdmin, idSquadra, idUtente) VALUES
-('MarioPro', 1, 1, 1),
-('LuigiMaster', 0, 1, 2),
-('LaraSniper', 0, 2, 3);
+-- 8. MEMBRI
+INSERT INTO membri (nickname, idSquadra, idUtente) VALUES
+('ProGamer1', 1, 1),
+('SniperX', 1, 2),
+('Shadow', 2, 3);
 
-
--- ============================================
--- 3. TABELLE PONTE
--- ============================================
-
+-- 9. MEMBRI_RUOLI
 INSERT INTO membri_ruoli (idRuolo, idMembro) VALUES
 (1, 1),
-(2, 1),
 (1, 2),
-(1, 3);
+(2, 3);
 
+-- 10. EVENTO_SPONSOR
 INSERT INTO evento_sponsor (idEvento, idSponsor, importo_sponsor) VALUES
-(1, 1, 5000.00),
-(1, 2, 3000.00),
-(2, 1, 7000.00);
+(1, 1, 2000.00),
+(2, 2, 1500.00);
 
+-- 11. EVENTO_UTENTI
 INSERT INTO evento_utenti (idEvento, idUtente) VALUES
 (1, 1),
 (1, 2),
 (2, 3);
 
+-- 12. TORNEI_SQUADRE
 INSERT INTO tornei_squadre (idTorneo, idSquadra) VALUES
 (1, 1),
 (1, 2),
-(2, 2),
-(3, 3);
+(2, 3);
 
+-- 13. GIOCHI_MEMBRI
 INSERT INTO giochi_membri (idGioco, idMembro) VALUES
 (1, 1),
 (1, 2),
-(2, 3),
-(3, 1);
+(2, 3);

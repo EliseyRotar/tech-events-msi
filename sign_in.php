@@ -34,6 +34,9 @@
   
     <p>cognome:</p>
     <input type="text" name="surnameTxt" required>
+
+    <p>admin (1, 0):</p>
+    <input type="number" name="adminTxt" required>
     
     <p>data:</p>
     <input type="date" name="dateTxt" required>
@@ -55,25 +58,39 @@
             $codFisc = trim($_POST['fiscTxt']);
             $surname = trim($_POST['surnameTxt']); 
             $date = trim($_POST['dateTxt']);
-            $pswd = trim($_POST['pswdTxt']);
+            $admin = trim($_POST['adminTxt']);
 
 
             if (!in_array($email, $emails) ){
                 
-                $hashpass = password_hash($pswd, PASSWORD_ARGON2ID);
+                try{
+                $pdo -> exec("SET SESSION idle_transaction_timeout = 5");
+                $pdo -> exec("BEGIN WORK");
+                $pdo -> exec("LOCK TABLES UTENTI WRITE");
+
+                $hashpass = password_hash($pswd, PASSWORD_DEFAULT);
     
-                $sql = "INSERT INTO utenti values (null, :c, :n, :s, :d, :e, :h)";
+                $sql = "INSERT INTO utenti values (null, :c, :n, :s, :d, :a,:e, :h)";
     
                 $stm = $pdo -> prepare($sql);
                 $stm -> bindParam(':c', $codFisc);
                 $stm -> bindParam(':n', $name);
                 $stm -> bindParam(':s', $surname);
                 $stm -> bindParam(':d', $date);
+                $stm -> bindParam(':a', $admin);
                 $stm -> bindParam(':e', $email);
                 $stm -> bindParam(':h', $hashpass);
                 $stm -> execute();
 
+                $pdo -> query('COMMIT WORK');
+
                 header('location: login.php');
+                }catch(PDOException $e){
+                    echo $e;
+                    $pdo -> exec('ROLLBACK WORK');
+                } finally{
+                    $pdo -> exec('UNLOCK TABLES');
+                }
 
             } else{
                 echo "utente già registrato";

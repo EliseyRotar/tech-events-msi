@@ -18,8 +18,9 @@ CREATE TABLE utenti (
     nome VARCHAR(50) NOT NULL,                 -- ✅ Aggiunto NOT NULL
     cognome VARCHAR(50) NOT NULL,              -- ✅ Aggiunto NOT NULL
     dataNascita DATE NOT NULL,
+    isAdmin tinyint not null,
     email VARCHAR(100) NOT NULL,
-    pswd VARCHAR(100) NOT NULL                 
+    pswd VARCHAR(255) NOT NULL                 
 );
 
 CREATE TABLE giochi (
@@ -48,6 +49,7 @@ CREATE TABLE sponsor (
 
 CREATE TABLE tornei (
     idTorneo INT AUTO_INCREMENT PRIMARY KEY,
+    nomeTorneo varchar(100),
     montePremi DECIMAL(10,2),                  -- ✅ Cambiato INT → DECIMAL (è denaro!)
     giornoSvolgimento DATE NOT NULL,
     idEvento INT NOT NULL,                     -- ✅ AGGIUNTO: collegamento a evento
@@ -67,7 +69,6 @@ CREATE TABLE squadre (
 CREATE TABLE membri (
     idMembro INT AUTO_INCREMENT PRIMARY KEY,
     nickname VARCHAR(50) NOT NULL UNIQUE,      -- ✅ Aggiunto UNIQUE (nickname deve essere unico)
-    isAdmin tinyint not null,
     idSquadra INT NOT NULL,
     idUtente INT NOT NULL,
     FOREIGN KEY (idSquadra) REFERENCES squadre(idSquadra),  -- ✅ Corretta sintassi

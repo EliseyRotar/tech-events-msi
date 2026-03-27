@@ -4,61 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Storico</title>
+
+    <link rel="stylesheet" href="storici.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <title>Valorant Events</title>
 </head>
 
 <body>
-    <table class="table table-light table-striped" id="tabella" border>
+
+    <table id="tabella">
         <tr>
             <th>Nome Evento</th>
-            <th>Price pool</th>
+            <th>Prize Pool</th>
             <th>Regione</th>
         </tr>
     </table>
-    <button id="start"></button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <button id="start">Carica dati</button>
+
     <script>
         let tabella = document.getElementById("tabella");
         let btn = document.getElementById("start");
-        btn.textContent = "test";
+
         btn.addEventListener("click", () => {
             btn.disabled = true;
+
             API().then(obj => {
-                obj.data.segments.forEach(element => {
+
+                let eventi = obj.data; // ✅ FIX
+
+                eventi.forEach(element => {
+
                     let tr = document.createElement('tr');
 
                     let td_nome = document.createElement('td');
                     let td_prize = document.createElement('td');
                     let td_region = document.createElement('td');
 
-                    td_nome.textContent = element.title;
-                    td_prize.textContent = element.prize;
-                    td_region.textContent = element.region;
+                    td_nome.textContent = element.title ?? "N/A";
+                    td_prize.textContent = element.prize ?? "N/A";
+                    td_region.textContent = element.region ?? "N/A";
 
                     tr.appendChild(td_nome);
                     tr.appendChild(td_prize);
                     tr.appendChild(td_region);
 
                     tabella.appendChild(tr);
+                });
 
-                })
+            }).catch(err => {
+                console.error("Errore API:", err);
             });
-        })
-
+        });
 
         async function API() {
-            let url = "https://corsproxy.io/?" + "https://vlrggapi.vercel.app/events?q=completed";
+            let url = "https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed";
             let httpRequest = await fetch(url);
             let obj = await httpRequest.json();
             return obj;
         }
-
     </script>
+
 </body>
 
 </html>

@@ -1,5 +1,8 @@
 <?php
-    //is now the main thing
+    /*
+        todo: crea "aggiungi gioco"
+        todo: mettere in relazione con le altre pagine (storici e home)
+    */
     require 'config.php';
     session_start();
     
@@ -14,7 +17,7 @@
 
     $generalInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
     if ($eventID != null) {
-        $sql = 'SELECT * FROM tornei WHERE tornei.idTorneo = :id';
+        $sql = 'SELECT * FROM tornei WHERE tornei.idEvento = :id';
     $stm = $pdo->prepare($sql);
            
     $stm -> bindParam(':id', $eventID);
@@ -22,6 +25,7 @@
 
     $tournamentInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 ?>
 
@@ -33,8 +37,11 @@
     <title>Document</title>
 </head>
 <body>
+
     <a href="sign_in.php">sign in</a>
     <a href="login.php">log in</a>
+    <a href="logout.php">log out</a>
+
     <table border>
         <tr>
             <th>eventi</th>
@@ -53,12 +60,14 @@
                 <td><?= $row['citta'] ?></td>
                 <td><?= $row['paese'] ?></td>
                 <td><?= $row['nPosti'] ?></td>
-                <td>    
-                    <a href="showeventstest.php?id=<?= $row["idEvento"]?>"> info torneo </a>
-
-                    <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
-                        <a href="addTournament.php?id=<?= $row["idEvento"]?>">aggiungi torneo</a>
-                    <?php endif; ?>
+                <td>   
+                    <p>
+                        <a href="showeventstest.php?id=<?= $row["idEvento"]?>"> info torneo </a>
+                        <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == '1'): ?>
+                            /   
+                            <a href="addTournament.php?id=<?= $row["idEvento"]?>">aggiungi torneo</a>
+                        <?php endif; ?>
+                    </p> 
 
                 </td>
             </tr>
@@ -71,12 +80,20 @@
                 <th>Squadra</th>
                 <th>monte premi</th>
                 <th>giorno</th>
+                <th>Azioni</th>
             </tr>
             <?php foreach($tournamentInfo as $row): ?>
                 <tr>
                     <td><?= $row['nomeTorneo']?></td>
                     <td><?= $row['montePremi']?></td>
                     <td><?= $row['giornoSvolgimento']?></td>
+                    <td>
+                        <p>
+                            <a href="showTeam.php?id=">visualizza team </a>
+                            /
+                            <a href="addTeam.php?id=<?= $row["idEvento"]?>">aggiungi Team </a> <!--todo: crea la funzione -->
+                        </p>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -84,7 +101,6 @@
     <br>
     <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
     <button><a href="createEvent.php">crea evento</a></button>
-        <button>termina sessione</button> <!-- da fare -->
     <?php endif ?>
 
 </body>

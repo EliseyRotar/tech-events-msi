@@ -43,27 +43,17 @@
         $stm -> bindParam('e', $email);
         $stm -> execute();
         
-        $credentials = $stm -> fetchAll();
-
-        if ($credentials){
-            foreach ($credentials as $elem){
-                $idUser = $elem['idUtente'];
-                $hashpass = $elem['pswd'];
-                $isAdmin = $elem['isAdmin'];
-            }
-        }else{
-            echo "accesso non andato a buon fine";
-        }
-        echo $passwd . " " . $hashpass ;
-        if(password_verify($passwd, $hashpass)){
+        $credentials = $stm -> fetch();
+        
+        if($credentials && password_verify($passwd, $credentials['pswd'])){
             session_start();
             $_SESSION["email"] = $email;
-            $_SESSION["id"] = $idUser;
+            $_SESSION["id"] = $credentials['idUser'];
             $_SESSION["accept"] = "ACCEPT";
-            $_SESSION["admin"] = $isAdmin;
-            header("location: showEvents.php");
+            $_SESSION["admin"] = $credentials['isAdmin'];
+            header("location: showeventstest.php");
         }else{
-            echo('male non ti sei loggato');
+            echo('e-mail o password errate');
         }
 
     }

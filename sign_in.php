@@ -59,6 +59,7 @@
             $surname = trim($_POST['surnameTxt']); 
             $date = trim($_POST['dateTxt']);
             $admin = trim($_POST['adminTxt']);
+            $pswd = trim($_POST['pswdTxt']);
 
 
             if (!in_array($email, $emails) ){
@@ -68,7 +69,7 @@
                 $pdo -> exec("BEGIN WORK");
                 $pdo -> exec("LOCK TABLES UTENTI WRITE");
 
-                $hashpass = password_hash($pswd, PASSWORD_DEFAULT);
+                $hashpass = password_hash($pswd, PASSWORD_ARGON2ID);
     
                 $sql = "INSERT INTO utenti values (null, :c, :n, :s, :d, :a,:e, :h)";
     
@@ -80,9 +81,12 @@
                 $stm -> bindParam(':a', $admin);
                 $stm -> bindParam(':e', $email);
                 $stm -> bindParam(':h', $hashpass);
-                $stm -> execute();
+                $result = $stm -> execute();
 
-                $pdo -> query('COMMIT WORK');
+                if ($result === true){
+                    $pdo -> query('COMMIT WORK');
+
+                }
 
                 header('location: login.php');
                 }catch(PDOException $e){

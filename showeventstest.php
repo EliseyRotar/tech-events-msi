@@ -89,7 +89,7 @@
                     <td><?= $row['giornoSvolgimento']?></td>
                     <td>
                         <p>
-                            <a href="showTeam.php?id=">visualizza team </a>
+                            <a href="viewTeam.php?id=<?= $row['idTorneo'] ?>">visualizza team </a>
                             /
                             <a href="addTeam.php?id=<?= $row["idEvento"]?>">aggiungi Team </a> <!--todo: crea la funzione -->
                         </p>

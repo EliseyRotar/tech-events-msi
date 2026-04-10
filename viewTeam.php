@@ -2,10 +2,14 @@
     require 'config.php';
     $idT = $_GET['id'];
     $idS = isset($_GET['Team']) ? $_GET['Team'] : "";
+    $memberList = null;
 
     try {
-
-    $sql = 'SELECT squadre.idSquadra, nomeSquadra, nComponenti, nomeAzienda FROM squadre, sponsor, tornei_squadre WHERE squadre.idSquadra = tornei_squadre.idSquadra AND tornei_squadre.idTorneo = :id AND squadre.idSponsor = sponsor.idSponsor;';
+    $sql = 'SELECT s.idSquadra, s.nomeSquadra, s.nComponenti, sp.nomeAzienda
+            FROM tornei_squadre ts
+            JOIN squadre s ON s.idSquadra = ts.idSquadra
+            LEFT JOIN sponsor sp ON s.idSponsor = sp.idSponsor
+            WHERE ts.idTorneo = :id;';
     $stm = $pdo->prepare($sql);
     $stm -> bindParam(':id', $idT);
     $stm -> execute();

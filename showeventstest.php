@@ -91,7 +91,7 @@
                         <p>
                             <a href="viewTeam.php?id=<?= $row['idTorneo'] ?>">visualizza team </a>
                             /
-                            <a href="addTeam.php?id=<?= $row["idEvento"]?>">aggiungi Team </a> <!--todo: crea la funzione -->
+                            <a href="SignTeam.php?id=<?= $row['idTorneo'] ?>">iscrivi Team</a>
                         </p>
                     </td>
                 </tr>
@@ -102,6 +102,6 @@
     <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
     <button><a href="createEvent.php">crea evento</a></button>
     <?php endif ?>
-
+    <button><a href="addTeam.php">aggiungi Team </a></button>
 </body>
 </html>

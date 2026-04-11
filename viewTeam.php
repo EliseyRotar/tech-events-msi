@@ -19,7 +19,21 @@
         echo $e;
     }
     if ($idS != '') {
-        $sql = 'SELECT nickname, nomeRuolo, nomeGioco FROM membri, ruoli, giochi, membri_ruoli, giochi_membri WHERE membri.idSquadra = :id AND membri.idMembro = membri_ruoli.idMembro AND membri_ruoli.idRuolo = ruoli.idRuolo AND membri.idMembro = giochi_membri.idMembro AND giochi_membri.idGioco = giochi.idGioco';
+        $sql = 'SELECT 
+                    m.idMembro,
+                    m.nickname, 
+                    r.nomeRuolo, 
+                    g.nomeGioco
+                FROM membri m
+                LEFT JOIN membri_ruoli mr 
+                    ON m.idMembro = mr.idMembro
+                LEFT JOIN ruoli r 
+                    ON mr.idRuolo = r.idRuolo
+                LEFT JOIN giochi_membri gm 
+                    ON m.idMembro = gm.idMembro
+                LEFT JOIN giochi g 
+                    ON gm.idGioco = g.idGioco
+                WHERE m.idSquadra = :id;';
         $stm = $pdo->prepare($sql);
         $stm -> bindParam(':id', $idS);
         $stm -> execute();
@@ -59,15 +73,23 @@
                     <td>giocatore</td>
                     <td>ruolo</td>
                     <td>gioco</td>
+                    <td>azioni</td>
                 </tr>
                 <?php foreach ($memberList as $row):?>
                     <tr>
                         <td><?= $row['nickname']?></td>
                         <td><?= $row['nomeRuolo']?></td>
                         <td><?= $row['nomeGioco']?></td>
+                        <td>
+                            <a href="assignRole.php?id=<?=$row['idMembro'] ?>">assegna ruolo</a>
+                            /
+                            <a href="assignGame.php?id=<?=$row['idMembro'] ?>">assegna gioco</a>
+                        </td>
                     </tr>
                 <?php endforeach;?>
             </table>
+            <button><a href="addMember.php?id=<?=$idT?>">aggiungi membro</a></button>
+
         <?php endif;?>
 </body>
 </html>

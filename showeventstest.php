@@ -1,6 +1,5 @@
 <?php
     /*
-        todo: crea "aggiungi gioco"
         todo: mettere in relazione con le altre pagine (storici e home)
     */
     require 'config.php';
@@ -101,6 +100,7 @@
     <br>
     <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == true): ?>
     <button><a href="createEvent.php">crea evento</a></button>
+    <button><a href="addGame.php">aggiungi gioco</a></button>
     <?php endif ?>
     <button><a href="addTeam.php">aggiungi Team </a></button>
 </body>

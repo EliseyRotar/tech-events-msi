@@ -1,70 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="storici.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600&display=swap"
-        rel="stylesheet">
-    <title>CS2 Matches (HVLT)</title>
+    <title>CS2 Matches — EEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
-    <table id="tabella" border>
-        <tr>
-            <th>Nome evento</th>
-            <th>Data</th>
-            <th>Team 1</th>
-            <th>Team 2</th>
-        </tr>
-    </table>
-    <button id="start"></button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <nav>
+        <a href="../index.html" class="nav-logo">EEM</a>
+        <div class="links">
+            <a href="../index.html">Home</a>
+            <a href="storico.html">Storico</a>
+            <a href="../../login.php" class="btn-nav">Accedi</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div>
+            <p class="section-label">CS2 — via HLTV</p>
+            <h1>CS2 Matches</h1>
+            <p>Match professionali aggiornati in tempo reale</p>
+        </div>
+        <a href="storico.html" class="back-link">← Torna allo Storico</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="tabella">
+            <thead>
+                <tr>
+                    <th>Nome Evento</th>
+                    <th>Data</th>
+                    <th>Team 1</th>
+                    <th>Team 2</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="load-area">
+        <button id="start">Carica Match CS2</button>
+    </div>
+
+    <footer>
+        <span class="footer-logo">EEM</span>
+        <p>© 2026 — Tech Dragons Events</p>
+    </footer>
+
     <script>
-        let tabella = document.getElementById("tabella");
-        let btn = document.getElementById("start");
-        btn.textContent = "test";
-        btn.addEventListener("click", () => {
+        const tabella = document.getElementById('tabella').querySelector('tbody');
+        const btn = document.getElementById('start');
+        const loading = document.getElementById('loading');
+
+        btn.addEventListener('click', async () => {
             btn.disabled = true;
-            API().then(obj => {
+            btn.textContent = 'Caricamento...';
+            loading.style.display = 'block';
+            try {
+                const obj = await API();
                 obj.forEach(element => {
-                    let tr = document.createElement('tr');
-
-                    let td_nome = document.createElement('td');
-                    let td_data = document.createElement('td');
-                    let td_team1 = document.createElement('td');
-                    let td_team2 = document.createElement('td');
-
-                    td_nome.textContent = element.event.name;
-                    td_data.textContent = element.time;
-                    td_team1.textContent = element.teams[0].name;
-                    td_team2.textContent = element.teams[1].name;
-
-                    tr.appendChild(td_nome);
-                    tr.appendChild(td_data);
-                    tr.appendChild(td_team1);
-                    tr.appendChild(td_team2);
-
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${element.event?.name ?? 'N/A'}</td>
+                        <td>${element.time ?? 'N/A'}</td>
+                        <td>${element.teams?.[0]?.name ?? 'N/A'}</td>
+                        <td>${element.teams?.[1]?.name ?? 'N/A'}</td>
+                    `;
                     tabella.appendChild(tr);
-                })
-            });
-        })
-
+                });
+                btn.textContent = `${obj.length} match caricati`;
+            } catch (e) {
+                btn.textContent = 'Errore nel caricamento';
+                btn.disabled = false;
+                console.error(e);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
 
         async function API() {
-            let url = "https://hltv-api.vercel.app/api/matchesByEvent.json";
-            let httpRequest = await fetch(url);
-            let obj = await httpRequest.json();
-            return obj;
+            const res = await fetch('https://hltv-api.vercel.app/api/matchesByEvent.json');
+            return res.json();
         }
-
     </script>
-</body>
 
+</body>
 </html>

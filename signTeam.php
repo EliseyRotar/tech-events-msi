@@ -49,7 +49,7 @@
     <title>Document</title>
 </head>
 <body>
-    <table border>
+    <table>
         <tr>
             <th>nome squadra</th>
             <th>numero componenti</th>

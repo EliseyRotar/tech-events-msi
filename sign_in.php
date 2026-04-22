@@ -1,15 +1,11 @@
 <?php
     require 'config.php';
 
-
     $sql = "SELECT email FROM utenti";
     $stm = $pdo -> prepare($sql);
     $stm -> execute();
     $emails = $stm -> fetch(PDO::FETCH_NUM);
-    
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css"></a>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -103,8 +99,6 @@
 
         }
     ?>
-
-
 
 </body>
 </html>

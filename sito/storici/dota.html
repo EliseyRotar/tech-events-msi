@@ -1,71 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="storici.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <title>Dota 2 Teams</title>
+    <title>Dota 2 Teams — EEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
 
-    <table id="tabella">
-        <tr>
-            <th>Nome Team</th>
-            <th>Rating</th>
-            <th>Wins</th>
-            <th>Losses</th>
-        </tr>
-    </table>
+    <nav>
+        <a href="../index.html" class="nav-logo">EEM</a>
+        <div class="links">
+            <a href="../index.html">Home</a>
+            <a href="storico.html">Storico</a>
+            <a href="../../login.php" class="btn-nav">Accedi</a>
+        </div>
+    </nav>
 
-    <button id="start">Carica dati</button>
+    <div class="page-header">
+        <div>
+            <p class="section-label">Dota 2 — via OpenDota</p>
+            <h1>Dota 2 Teams</h1>
+            <p>Lista completa dei team professionali con statistiche</p>
+        </div>
+        <a href="storico.html" class="back-link">← Torna allo Storico</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="tabella">
+            <thead>
+                <tr>
+                    <th>Nome Team</th>
+                    <th>Rating</th>
+                    <th>Vittorie</th>
+                    <th>Sconfitte</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="load-area">
+        <button id="start">Carica Team Dota 2</button>
+    </div>
+
+    <footer>
+        <span class="footer-logo">EEM</span>
+        <p>© 2026 — Tech Dragons Events</p>
+    </footer>
 
     <script>
-        let tabella = document.getElementById("tabella");
-        let btn = document.getElementById("start");
+        const tabella = document.getElementById('tabella').querySelector('tbody');
+        const btn = document.getElementById('start');
+        const loading = document.getElementById('loading');
 
-        btn.addEventListener("click", () => {
+        btn.addEventListener('click', async () => {
             btn.disabled = true;
-
-            API().then(obj => {
+            btn.textContent = 'Caricamento...';
+            loading.style.display = 'block';
+            try {
+                const obj = await API();
                 obj.forEach(team => {
-
-                    let tr = document.createElement('tr');
-
-                    let td_nome = document.createElement('td');
-                    let td_rating = document.createElement('td');
-                    let td_wins = document.createElement('td');
-                    let td_losses = document.createElement('td');
-
-                    td_nome.textContent = team.name;
-                    td_rating.textContent = team.rating ?? "N/A";
-                    td_wins.textContent = team.wins ?? 0;
-                    td_losses.textContent = team.losses ?? 0;
-
-                    tr.appendChild(td_nome);
-                    tr.appendChild(td_rating);
-                    tr.appendChild(td_wins);
-                    tr.appendChild(td_losses);
-
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${team.name ?? 'N/A'}</td>
+                        <td>${team.rating ?? 'N/A'}</td>
+                        <td>${team.wins ?? 0}</td>
+                        <td>${team.losses ?? 0}</td>
+                    `;
                     tabella.appendChild(tr);
                 });
-            });
+                btn.textContent = `${obj.length} team caricati`;
+            } catch (e) {
+                btn.textContent = 'Errore nel caricamento';
+                btn.disabled = false;
+                console.error(e);
+            } finally {
+                loading.style.display = 'none';
+            }
         });
 
         async function API() {
-            let url = "https://api.opendota.com/api/teams";
-            let httpRequest = await fetch(url);
-            let obj = await httpRequest.json();
-            return obj;
+            const res = await fetch('https://api.opendota.com/api/teams');
+            return res.json();
         }
     </script>
 
 </body>
-
 </html>

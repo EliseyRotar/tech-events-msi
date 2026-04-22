@@ -1,73 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="storici.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600&display=swap"
-        rel="stylesheet">
-
-    <title>Valorant Events</title>
+    <title>Valorant Events — EEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
 
-    <table id="tabella">
-        <tr>
-            <th>Nome Evento</th>
-            <th>Prize Pool</th>
-            <th>Regione</th>
-        </tr>
-    </table>
+    <nav>
+        <a href="../index.html" class="nav-logo">EEM</a>
+        <div class="links">
+            <a href="../index.html">Home</a>
+            <a href="storico.html">Storico</a>
+            <a href="../../login.php" class="btn-nav">Accedi</a>
+        </div>
+    </nav>
 
-    <button id="start">Carica dati</button>
+    <div class="page-header">
+        <div>
+            <p class="section-label">Valorant — via VLR.gg</p>
+            <h1>Valorant Events</h1>
+            <p>Tutti gli eventi completati nel circuito professionistico</p>
+        </div>
+        <a href="storico.html" class="back-link">← Torna allo Storico</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="tabella">
+            <thead>
+                <tr>
+                    <th>Nome Evento</th>
+                    <th>Prize Pool</th>
+                    <th>Regione</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="load-area">
+        <button id="start">Carica Eventi Valorant</button>
+    </div>
+
+    <footer>
+        <span class="footer-logo">EEM</span>
+        <p>© 2026 — Tech Dragons Events</p>
+    </footer>
 
     <script>
-        let tabella = document.getElementById("tabella");
-        let btn = document.getElementById("start");
+        const tabella = document.getElementById('tabella').querySelector('tbody');
+        const btn = document.getElementById('start');
+        const loading = document.getElementById('loading');
 
-        btn.addEventListener("click", () => {
+        btn.addEventListener('click', async () => {
             btn.disabled = true;
-
-            API().then(obj => {
-
-                let eventi = obj.data; // ✅ FIX
-
+            btn.textContent = 'Caricamento...';
+            loading.style.display = 'block';
+            try {
+                const obj = await API();
+                const eventi = obj.data;
                 eventi.forEach(element => {
-
-                    let tr = document.createElement('tr');
-
-                    let td_nome = document.createElement('td');
-                    let td_prize = document.createElement('td');
-                    let td_region = document.createElement('td');
-
-                    td_nome.textContent = element.title ?? "N/A";
-                    td_prize.textContent = element.prize ?? "N/A";
-                    td_region.textContent = element.region ?? "N/A";
-
-                    tr.appendChild(td_nome);
-                    tr.appendChild(td_prize);
-                    tr.appendChild(td_region);
-
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${element.title ?? 'N/A'}</td>
+                        <td>${element.prize ?? 'N/A'}</td>
+                        <td>${element.region ?? 'N/A'}</td>
+                    `;
                     tabella.appendChild(tr);
                 });
-
-            }).catch(err => {
-                console.error("Errore API:", err);
-            });
+                btn.textContent = `${eventi.length} eventi caricati`;
+            } catch (e) {
+                btn.textContent = 'Errore nel caricamento';
+                btn.disabled = false;
+                console.error(e);
+            } finally {
+                loading.style.display = 'none';
+            }
         });
 
         async function API() {
-            let url = "https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed";
-            let httpRequest = await fetch(url);
-            let obj = await httpRequest.json();
-            return obj;
+            const res = await fetch('https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed');
+            return res.json();
         }
     </script>
 
 </body>
-
 </html>

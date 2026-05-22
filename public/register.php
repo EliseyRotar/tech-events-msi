@@ -80,12 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stm->execute();
             $pdo->commit();
 
-            // Welcome email (requires PHP mail / SMTP to be configured)
-            $to      = $email;
-            $subject = 'Welcome to Tech Dragons Events';
-            $body    = "Hi {$name},\n\nYour account has been created successfully.\n\nEmail: {$email}\n\nYou can now sign in at: http://{$_SERVER['HTTP_HOST']}/login.php\n\n— Tech Dragons Events";
-            $headers = "From: noreply@techdragonevents.com\r\nContent-Type: text/plain; charset=UTF-8";
-            @mail($to, $subject, $body, $headers);
+            // Welcome email via Resend
+            require_once __DIR__ . '/../src/Mailer.php';
+            \App\Mailer::send(
+                $email,
+                'Welcome to Tech Dragons Events',
+                "Hi {$name},\n\nYour account has been created successfully.\n\nEmail: {$email}\n\nSign in at: http://{$_SERVER['HTTP_HOST']}/login.php\n\n— Tech Dragons Events"
+            );
 
             header('Location: login.php?registered=1');
             exit;

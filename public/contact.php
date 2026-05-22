@@ -62,14 +62,20 @@ if (is_file($logFile)) {
 $existing[] = $entry;
 file_put_contents($logFile, json_encode($existing, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
-// Attempt email delivery (works when PHP mail() / sendmail is configured)
+// Send emails via Resend
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../src/Mailer.php';
 
-$contactEmail = defined('CONTACT_EMAIL') ? CONTACT_EMAIL : (getenv('CONTACT_EMAIL') ?: '');
+use App\Mailer;
+
+$contactEmail = getenv('CONTACT_EMAIL') ?: '';
 
 if ($contactEmail !== '') {
-    $subject = "[Tech Dragons] New contact from {$name}";
-    $body = <<<TXT
+    // Notification to the team
+    Mailer::send(
+        $contactEmail,
+        "[Tech Dragons] New contact from {$name}",
+        <<<TXT
 New contact form submission — Tech Dragons Events
 =================================================
 Name         : {$name}
@@ -80,15 +86,14 @@ Timestamp    : {$entry['timestamp']}
 
 Message:
 {$message}
-TXT;
-    $headers  = "From: noreply@techdragonevents.com\r\n";
-    $headers .= "Reply-To: {$email}\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    @mail($contactEmail, $subject, $body, $headers);
+TXT
+    );
 
-    // Auto-reply to sender
-    $replySubject = "We received your message — Tech Dragons Events";
-    $replyBody = <<<TXT
+    // Auto-reply to the sender
+    Mailer::send(
+        $email,
+        "We received your message — Tech Dragons Events",
+        <<<TXT
 Hi {$name},
 
 Thank you for reaching out to Tech Dragons Events.
@@ -96,10 +101,9 @@ Thank you for reaching out to Tech Dragons Events.
 We've received your message and will get back to you within 24 hours.
 
 — The Tech Dragons Events Team
-TXT;
-    $replyHeaders  = "From: noreply@techdragonevents.com\r\n";
-    $replyHeaders .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    @mail($email, $replySubject, $replyBody, $replyHeaders);
+https://techdragonevents.com
+TXT
+    );
 }
 
 echo json_encode(['success' => true, 'message' => 'Message received.']);

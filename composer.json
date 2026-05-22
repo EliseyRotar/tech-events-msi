@@ -1,0 +1,21 @@
+{
+    "name": "eliseyrotar/tech-events-msi",
+    "description": "EEM - Esports Event Manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elisey Rotar"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

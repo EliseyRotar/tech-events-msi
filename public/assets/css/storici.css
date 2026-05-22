@@ -1,0 +1,123 @@
+/* ---------------- RESET ---------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------------- BODY ---------------- */
+body {
+    background: #0b0d12;
+    color: #eaeaf0;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+    padding: 40px;
+}
+
+/* ---------------- TITOLO (se lo aggiungi dopo) ---------------- */
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 30px;
+}
+
+/* ---------------- TABELLA ---------------- */
+#tabella {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #141621;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1f2233;
+}
+
+/* HEADER */
+#tabella th {
+    background: #1b1e2c;
+    color: #7b5cff;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+    padding: 18px;
+    text-align: left;
+    border-bottom: 1px solid #2a2e45;
+}
+
+/* CELLE */
+#tabella td {
+    padding: 16px 18px;
+    border-bottom: 1px solid #1f2233;
+    color: #eaeaf0;
+}
+
+/* RIGHE */
+#tabella tr {
+    transition: 0.3s;
+}
+
+/* HOVER */
+#tabella tr:hover {
+    background: #1b1e2c;
+    transform: scale(1.01);
+}
+
+/* ALTERNANZA */
+#tabella tr:nth-child(even) {
+    background-color: #10121a;
+}
+
+/* ---------------- BOTTONE ---------------- */
+#start {
+    margin-top: 30px;
+    padding: 16px 45px;
+    border-radius: 50px;
+    border: none;
+    background: #7b5cff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#start:hover {
+    transform: scale(1.08);
+    background: #9177ff;
+}
+
+#start:disabled {
+    background: #2a2e45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ---------------- SCROLL BAR (bonus figo) ---------------- */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0b0d12;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #7b5cff;
+    border-radius: 10px;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    #tabella th,
+    #tabella td {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    #start {
+        width: 100%;
+        text-align: center;
+    }
+}

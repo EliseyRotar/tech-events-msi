@@ -311,32 +311,52 @@
     });
   }
 
-  /* ── Contact Form Submit Animation ─────────────────────── */
-  const contactForm    = document.getElementById('contact-form');
-  const formSuccess    = document.getElementById('form-success');
+  /* ── Contact Form Submit ────────────────────────────────── */
+  const contactForm = document.getElementById('contact-form');
+  const formSuccess = document.getElementById('form-success');
 
   if (contactForm && formSuccess) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = contactForm.querySelector('button[type="submit"]');
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-      }
+      const sendLabel    = btn?.dataset.sendLabel    || 'Send Message';
+      const sendingLabel = btn?.dataset.sendingLabel || 'Sending…';
 
-      // Simulate async send
-      setTimeout(() => {
-        gsap.to(contactForm, {
-          opacity: 0, y: -20, duration: 0.4, ease: 'power2.in',
-          onComplete: () => {
-            contactForm.style.display = 'none';
-            formSuccess.classList.add('visible');
-            gsap.from(formSuccess, {
-              opacity: 0, y: 20, duration: 0.6, ease: 'power3.out',
-            });
-          },
+      if (btn) { btn.disabled = true; btn.textContent = sendingLabel; }
+
+      const data = {
+        name:         contactForm.querySelector('[name="name"]')?.value    || '',
+        email:        contactForm.querySelector('[name="email"]')?.value   || '',
+        organization: contactForm.querySelector('[name="organization"]')?.value || '',
+        role:         contactForm.querySelector('[name="role"]')?.value    || '',
+        message:      contactForm.querySelector('[name="message"]')?.value || '',
+      };
+
+      try {
+        const res = await fetch('/contact.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
         });
-      }, 800);
+        const json = await res.json();
+
+        if (json.success) {
+          gsap.to(contactForm, {
+            opacity: 0, y: -20, duration: 0.4, ease: 'power2.in',
+            onComplete: () => {
+              contactForm.style.display = 'none';
+              formSuccess.classList.add('visible');
+              gsap.from(formSuccess, { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' });
+            },
+          });
+        } else {
+          if (btn) { btn.disabled = false; btn.textContent = sendLabel; }
+          alert(json.message || 'Something went wrong. Please try again.');
+        }
+      } catch {
+        if (btn) { btn.disabled = false; btn.textContent = sendLabel; }
+        alert('Network error. Please try again.');
+      }
     });
   }
 

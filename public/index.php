@@ -1,8 +1,9 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../src/helpers.php';
 
-$pageTitle = "Tech Events — Professional Esports Management";
+$pageTitle = t('title_home');
 require_once __DIR__ . '/../templates/layout/header.php';
 ?>
 
@@ -18,7 +19,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <div class="noise-overlay"></div>
         </div>
         <div class="hero-content">
-            <div class="hero-badge">Esports Infrastructure</div>
+            <div class="hero-badge"><?= t('hero_badge') ?></div>
             <h1>The Professional Standard for <br><span class="gradient-text">Event Management</span></h1>
             <p>Deploy a comprehensive platform for tournament organization, team coordination, and digital ticketing in minutes.</p>
             <div class="hero-actions">
@@ -89,7 +90,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
         <div class="cta-content" style="max-width: 800px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); padding: 60px; border-radius: 12px;">
             <p class="section-label">Next Steps</p>
             <h2 style="margin-bottom: 24px;">Ready to Elevate Your Competition?</h2>
-            <p style="color: var(--text-muted); margin-bottom: 40px;">Join the elite organizations using Tech Events to power their esports ecosystems.</p>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">Join the elite organizations using Tech Dragons Events to power their esports ecosystems.</p>
             <div class="hero-actions">
                 <a href="/register.php" class="btn-primary">Create Organization Account</a>
                 <a href="/#tournaments" class="btn-secondary">Request Demo</a>

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Tech Events</title>
+    <title>Login — Tech Dragons Events</title>
     <link rel="stylesheet" href="/assets/css/php-pages.css">
 </head>
 <body>
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST">
         <p class="section-label" style="text-align: left; margin-bottom: 8px;">Portal Access</p>
-        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">Sign in to Tech Events</h1>
+        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">Sign in to Tech Dragons Events</h1>
 
         <p>Email Address</p>
         <input type="text" name="emailTxt" placeholder="name@organization.com" required>

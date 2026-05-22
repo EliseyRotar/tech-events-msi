@@ -1,69 +1,99 @@
 <?php
-
 require_once '../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['emailTxt'] ?? '');
+    $email    = trim($_POST['emailTxt'] ?? '');
     $password = trim($_POST['pswdTxt'] ?? '');
 
-    $sql = "SELECT idUtente, pswd, isAdmin FROM utenti WHERE email = :e";
-    $stm = $pdo->prepare($sql);
+    $stm = $pdo->prepare("SELECT idUtente, pswd, isAdmin FROM utenti WHERE email = :e");
     $stm->bindParam(':e', $email);
     $stm->execute();
-
     $credentials = $stm->fetch(PDO::FETCH_ASSOC);
 
     if ($credentials && password_verify($password, $credentials['pswd'])) {
         session_start();
-        $_SESSION["email"] = $email;
-        $_SESSION["id"] = $credentials['idUtente'];
-        $_SESSION["accept"] = "ACCEPT";
-        $_SESSION["admin"] = $credentials['isAdmin'];
-        header("Location: dashboard.php");
+        $_SESSION['email']  = $email;
+        $_SESSION['id']     = $credentials['idUtente'];
+        $_SESSION['accept'] = 'ACCEPT';
+        $_SESSION['admin']  = $credentials['isAdmin'];
+        header('Location: dashboard.php');
         exit;
     } else {
-        $error = "Email o password errate.";
+        $error = 'Invalid email or password.';
     }
 }
+
+$registered = isset($_GET['registered']);
 ?>
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Tech Dragons Events</title>
+    <title>Sign In — Tech Dragons Events</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/php-pages.css">
 </head>
-<body>
-    <nav class="glass-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">Tech<span>Events</span></a>
-            <div class="links">
-                <a href="/">Overview</a>
-                <a href="/register.php" class="btn-primary-outline">Register</a>
-            </div>
+<body class="page-form">
+
+<!-- Overlay -->
+<div id="page-overlay" aria-hidden="true"><span class="overlay-logo">TD</span></div>
+<div id="cursor-dot"  aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<!-- Nav -->
+<nav class="glass-nav scrolled" id="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
+        <div class="links">
+            <a href="/">Overview</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Create Account</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <form method="POST">
-        <p class="section-label" style="text-align: left; margin-bottom: 8px;">Portal Access</p>
-        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">Sign in to Tech Dragons Events</h1>
+<!-- Form page -->
+<div class="form-page">
+    <div class="form-card">
+        <span class="section-label">Portal Access</span>
+        <h1>Sign In</h1>
+        <p class="lead">Welcome back. Enter your credentials to continue.</p>
 
-        <p>Email Address</p>
-        <input type="text" name="emailTxt" placeholder="name@organization.com" required>
-
-        <p>Security Key</p>
-        <input type="password" name="pswdTxt" placeholder="••••••••" required>
-
-        <br>
-        <button type="submit">Authorize Session</button>
-        <br><br>
-        
-        <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center;"><?php echo $error; ?></p>
+        <?php if ($registered): ?>
+            <div class="success-msg">Account created successfully — sign in to continue.</div>
         <?php endif; ?>
 
-        <p style="text-align: center; margin-top: 24px;">New organization? <a href="register.php" style="font-weight: 700;">Create account</a></p>
-    </form>
+        <?php if (isset($error)): ?>
+            <div class="error-msg"><?= htmlspecialchars($error, ENT_QUOTES) ?></div>
+        <?php endif; ?>
+
+        <form method="POST" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="emailTxt">Email Address</label>
+                <input class="form-input" type="email" id="emailTxt" name="emailTxt"
+                       placeholder="name@organization.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="pswdTxt">Password</label>
+                <input class="form-input" type="password" id="pswdTxt" name="pswdTxt"
+                       placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-primary btn-submit">Authorize Session</button>
+        </form>
+
+        <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--text-secondary);">
+            New here?
+            <a href="/register.php" style="color:var(--accent-blue);font-weight:600;">Create an account</a>
+        </p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
 </body>
 </html>

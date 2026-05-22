@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-echo 🚀 Starting Tech Events Setup for Windows...
+echo 🚀 Starting Tech Dragons Events Setup for Windows...
 
 :: Check for Docker
 docker --version >nul 2>&1
@@ -23,7 +23,7 @@ echo 🐳 Spinning up Docker containers...
 docker compose up -d
 
 echo.
-echo ✅ Tech Events is now running!
+echo ✅ Tech Dragons Events is now running!
 echo 🌐 Access the application at: http://localhost:8080
 echo 🛠️ To stop the app, run: docker compose down
 echo.

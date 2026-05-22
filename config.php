@@ -9,14 +9,13 @@ use App\Auth;
 EnvLoader::load(__DIR__ . '/.env');
 
 $host = getenv('DB_HOST') ?: 'localhost';
-$dbname = getenv('DB_NAME') ?: 'tech_events';
+$dbname = getenv('DB_NAME') ?: 'tech_dragons_events';
 $user = getenv('DB_USER') ?: 'root';
 $pass = getenv('DB_PASS') ?: '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->exec('SET autocommit = 0');
 } catch (PDOException $e) {
     die('Errore di connessione: ' . $e->getMessage());
 }

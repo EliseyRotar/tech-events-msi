@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Archive — Tech Events</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/storici.css">
+</head>
+<body>
+
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Tech<span>Events</span></a>
+            <div class="links">
+                <a href="/">Overview</a>
+                <a href="/#features">Capabilities</a>
+                <a href="/login.php" class="btn-primary-outline">Admin Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-small" style="padding-top: 140px; text-align: center;">
+        <p class="section-label">Archive</p>
+        <h1 style="font-family: var(--font-display); font-size: 48px; margin-bottom: 16px;">Tournament History</h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 60px;">Complete record of sanctioned competitions, verified results, and athlete performance metrics.</p>
+    </section>
+
+    <section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 120px;">
+        <div class="filter-bar" style="display: flex; gap: 16px; margin-bottom: 40px; background: var(--surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+            <input type="text" placeholder="Search archive..." id="search-input" style="flex: 1; background: transparent; border: none; color: #fff; font-size: 14px; outline: none;">
+            <select id="filter-game" style="background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 14px;">
+                <option value="">All Disciplines</option>
+                <option value="cs2">Counter-Strike 2</option>
+                <option value="dota">Dota 2</option>
+                <option value="valorant">Valorant</option>
+            </select>
+        </div>
+
+        <div class="cards-grid" id="cards-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+            <a href="cs2.html" class="card-link" data-game="cs2" style="text-decoration: none;">
+                <div class="feature">
+                    <span class="feature-icon">🔫</span>
+                    <h3>CS2 Championship</h3>
+                    <p>Verified match data and bracket outcomes for CS2 Tier-1 events.</p>
+                </div>
+            </a>
+            <a href="dota.html" class="card-link" data-game="dota" style="text-decoration: none;">
+                <div class="feature">
+                    <span class="feature-icon">⚔️</span>
+                    <h3>Dota 2 Internationals</h3>
+                    <p>Historical roster and performance tracking for major Dota 2 circuits.</p>
+                </div>
+            </a>
+            <a href="valorant.html" class="card-link" data-game="valorant" style="text-decoration: none;">
+                <div class="feature">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Valorant Challengers</h3>
+                    <p>Regional tournament logs and MVP statistics for the VCT ecosystem.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <footer style="border-top: 1px solid var(--border); padding: 60px 24px; text-align: center;">
+        <span class="footer-logo">Tech Events</span>
+        <p style="color: var(--text-dim);">© 2026 — Advanced Esports Systems</p>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const filterGame = document.getElementById('filter-game');
+        const cards = document.querySelectorAll('.card-link');
+
+        function filterCards() {
+            const query = searchInput.value.toLowerCase();
+            const game = filterGame.value;
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const cardGame = card.dataset.game;
+                const matchSearch = !query || title.includes(query);
+                const matchGame = !game || cardGame === game;
+                card.style.display = (matchSearch && matchGame) ? 'block' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', filterCards);
+        filterGame.addEventListener('change', filterCards);
+    </script>
+
+</body>
+</html>

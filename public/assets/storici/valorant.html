@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant Events — EEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-logo">EEM</a>
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="storico.html">Storico</a>
+            <a href="/login.php" class="btn-nav">Accedi</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div>
+            <p class="section-label">Valorant — via VLR.gg</p>
+            <h1>Valorant Events</h1>
+            <p>Tutti gli eventi completati nel circuito professionistico</p>
+        </div>
+        <a href="storico.html" class="back-link">← Torna allo Storico</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="tabella">
+            <thead>
+                <tr>
+                    <th>Nome Evento</th>
+                    <th>Prize Pool</th>
+                    <th>Regione</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="load-area">
+        <button id="start">Carica Eventi Valorant</button>
+    </div>
+
+    <footer>
+        <span class="footer-logo">EEM</span>
+        <p>© 2026 — Tech Dragons Events</p>
+    </footer>
+
+    <script>
+        const tabella = document.getElementById('tabella').querySelector('tbody');
+        const btn = document.getElementById('start');
+        const loading = document.getElementById('loading');
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btn.textContent = 'Caricamento...';
+            loading.style.display = 'block';
+            try {
+                const obj = await API();
+                const eventi = obj.data;
+                eventi.forEach(element => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${element.title ?? 'N/A'}</td>
+                        <td>${element.prize ?? 'N/A'}</td>
+                        <td>${element.region ?? 'N/A'}</td>
+                    `;
+                    tabella.appendChild(tr);
+                });
+                btn.textContent = `${eventi.length} eventi caricati`;
+            } catch (e) {
+                btn.textContent = 'Errore nel caricamento';
+                btn.disabled = false;
+                console.error(e);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        async function API() {
+            const res = await fetch('https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed');
+            return res.json();
+        }
+    </script>
+
+</body>
+</html>

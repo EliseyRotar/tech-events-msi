@@ -1,8 +1,11 @@
 <?php
 require_once '../config.php';
 require_once '../src/helpers.php';
+require_once '../src/Mailer.php';
 
-// Lang switch handler (mirrors templates/layout/header.php)
+use App\Mailer;
+
+// Lang switch
 if (isset($_GET['lang'])) {
     $supported = ['it', 'en'];
     $lang = in_array($_GET['lang'], $supported, true) ? $_GET['lang'] : 'it';
@@ -12,7 +15,8 @@ if (isset($_GET['lang'])) {
 }
 
 $pageTitle = t('register_title') . ' — Tech Dragons Events';
-$errors = [];
+$errors    = [];
+$pending   = false; // show "check your email" state
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email   = trim($_POST['emailTxt'] ?? '');
@@ -26,13 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($name === '' || $surname === '' || $email === '' || $codFisc === '' || $date === '' || $pswd === '') {
         $errors[] = t('err_missing_fields');
     }
-
-    // Validate email
     if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = t('err_invalid_email');
     }
-
-    // Validate date
     if ($date !== '' && empty($errors)) {
         $dob = DateTime::createFromFormat('Y-m-d', $date);
         if (!$dob || $dob->format('Y-m-d') !== $date) {
@@ -46,8 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-
-    // Validate password length
     if ($pswd !== '' && strlen($pswd) < 8) {
         $errors[] = t('err_pswd_length');
     }
@@ -55,42 +53,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check duplicate email
     if (empty($errors) && $email !== '') {
         $check = $pdo->prepare("SELECT idUtente FROM utenti WHERE email = :e");
-        $check->bindParam(':e', $email);
-        $check->execute();
+        $check->execute([':e' => $email]);
         if ($check->fetch()) {
             $errors[] = t('err_email_taken');
         }
     }
 
-    // Insert
+    // Insert with unverified status
     if (empty($errors)) {
         try {
+            $token     = bin2hex(random_bytes(32)); // 64-char hex token
+            $expiresAt = date('Y-m-d H:i:s', time() + 86400); // 24 hours
+            $hash      = password_hash($pswd, PASSWORD_ARGON2ID);
+
             $pdo->beginTransaction();
-            $hash = password_hash($pswd, PASSWORD_ARGON2ID);
-            $stm  = $pdo->prepare(
-                "INSERT INTO utenti (codice_fiscale, nome, cognome, dataNascita, isAdmin, email, pswd)
-                 VALUES (:c, :n, :s, :d, 0, :e, :h)"
+            $stm = $pdo->prepare(
+                "INSERT INTO utenti (codice_fiscale, nome, cognome, dataNascita, isAdmin, email, pswd,
+                                    email_verified, verification_token, token_expires_at)
+                 VALUES (:c, :n, :s, :d, 0, :e, :h, 0, :tok, :exp)"
             );
-            $stm->bindParam(':c', $codFisc);
-            $stm->bindParam(':n', $name);
-            $stm->bindParam(':s', $surname);
-            $stm->bindParam(':d', $date);
-            $stm->bindParam(':e', $email);
-            $stm->bindParam(':h', $hash);
-            $stm->execute();
+            $stm->execute([
+                ':c'   => $codFisc,
+                ':n'   => $name,
+                ':s'   => $surname,
+                ':d'   => $date,
+                ':e'   => $email,
+                ':h'   => $hash,
+                ':tok' => $token,
+                ':exp' => $expiresAt,
+            ]);
             $pdo->commit();
 
-            // Welcome email via Resend
-            require_once __DIR__ . '/../src/Mailer.php';
-            \App\Mailer::send(
-                $email,
-                'Welcome to Tech Dragons Events',
-                "Hi {$name},\n\nYour account has been created successfully.\n\nEmail: {$email}\n\nSign in at: http://{$_SERVER['HTTP_HOST']}/login.php\n\n— Tech Dragons Events"
-            );
+            // Build verification URL
+            $scheme  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $host    = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $verifyUrl = "{$scheme}://{$host}/verify.php?token={$token}";
 
-            header('Location: login.php?registered=1');
-            exit;
-        } catch (PDOException $e) {
+            // Send verification email
+            $subject = 'Verify your Tech Dragons Events account';
+            $text    = <<<TXT
+Hi {$name},
+
+Welcome to Tech Dragons Events!
+
+Click the link below to verify your email address and activate your account:
+
+{$verifyUrl}
+
+This link expires in 24 hours.
+
+If you didn't create this account, you can safely ignore this email.
+
+— Tech Dragons Events
+TXT;
+            $html = <<<HTML
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#0a0a0a;font-family:Inter,sans-serif;color:#ffffff;">
+<div style="max-width:560px;margin:40px auto;padding:40px;background:#111111;border:1px solid rgba(255,255,255,0.08);border-radius:16px;">
+  <div style="text-align:center;margin-bottom:32px;">
+    <span style="font-size:22px;font-weight:700;letter-spacing:-0.5px;">Tech<span style="color:#00d4ff;">Dragons</span></span>
+  </div>
+  <h1 style="font-size:24px;font-weight:700;margin:0 0 12px;letter-spacing:-0.5px;">Verify your email</h1>
+  <p style="color:#888888;line-height:1.7;margin:0 0 32px;">
+    Hi {$name}, welcome to Tech Dragons Events. Click the button below to verify your email address and activate your account.
+  </p>
+  <div style="text-align:center;margin-bottom:32px;">
+    <a href="{$verifyUrl}" style="display:inline-block;padding:14px 32px;background:#00d4ff;color:#000000;font-weight:700;font-size:15px;border-radius:10px;text-decoration:none;letter-spacing:-0.2px;">
+      Verify Email Address
+    </a>
+  </div>
+  <p style="color:#555555;font-size:13px;line-height:1.6;margin:0;">
+    This link expires in <strong style="color:#888888;">24 hours</strong>. If you didn't create this account, ignore this email.<br><br>
+    Or copy this URL into your browser:<br>
+    <span style="color:#00d4ff;word-break:break-all;">{$verifyUrl}</span>
+  </p>
+</div>
+</body>
+</html>
+HTML;
+
+            Mailer::send($email, $subject, $text, $html);
+
+            $pending = true; // Show "check your email" screen
+
+        } catch (\PDOException $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
             $errors[] = t('err_registration');
         }
@@ -131,6 +179,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </nav>
 
 <div class="form-page">
+<?php if ($pending): ?>
+    <!-- ── Email sent confirmation state ── -->
+    <div class="form-card" style="text-align:center;">
+        <div style="width:72px;height:72px;border-radius:50%;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="28" height="20" rx="3"/>
+                <path d="M2 9l14 9 14-9"/>
+            </svg>
+        </div>
+        <span class="section-label">One more step</span>
+        <h1 style="font-size:26px;margin-bottom:12px;">Check your email</h1>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:32px;">
+            We sent a verification link to<br>
+            <strong style="color:var(--text-primary);"><?= htmlspecialchars($_POST['emailTxt'] ?? '', ENT_QUOTES) ?></strong><br><br>
+            Click the button in the email to activate your account. The link expires in <strong>24 hours</strong>.
+        </p>
+
+        <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:16px;margin-bottom:24px;font-size:13px;color:var(--text-secondary);text-align:left;line-height:1.7;">
+            <strong style="color:var(--text-primary);">Didn't receive it?</strong><br>
+            Check your spam folder. If it's not there after a few minutes,
+            <a href="/resend-verification.php?email=<?= urlencode($_POST['emailTxt'] ?? '') ?>" style="color:var(--accent-blue);font-weight:600;">resend the verification email</a>.
+        </div>
+
+        <a href="/login.php" class="btn-secondary" style="display:inline-flex;padding:11px 28px;">Back to Sign In</a>
+    </div>
+
+<?php else: ?>
+    <!-- ── Registration form ── -->
     <div class="form-card form-card-wide">
         <span class="section-label"><?= t('register_label') ?></span>
         <h1><?= t('register_title') ?></h1>
@@ -192,7 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input class="form-input" type="password" id="pswdTxt" name="pswdTxt"
                            placeholder="••••••••" required autocomplete="new-password"
                            style="margin-bottom:8px;">
-                    <!-- Password strength meter -->
                     <div class="pswd-meter" id="pswd-meter" aria-hidden="true">
                         <div class="pswd-meter-bar" id="bar-1"></div>
                         <div class="pswd-meter-bar" id="bar-2"></div>
@@ -218,6 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="/login.php" style="color:var(--accent-blue);font-weight:600;"><?= t('register_signin_link') ?></a>
         </p>
     </div>
+<?php endif; ?>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -225,63 +301,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
 (function () {
     const input  = document.getElementById('pswdTxt');
-    const bars   = [
-        document.getElementById('bar-1'),
-        document.getElementById('bar-2'),
-        document.getElementById('bar-3'),
-        document.getElementById('bar-4'),
-    ];
+    if (!input) return;
+    const bars   = [1,2,3,4].map(i => document.getElementById('bar-'+i));
     const label  = document.getElementById('pswd-label');
     const reqLen     = document.getElementById('req-len');
     const reqUpper   = document.getElementById('req-upper');
     const reqLower   = document.getElementById('req-lower');
     const reqNumber  = document.getElementById('req-number');
     const reqSpecial = document.getElementById('req-special');
-
     const levels = [
-        { cls: 'active-weak',   text: 'Weak' },
-        { cls: 'active-fair',   text: 'Fair' },
-        { cls: 'active-good',   text: 'Good' },
-        { cls: 'active-strong', text: 'Strong' },
+        { cls: 'active-weak',   text: 'Weak',   col: '#ff3b30' },
+        { cls: 'active-fair',   text: 'Fair',   col: '#ff9500' },
+        { cls: 'active-good',   text: 'Good',   col: '#34c759' },
+        { cls: 'active-strong', text: 'Strong', col: 'var(--accent-blue)' },
     ];
-
-    function check(v) {
-        return {
-            len:     v.length >= 8,
-            upper:   /[A-Z]/.test(v),
-            lower:   /[a-z]/.test(v),
-            number:  /[0-9]/.test(v),
-            special: /[^A-Za-z0-9]/.test(v),
-        };
+    function score(v) {
+        return [v.length >= 8, /[A-Z]/.test(v), /[a-z]/.test(v), /[0-9]/.test(v), /[^A-Za-z0-9]/.test(v)].filter(Boolean).length;
     }
-
-    function score(r) {
-        return [r.len, r.upper, r.lower, r.number, r.special]
-            .filter(Boolean).length;
-    }
-
     input.addEventListener('input', function () {
         const v = this.value;
-        const r = check(v);
-        const s = v.length === 0 ? 0 : Math.min(4, Math.max(1, Math.floor(score(r) * 4 / 5) + (r.len ? 0 : -1) + 1));
-
-        // Update requirements
+        const r = { len: v.length >= 8, upper: /[A-Z]/.test(v), lower: /[a-z]/.test(v), number: /[0-9]/.test(v), special: /[^A-Za-z0-9]/.test(v) };
+        const s = v.length === 0 ? 0 : Math.min(4, Math.max(1, Math.round(score(v) * 4 / 5)));
         reqLen.classList.toggle('met', r.len);
         reqUpper.classList.toggle('met', r.upper);
         reqLower.classList.toggle('met', r.lower);
         reqNumber.classList.toggle('met', r.number);
         reqSpecial.classList.toggle('met', r.special);
-
-        // Update bars
-        bars.forEach((b, i) => {
-            b.className = 'pswd-meter-bar';
-            if (v.length > 0 && i < s) {
-                b.classList.add(levels[s - 1].cls);
-            }
-        });
-
-        label.textContent = v.length === 0 ? '' : levels[s - 1].text;
-        label.style.color = v.length === 0 ? '' : ['#ff3b30', '#ff9500', '#34c759', 'var(--accent-blue)'][s - 1];
+        bars.forEach((b, i) => { b.className = 'pswd-meter-bar'; if (v.length > 0 && i < s) b.classList.add(levels[s-1].cls); });
+        label.textContent = v.length === 0 ? '' : levels[s-1].text;
+        label.style.color = v.length === 0 ? '' : levels[s-1].col;
     });
 })();
 </script>

@@ -8,19 +8,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['emailTxt'] ?? '');
     $password = trim($_POST['pswdTxt'] ?? '');
 
-    $stm = $pdo->prepare("SELECT idUtente, pswd, isAdmin FROM utenti WHERE email = :e");
+    $stm = $pdo->prepare("SELECT idUtente, pswd, isAdmin, email_verified FROM utenti WHERE email = :e");
     $stm->bindParam(':e', $email);
     $stm->execute();
     $credentials = $stm->fetch(PDO::FETCH_ASSOC);
 
     if ($credentials && password_verify($password, $credentials['pswd'])) {
-        session_start();
-        $_SESSION['email']  = $email;
-        $_SESSION['id']     = $credentials['idUtente'];
-        $_SESSION['accept'] = 'ACCEPT';
-        $_SESSION['admin']  = $credentials['isAdmin'];
-        header('Location: dashboard.php');
-        exit;
+        if (!(int)($credentials['email_verified'] ?? 1)) {
+            // Account exists but email not verified yet
+            $unverifiedEmail = $email;
+        } else {
+            session_start();
+            $_SESSION['email']  = $email;
+            $_SESSION['id']     = $credentials['idUtente'];
+            $_SESSION['accept'] = 'ACCEPT';
+            $_SESSION['admin']  = $credentials['isAdmin'];
+            header('Location: dashboard.php');
+            exit;
+        }
     } else {
         $error = 'Invalid email or password.';
     }
@@ -72,7 +77,14 @@ $registered = isset($_GET['registered']);
 
         <?php if ($registered): ?>
             <div class="error-msg" style="background:rgba(0,232,120,0.08);border-color:rgba(0,232,120,0.3);color:var(--success);">
-                Account created successfully — sign in to continue.
+                Account created — check your email and click the verification link before signing in.
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($unverifiedEmail)): ?>
+            <div class="error-msg" style="background:rgba(255,149,0,0.08);border-color:rgba(255,149,0,0.3);color:#ff9500;">
+                <strong>Email not verified.</strong> Check your inbox for the verification link, or
+                <a href="/resend-verification.php?email=<?= urlencode($unverifiedEmail) ?>" style="color:#ff9500;text-decoration:underline;font-weight:600;">resend it</a>.
             </div>
         <?php endif; ?>
 

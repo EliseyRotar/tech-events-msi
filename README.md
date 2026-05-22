@@ -1,115 +1,187 @@
 <div align="center">
 
-# 🎮 Tech Events - Enterprise Esports Management
+# Tech Dragons Events
 
-### The Infrastructure for Professional Competition
-*A high-performance, secure, and architecturally sound platform for managing global esports events, tournaments, and professional organizations.*
+**Enterprise-grade esports event management platform**
 
-[![PHP Version](https://img.shields.io/badge/php-%5E8.2-777bb4.svg?style=flat-square&logo=php)](https://www.php.net/)
-[![MariaDB](https://img.shields.io/badge/database-MariaDB-003545.svg?style=flat-square&logo=mariadb)](https://mariadb.org/)
-[![Docker](https://img.shields.io/badge/docker-ready-2496ed.svg?style=flat-square&logo=docker)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-8.2-777bb4?style=flat-square&logo=php&logoColor=white)](https://php.net)
+[![MariaDB](https://img.shields.io/badge/MariaDB-10.6-003545?style=flat-square&logo=mariadb&logoColor=white)](https://mariadb.org)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ed?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
 
-[Architecture](#-architecture) • [Features](#-core-capabilities) • [Deployment](#-deployment-guide) • [Security](#-security-standards) • [Support](#-support)
+[Overview](#overview) · [Architecture](#architecture) · [Features](#features) · [Quickstart](#quickstart) · [Security](#security) · [Contributing](#contributing)
 
 </div>
 
 ---
 
-## 🏗️ Architecture
+## Overview
 
-Tech Events is built on a **Modern PHP Architecture** that prioritizes security through isolation.
+Tech Dragons Events is a full-stack web application for running professional esports events end-to-end — from event creation and tournament scheduling to team registration and roster management. Built on PHP 8.2 with MariaDB and shipped as a single `docker compose up` command.
 
-```text
+---
+
+## Architecture
+
+The project follows a **public-root isolation** pattern: only the `public/` directory is exposed to the web server. Application logic, credentials, and templates live outside the web root.
+
+```
 tech-events-msi/
-├── 📂 public/           # Entry Points (Only folder exposed to web)
-│   ├── 📂 assets/       # Compiled CSS & Static Data
-│   └── 📄 index.php     # Main entry
-├── 📂 src/              # Core Business Logic (PSR-4)
-│   ├── 📄 Auth.php      # RBAC & Session Security
-│   └── 📄 EnvLoader.php # Secure Credential Management
-├── 📂 templates/        # Reusable UI Components
-├── 📂 database/         # Versioned SQL Schema
-└── 📄 config.php        # Application Bootstrap
+├── public/                 # Web root (only this is exposed)
+│   ├── assets/             # CSS, images, static HTML archives
+│   ├── index.php           # Homepage
+│   ├── dashboard.php       # Event management portal
+│   ├── login.php / register.php
+│   ├── createEvent.php     # Admin: create events
+│   ├── addTournament.php   # Admin: attach tournaments to events
+│   ├── addGame.php         # Admin: register game titles
+│   ├── addTeam.php         # Register a new organization
+│   ├── addMember.php       # Add players to a roster
+│   ├── signTeam.php        # Enter a team into a tournament
+│   └── viewTeam.php        # View registered rosters
+├── src/
+│   ├── Auth.php            # RBAC — session, login, admin guards
+│   ├── EnvLoader.php       # Reads .env without exposing values to logs
+│   ├── helpers.php         # runInTransaction(), t() i18n helper
+│   └── Controller/         # (future expansion)
+├── templates/
+│   └── layout/
+│       ├── header.php      # Global nav, lang switcher, <head>
+│       └── footer.php      # Global footer
+├── lang/
+│   ├── it.php              # Italian translation strings
+│   └── en.php              # English translation strings
+├── database/
+│   ├── 01_tables.sql       # Schema
+│   └── 02_elements.sql     # Seed data
+└── config.php              # PDO bootstrap, env loading
 ```
 
 ---
 
-## ✨ Core Capabilities
+## Features
 
-### 🗓️ Event Life-Cycle Management
-- **Centralized Command**: Admin portal for creating LAN/Online events with capacity tracking.
-- **Dynamic Scheduling**: Manage start/end timestamps with localized time-zone support.
-- **Location Analytics**: Track events by city and country for global circuit planning.
+### Event Management
+- Create LAN and online events with date range, location, and capacity
+- Admin-only creation and tournament assignment
+- Dashboard with real-time event listing and tournament drill-down
 
-### 🏆 Tournament Orchestration
-- **Relational Integrity**: Associate multiple tournaments (CS2, Valorant, Dota 2) with a single master event.
-- **Financial Tracking**: Manage prize pools and sponsorship distributions.
-- **Registration Flow**: Self-service registration for verified professional organizations.
+### Tournament System
+- Multiple tournaments per event, each tied to a specific game title
+- Prize pool tracking
+- Team registration and roster viewing per tournament
 
-### 👥 Professional Organizations (Teams)
-- **Organization Profiles**: Manage team names, rosters, and official sponsors.
-- **Athlete Verification**: Add players to specific organization rosters with unique nicknames.
-- **Role-Based Control**: Separate permissions for Players, Admins, and Organizers.
+### Team & Roster Management
+- Register organizations with sponsor associations
+- Add players to team rosters using unique in-game nicknames
+- Per-team roster management with user-to-member linking
+
+### Internationalisation (i18n)
+- Language switcher (Italian / English) in the global nav
+- Cookie-based language persistence (1-year expiry)
+- Translation files under `lang/` — add new languages by dropping in a file
+
+### Security
+- All writes wrapped in `runInTransaction()` with `\Throwable` catch — no unclosed transactions
+- 100% PDO prepared statements — zero string interpolation in SQL
+- Argon2ID password hashing
+- `htmlspecialchars()` on every user-facing output
+- Auth guards on every authenticated route (`requireLogin()` / `requireAdmin()`)
+- Open-redirect protection on the lang-switch handler
+- `.env` and `src/` outside the web root
 
 ---
 
-## 🚀 Deployment Guide
+## Quickstart
 
-### 🐳 The One-Click Solution (Recommended)
-The project is fully containerized. To deploy the entire stack including the database and web server:
+### Docker (recommended)
 
-**Arch Linux / Linux:**
+**Linux / Arch Linux:**
 ```bash
 ./start_arch.sh
 ```
 
 **Windows 10/11:**
-```powershell
-./start_windows.bat
+```bat
+start_windows.bat
 ```
 
-### 🛠️ Manual Configuration
-1. **Prerequisites**: PHP 8.2+, MariaDB/MySQL.
-2. **Environment**: Copy `.env.example` to `.env` and configure your credentials.
-3. **Database**: Import `database/01_tables.sql` followed by `database/02_elements.sql`.
-4. **Server**: Point your web root to the `/public` directory.
+Both scripts start the full stack (Apache + PHP 8.2 + MariaDB 10.6) and seed the database automatically.
+
+Open **http://localhost:8080** — the app is ready.
+
+### Manual setup
+
+**Requirements:** PHP 8.2+, MariaDB 10.6+, Composer (optional, no runtime dependencies).
+
+```bash
+# 1. Clone
+git clone https://github.com/EliseyRotar/tech-events-msi.git
+cd tech-events-msi
+
+# 2. Configure environment
+cp .env.example .env
+# edit .env with your DB credentials
+
+# 3. Import the schema and seed data
+mariadb -u root -p < database/01_tables.sql
+mariadb -u root -p tech_dragons_events < database/02_elements.sql
+
+# 4. Point your web server document root to ./public
+# Apache example:
+#   DocumentRoot /path/to/tech-events-msi/public
+```
+
+### Default credentials (seeded)
+
+| Email | Password | Role |
+|-------|----------|------|
+| mario@example.com | *(hashed — reset via register.php)* | Admin |
+| luigi@example.com | *(hashed — reset via register.php)* | User |
+
+To create a working admin account, use `register.php` and then set `isAdmin = 1` in the DB.
 
 ---
 
-## 🛡️ Security Standards
+## Security
 
-Tech Events is engineered with a **Security-First** mindset:
-
-- **RBAC (Role-Based Access Control)**: Centralized `Auth` class gates every administrative and user-level action.
-- **Password Integrity**: Uses `Argon2ID` (industry-standard hashing) for all user credentials.
-- **Data Protection**: 100% PDO Prepared Statements to eliminate SQL Injection risks.
-- **Isolation**: The core application logic and `.env` files are stored outside the web root.
-- **Environment Safety**: Custom `EnvLoader` ensures sensitive keys are never exposed in server logs.
-
----
-
-## 🤖 DevOps & CI/CD
-
-Integrated with **GitHub Actions** for automated quality assurance:
-- **Linting**: Automatic validation of `composer.json` and dependency trees.
-- **Quality Checks**: On every push to `main`, the CI suite ensures the application is deployable.
+| Concern | Implementation |
+|---------|----------------|
+| SQL Injection | PDO prepared statements everywhere — no string interpolation in queries |
+| XSS | `htmlspecialchars()` on every `<?=` output; `ENT_QUOTES` on attributes |
+| Auth bypass | `Auth::requireLogin()` / `Auth::requireAdmin()` at the top of every protected page |
+| Password storage | `password_hash(..., PASSWORD_ARGON2ID)` |
+| Open redirect | `?lang=` handler validates URL starts with `/` and not `//` |
+| Transactions | `runInTransaction()` catches `\Throwable` — any exception rolls back |
+| Credential exposure | `.env` is outside the web root; `EnvLoader` reads it without `$_ENV` leakage |
 
 ---
 
-## 🎨 Visual Identity
+## Tech Stack
 
-The platform features a custom-designed **"Liquid Tech"** UI:
-- **Dark Mode**: Optimized for low-eye-strain during high-intensity competition.
-- **Glassmorphism**: Backdrop-blur effects for high-end aesthetic depth.
-- **Bento Grid**: Modular layout for dense data visualization.
-- **Animated Background**: High-performance, GPU-accelerated mesh orbs.
+| Layer | Technology |
+|-------|-----------|
+| Language | PHP 8.2 |
+| Database | MariaDB 10.6 |
+| Web server | Apache 2.4 (inside Docker) |
+| Containerisation | Docker Compose |
+| Frontend | Vanilla CSS (custom design system, no framework) |
+| Auth | Custom RBAC (`src/Auth.php`) |
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide. In short:
+
+1. Fork the repo and create a feature branch
+2. Follow the existing code style (no frameworks, PDO prepared statements, `htmlspecialchars()` on output)
+3. Open a pull request against `main`
 
 ---
 
 <div align="center">
 
-### Developed with Excellence by [Elisey Rotar](https://github.com/EliseyRotar)
-*Turning Esports Ideas into Professional Reality*
+Built by [Elisey Rotar](https://github.com/EliseyRotar)
 
 </div>

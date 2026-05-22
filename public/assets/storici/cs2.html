@@ -152,14 +152,17 @@
         showSkeleton();
         countEl.textContent = '';
         try {
-            const res  = await fetch('https://hltv-api.vercel.app/api/matchesByEvent.json');
+            // Use server-side PHP proxy to avoid CORS restrictions
+            const res  = await fetch('/api/cs2.php');
             if (!res.ok) throw new Error('HTTP ' + res.status);
-            const data = await res.json();
-            allRows = (Array.isArray(data) ? data : []).map(m => ({
-                event: m.event?.name ?? 'N/A',
-                time:  m.time        ?? 'N/A',
-                team1: m.teams?.[0]?.name ?? 'N/A',
-                team2: m.teams?.[1]?.name ?? 'N/A',
+            const json = await res.json();
+            if (!json.success) throw new Error('API error');
+
+            allRows = (json.data ?? []).map(m => ({
+                event: m.event ?? '—',
+                time:  m.time  ?? '—',
+                team1: m.team1 ?? '—',
+                team2: m.team2 ?? '—',
             }));
             tbody.innerHTML = '';
             shown = 0;
@@ -167,7 +170,8 @@
             renderRows();
         } catch (e) {
             tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">
-                Failed to load data. The HLTV API may be temporarily unavailable. <button class="game-load-btn" onclick="location.reload()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
+                Failed to load data. Please try again.
+                <button class="game-load-btn" onclick="load()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
             </td></tr>`;
             countEl.textContent = '';
         } finally {

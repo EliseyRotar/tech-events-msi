@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,20 +21,25 @@
     <div class="nav-container">
         <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
         <div class="links">
-            <a href="/">Overview</a>
-            <a href="/#events">Events</a>
-            <a href="/#contact">Contact</a>
-            <a href="/login.php" class="btn-secondary" style="padding:8px 18px;">Sign In</a>
-            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Register</a>
+            <a href="/" data-i18n="nav_overview">Overview</a>
+            <a href="/#events" data-i18n="nav_events">Events</a>
+            <a href="/#contact" data-i18n="nav_contact">Contact</a>
+            <a href="/login.php" class="btn-secondary" style="padding:8px 18px;" data-i18n="nav_signin">Sign In</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;" data-i18n="nav_register">Register</a>
+        </div>
+        <div class="lang-switch" id="lang-switch-wrap">
+            <a href="#" class="lang-btn" id="btn-it" onclick="setLang('it');return false;">IT</a>
+            <span style="color:var(--border-bright)">/</span>
+            <a href="#" class="lang-btn" id="btn-en" onclick="setLang('en');return false;">EN</a>
         </div>
     </div>
 </nav>
 
 <!-- Hero -->
 <div class="archive-hero">
-    <span class="section-label">Archive</span>
-    <h1>Tournament History</h1>
-    <p>Complete record of sanctioned competitions, verified results, and professional performance data — spanning CS2, Dota 2, and Valorant circuits worldwide.</p>
+    <span class="section-label" data-i18n="archive_label">Archive</span>
+    <h1 data-i18n="archive_title">Tournament History</h1>
+    <p data-i18n="archive_sub">Complete record of sanctioned competitions, verified results, and professional performance data — spanning CS2, Dota 2, and Valorant circuits worldwide.</p>
 </div>
 
 <!-- Search / filter bar -->
@@ -44,9 +49,9 @@
             <circle cx="6.5" cy="6.5" r="5"/>
             <path d="M10.5 10.5l3.5 3.5"/>
         </svg>
-        <input class="archive-search" type="text" id="search-input" placeholder="Search disciplines…" autocomplete="off">
+        <input class="archive-search" type="text" id="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search disciplines…" autocomplete="off">
         <select class="archive-select" id="filter-cat">
-            <option value="">All Games</option>
+            <option value="" data-i18n="filter_all">All Games</option>
             <option value="cs2">Counter-Strike 2</option>
             <option value="dota">Dota 2</option>
             <option value="valorant">Valorant</option>
@@ -57,71 +62,133 @@
 <!-- Cards -->
 <div class="archive-cards" id="cards-container">
     <a href="cs2.html" class="archive-card" data-game="cs2" data-title="cs2 championship counter-strike">
-        <!-- CS2 Logo SVG -->
         <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(245,142,0,0.2);margin-bottom:4px;">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- CS2 flame/star mark: simplified from CS2 visual identity -->
-                <path d="M24 4L28.5 14.5L40 13L32 22L36 34L24 28L12 34L16 22L8 13L19.5 14.5Z" fill="#F58E00" opacity="0.15"/>
                 <path d="M24 7L27.8 15.8L37.5 14.8L30.8 21.5L33.5 31.5L24 26.5L14.5 31.5L17.2 21.5L10.5 14.8L20.2 15.8Z" fill="#F58E00" opacity="0.5"/>
                 <path d="M24 11L26.9 17.6L34.2 17L29.2 22L31.2 29.5L24 25.8L16.8 29.5L18.8 22L13.8 17L21.1 17.6Z" fill="#F58E00"/>
-                <circle cx="24" cy="22" r="4" fill="#0a0a0a"/>
-                <circle cx="24" cy="22" r="2.5" fill="#F58E00"/>
-                <!-- CS2 text indicator -->
+                <circle cx="24" cy="22" r="3.5" fill="#0a0a0a"/>
+                <circle cx="24" cy="22" r="2" fill="#F58E00"/>
                 <text x="24" y="43" text-anchor="middle" fill="#F58E00" font-size="7" font-weight="700" font-family="monospace" letter-spacing="1">CS2</text>
             </svg>
         </div>
         <span class="section-label" style="margin-bottom:8px;">Counter-Strike 2</span>
-        <h3>CS2 Matches</h3>
-        <p>Live match data and bracket outcomes for CS2 Tier-1 events sourced via HLTV. Filter by event, sort by date.</p>
-        <div class="archive-card-arrow">View records →</div>
+        <h3 data-i18n="cs2_title">CS2 Matches</h3>
+        <p data-i18n="cs2_desc">Live match data and bracket outcomes for CS2 Tier-1 events sourced via HLTV. Filter by event, sort by date.</p>
+        <div class="archive-card-arrow" data-i18n="view_records">View records →</div>
     </a>
 
     <a href="dota.html" class="archive-card" data-game="dota" data-title="dota 2 internationals opendota teams">
-        <!-- Dota 2 Logo SVG -->
         <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(196,35,35,0.2);margin-bottom:4px;">
             <svg width="44" height="48" viewBox="0 0 44 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Dota 2 shield / droplet shape -->
-                <path d="M22 3L40 11V26C40 35 31 43 22 46C13 43 4 35 4 26V11L22 3Z" fill="#C42323" opacity="0.15"/>
-                <path d="M22 6L37 13V26C37 33.5 29.5 40.5 22 43.5C14.5 40.5 7 33.5 7 26V13L22 6Z" fill="#C42323" opacity="0.4"/>
+                <path d="M22 6L37 13V26C37 33.5 29.5 40.5 22 43.5C14.5 40.5 7 33.5 7 26V13L22 6Z" fill="#C42323" opacity="0.35"/>
                 <path d="M22 10L34 16.5V26C34 31.5 28.5 37.5 22 40C15.5 37.5 10 31.5 10 26V16.5L22 10Z" fill="#C42323"/>
-                <!-- D letter -->
-                <path d="M16 19H23C27 19 29 21 29 25C29 29 27 31 23 31H16V19Z" fill="#0a0a0a"/>
-                <path d="M18 21H22.5C25 21 27 22.5 27 25C27 27.5 25 29 22.5 29H18V21Z" fill="#C42323" opacity="0.3"/>
-                <text x="22" y="26.5" text-anchor="middle" fill="#0a0a0a" font-size="9" font-weight="900" font-family="sans-serif">D2</text>
+                <text x="22" y="29" text-anchor="middle" fill="#0a0a0a" font-size="11" font-weight="900" font-family="sans-serif">D2</text>
             </svg>
         </div>
         <span class="section-label" style="margin-bottom:8px;">Dota 2</span>
-        <h3>Dota 2 Teams</h3>
-        <p>Professional team roster and performance tracking for major Dota 2 circuits. Win/loss records and ratings.</p>
-        <div class="archive-card-arrow">View records →</div>
+        <h3 data-i18n="dota_title">Dota 2 Teams</h3>
+        <p data-i18n="dota_desc">Professional team roster and performance tracking for major Dota 2 circuits. Win/loss records and ratings.</p>
+        <div class="archive-card-arrow" data-i18n="view_records">View records →</div>
     </a>
 
     <a href="valorant.html" class="archive-card" data-game="valorant" data-title="valorant challengers vct events">
-        <!-- Valorant Logo SVG -->
         <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(255,70,85,0.2);margin-bottom:4px;">
             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Valorant V-diamond mark -->
-                <path d="M22 4L40 16V28L22 40L4 28V16L22 4Z" fill="#FF4655" opacity="0.12"/>
-                <path d="M22 8L36 18V26L22 36L8 26V18L22 8Z" fill="#FF4655" opacity="0.3"/>
-                <!-- Valorant V shape -->
+                <path d="M22 8L36 18V26L22 36L8 26V18L22 8Z" fill="#FF4655" opacity="0.2"/>
                 <path d="M10 14L22 32L34 14H28L22 26L16 14H10Z" fill="#FF4655"/>
-                <!-- Diagonal slash (the valorant mark accent) -->
-                <line x1="19" y1="14" x2="25" y2="14" stroke="#FF4655" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
             </svg>
         </div>
         <span class="section-label" style="margin-bottom:8px;">Valorant</span>
-        <h3>Valorant Events</h3>
-        <p>Regional tournament logs and prize pool history for the VCT ecosystem. Completed events with full metadata.</p>
-        <div class="archive-card-arrow">View records →</div>
+        <h3 data-i18n="val_title">Valorant Events</h3>
+        <p data-i18n="val_desc">Regional tournament logs and prize pool history for the VCT ecosystem. Completed events with full metadata.</p>
+        <div class="archive-card-arrow" data-i18n="view_records">View records →</div>
     </a>
 </div>
 
 <footer style="border-top:1px solid var(--border);padding:60px 24px;text-align:center;">
     <span class="footer-logo">Tech<span style="color:var(--accent-blue)">Dragons</span></span>
-    <p style="color:var(--text-secondary);margin-top:12px;font-size:14px;">© 2026 Tech Dragons Events. All rights reserved.</p>
+    <p style="color:var(--text-secondary);margin-top:12px;font-size:14px;" data-i18n="footer_copy">© 2026 Tech Dragons Events. All rights reserved.</p>
 </footer>
 
 <script>
+// ── Translations ─────────────────────────────────────────
+const i18n = {
+    en: {
+        nav_overview:        'Overview',
+        nav_events:          'Events',
+        nav_contact:         'Contact',
+        nav_signin:          'Sign In',
+        nav_register:        'Register',
+        archive_label:       'Archive',
+        archive_title:       'Tournament History',
+        archive_sub:         'Complete record of sanctioned competitions, verified results, and professional performance data — spanning CS2, Dota 2, and Valorant circuits worldwide.',
+        search_placeholder:  'Search disciplines…',
+        filter_all:          'All Games',
+        cs2_title:           'CS2 Matches',
+        cs2_desc:            'Live match data and bracket outcomes for CS2 Tier-1 events sourced via HLTV. Filter by event, sort by date.',
+        dota_title:          'Dota 2 Teams',
+        dota_desc:           'Professional team roster and performance tracking for major Dota 2 circuits. Win/loss records and ratings.',
+        val_title:           'Valorant Events',
+        val_desc:            'Regional tournament logs and prize pool history for the VCT ecosystem. Completed events with full metadata.',
+        view_records:        'View records →',
+        footer_copy:         '© 2026 Tech Dragons Events. All rights reserved.',
+    },
+    it: {
+        nav_overview:        'Panoramica',
+        nav_events:          'Eventi',
+        nav_contact:         'Contatto',
+        nav_signin:          'Accedi',
+        nav_register:        'Registrati',
+        archive_label:       'Archivio',
+        archive_title:       'Storico Tornei',
+        archive_sub:         'Registro completo delle competizioni sanzionate, risultati verificati e dati di performance professionali — CS2, Dota 2 e circuiti Valorant di tutto il mondo.',
+        search_placeholder:  'Cerca discipline…',
+        filter_all:          'Tutti i giochi',
+        cs2_title:           'Partite CS2',
+        cs2_desc:            'Dati live delle partite e risultati dei bracket per eventi CS2 di primo livello tramite HLTV. Filtra per evento, ordina per data.',
+        dota_title:          'Team Dota 2',
+        dota_desc:           'Roster e monitoraggio delle performance dei team professionistici nei principali circuiti Dota 2. Vittorie, sconfitte e rating.',
+        val_title:           'Eventi Valorant',
+        val_desc:            'Log dei tornei regionali e storico dei montepremi nell\'ecosistema VCT. Eventi completati con metadati completi.',
+        view_records:        'Vedi i record →',
+        footer_copy:         '© 2026 Tech Dragons Events. Tutti i diritti riservati.',
+    },
+};
+
+function getLang() {
+    const m = document.cookie.match(/(?:^|;\s*)lang=([^;]+)/);
+    return (m && m[1] === 'it') ? 'it' : 'en';
+}
+
+function setLang(lang) {
+    document.cookie = `lang=${lang};path=/;max-age=${365*24*3600}`;
+    applyLang(lang);
+}
+
+function applyLang(lang) {
+    const t = i18n[lang] || i18n.en;
+    document.getElementById('html-root').setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) el.textContent = t[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (t[key]) el.placeholder = t[key];
+    });
+    // Also update select first option
+    const opt = document.querySelector('#filter-cat option[data-i18n="filter_all"]');
+    if (opt && t.filter_all) opt.textContent = t.filter_all;
+
+    // Highlight active lang button
+    document.getElementById('btn-it').classList.toggle('lang-active', lang === 'it');
+    document.getElementById('btn-en').classList.toggle('lang-active', lang === 'en');
+}
+
+// Apply on load
+applyLang(getLang());
+
+// ── Search / filter ──────────────────────────────────────
 (function () {
     const search = document.getElementById('search-input');
     const filter = document.getElementById('filter-cat');
@@ -131,10 +198,10 @@
         const q = search.value.toLowerCase().trim();
         const g = filter.value;
         cards.forEach(card => {
-            const title   = card.dataset.title || '';
-            const game    = card.dataset.game  || '';
-            const matchQ  = !q || title.includes(q);
-            const matchG  = !g || game === g;
+            const title  = card.dataset.title || '';
+            const game   = card.dataset.game  || '';
+            const matchQ = !q || title.includes(q);
+            const matchG = !g || game === g;
             card.style.display = (matchQ && matchG) ? '' : 'none';
         });
     }

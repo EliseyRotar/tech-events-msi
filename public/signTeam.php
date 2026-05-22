@@ -1,16 +1,14 @@
-<?php 
+<?php
 require '../config.php';
 \App\Auth::requireLogin();
 
-$idTorneo = $_GET['id'] ?? null;
+$idTorneo = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if (!$idTorneo) {
     header('Location: dashboard.php');
     exit;
 }
 
-// Get tournament info
-$sql = "SELECT nomeTorneo FROM tornei WHERE idTorneo = :id";
-$stm = $pdo->prepare($sql);
+$stm = $pdo->prepare('SELECT nomeTorneo FROM tornei WHERE idTorneo = :id');
 $stm->bindParam(':id', $idTorneo);
 $stm->execute();
 $tournament = $stm->fetch(PDO::FETCH_ASSOC);
@@ -19,60 +17,69 @@ if (!$tournament) {
     exit;
 }
 
-// Get available teams
-$sql = "SELECT idSquadra, nomeSquadra FROM squadre";
-$stm = $pdo->prepare($sql);
+$stm = $pdo->prepare('SELECT idSquadra, nomeSquadra FROM squadre ORDER BY nomeSquadra');
 $stm->execute();
 $teams = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-$pageTitle = "Tournament Registration — Tech Dragons Events";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idS = $_POST['idSTxt'];
-
+    $idS = (int)$_POST['idSTxt'];
     try {
         $pdo->beginTransaction();
-        $sql = "INSERT INTO tornei_squadre (idTorneo, idSquadra) VALUES (:it, :is)";
-        $stm = $pdo->prepare($sql);
+        $stm = $pdo->prepare(
+            "INSERT INTO tornei_squadre (idTorneo, idSquadra) VALUES (:it, :is)"
+        );
         $stm->bindParam(':it', $idTorneo);
         $stm->bindParam(':is', $idS);
-        
-        if ($stm->execute()) {
-            $pdo->commit();
-            header('Location: dashboard.php');
-            exit;
-        }
+        $stm->execute();
+        $pdo->commit();
+        header('Location: dashboard.php');
+        exit;
     } catch (PDOException $e) {
         $pdo->rollBack();
-        $error = "Registration failed: " . $e->getMessage();
+        $error = 'Registration failed: ' . $e->getMessage();
     }
 }
 
+$pageTitle = 'Tournament Entry — Tech Dragons Events';
 require_once __DIR__ . '/../templates/layout/header.php';
 ?>
 
-<div class="container" style="margin-top: 100px; display: flex; align-items: center; justify-content: center; min-height: 70vh;">
-    <form method="POST" style="margin: 0;">
-        <p class="section-label" style="text-align: left; margin-bottom: 8px;">Competition Entry</p>
-        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 8px; font-weight: 800;"><?= htmlspecialchars($tournament['nomeTorneo']) ?></h1>
-        <p style="color: var(--text-muted); margin-bottom: 32px;">Register your organization for the upcoming competition.</p>
+<main class="page-main">
+    <div class="container" style="max-width:540px;">
+        <div class="form-card" style="margin-top:0;">
+            <span class="section-label">Competition Entry</span>
+            <h1 style="font-family:var(--font-display);font-size:26px;font-weight:700;letter-spacing:-0.8px;margin-bottom:8px;">
+                <?= htmlspecialchars($tournament['nomeTorneo'], ENT_QUOTES) ?>
+            </h1>
+            <p class="lead" style="color:var(--text-secondary);font-size:15px;margin-bottom:32px;line-height:1.6;">
+                Register your organisation to compete in this tournament.
+            </p>
 
-        <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <div class="error-msg"><?= htmlspecialchars($error, ENT_QUOTES) ?></div>
+            <?php endif; ?>
 
-        <p>Select Your Team</p>
-        <select name="idSTxt" required>
-            <option value="">Select a registered team</option>
-            <?php foreach($teams as $t): ?>
-                <option value="<?= $t['idSquadra'] ?>"><?= htmlspecialchars($t['nomeSquadra']) ?></option>
-            <?php endforeach; ?>
-        </select>
+            <form method="POST" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="idSTxt">Select Your Team</label>
+                    <select class="form-select form-input" id="idSTxt" name="idSTxt" required>
+                        <option value="">Choose a registered team…</option>
+                        <?php foreach ($teams as $t): ?>
+                            <option value="<?= (int)$t['idSquadra'] ?>">
+                                <?= htmlspecialchars($t['nomeSquadra'], ENT_QUOTES) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <br><br>
-        <button type="submit">Confirm Participation</button>
-        <p style="text-align: center; margin-top: 24px;"><a href="dashboard.php" style="color: var(--text-muted);">Cancel and return</a></p>
-    </form>
-</div>
+                <button type="submit" class="btn-primary btn-submit">Confirm Participation</button>
+            </form>
+
+            <p style="text-align:center;margin-top:24px;font-size:14px;">
+                <a href="/dashboard.php" style="color:var(--text-secondary);">← Cancel and return</a>
+            </p>
+        </div>
+    </div>
+</main>
 
 <?php require_once __DIR__ . '/../templates/layout/footer.php'; ?>

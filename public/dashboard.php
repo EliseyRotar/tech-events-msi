@@ -18,7 +18,7 @@ if ($eventID != "") {
     $tournamentInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$pageTitle = "Event Dashboard — Tech Events";
+$pageTitle = "Event Dashboard — Tech Dragons Events";
 require_once __DIR__ . '/../templates/layout/header.php';
 ?>
 
@@ -52,7 +52,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
                     <tr style="border-top: 1px solid var(--border); transition: var(--transition);">
                         <td style="padding: 20px; font-weight: 600;"><?= htmlspecialchars($row['nome']) ?></td>
                         <td style="padding: 20px; color: var(--text-muted); font-size: 14px;">
-                            <?= $row['dataInizio'] ?> <span style="color: var(--primary);">→</span> <?= $row['dataFine'] ?>
+                            <?= htmlspecialchars($row['dataInizio']) ?> <span style="color: var(--primary);">→</span> <?= htmlspecialchars($row['dataFine']) ?>
                         </td>
                         <td style="padding: 20px; font-size: 14px;"><?= htmlspecialchars($row['citta']) ?>, <?= htmlspecialchars($row['paese']) ?></td>
                         <td style="padding: 20px; font-size: 14px;">
@@ -90,7 +90,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
                             <tr style="border-top: 1px solid var(--border);">
                                 <td style="padding: 20px; font-weight: 600;"><?= htmlspecialchars($row['nomeTorneo']) ?></td>
                                 <td style="padding: 20px; color: var(--accent); font-weight: 800;">$<?= number_format($row['montePremi'], 0) ?></td>
-                                <td style="padding: 20px; font-size: 14px;"><?= $row['giornoSvolgimento'] ?></td>
+                                <td style="padding: 20px; font-size: 14px;"><?= htmlspecialchars($row['giornoSvolgimento']) ?></td>
                                 <td style="padding: 20px; text-align: right;">
                                     <a href="viewTeam.php?id=<?= $row['idTorneo'] ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">Rosters</a>
                                     <a href="signTeam.php?id=<?= $row['idTorneo'] ?>" class="btn-primary" style="padding: 6px 12px; font-size: 12px; margin-left: 8px;">Register Team</a>

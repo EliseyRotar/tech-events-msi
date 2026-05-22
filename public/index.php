@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../src/helpers.php';
 
-$pageTitle = 'Tech Dragons Events — The Infrastructure for Professional Competition';
+$pageTitle = t('title_home');
 
 // Fetch events with their top tournament + game for the events section
 $eventsStm = $pdo->query(
@@ -18,6 +18,12 @@ $eventsStm = $pdo->query(
 $events = $eventsStm ? $eventsStm->fetchAll(PDO::FETCH_ASSOC) : [];
 
 require_once __DIR__ . '/../templates/layout/header.php';
+
+// Build hero headline word spans
+$line1 = t('hero_line1');
+$line2 = t('hero_line2');
+$words1 = array_filter(explode(' ', $line1));
+$words2 = array_filter(explode(' ', $line2));
 ?>
 
 <!-- ══════════════════════════════════════════════════════
@@ -45,27 +51,25 @@ require_once __DIR__ . '/../templates/layout/header.php';
         <div class="hero-badge"><?= t('hero_badge') ?></div>
 
         <h1>
-            <span class="hero-word">The</span>
-            <span class="hero-word">Infrastructure</span>
-            <span class="hero-word">for</span><br>
-            <span class="hero-word gradient-text">Professional</span>
-            <span class="hero-word gradient-text">Competition</span>
+            <?php foreach ($words1 as $word): ?>
+                <span class="hero-word"><?= htmlspecialchars($word, ENT_QUOTES) ?></span>
+            <?php endforeach; ?><br>
+            <?php foreach ($words2 as $word): ?>
+                <span class="hero-word gradient-text"><?= htmlspecialchars($word, ENT_QUOTES) ?></span>
+            <?php endforeach; ?>
         </h1>
 
-        <p class="hero-sub">
-            Deploy a comprehensive platform for tournament orchestration, team coordination,
-            and digital ticketing. Built for organisations that compete at the highest level.
-        </p>
+        <p class="hero-sub"><?= t('hero_sub') ?></p>
 
         <div class="hero-actions">
-            <a href="#events" class="btn-primary">Explore Events</a>
-            <a href="/register.php" class="btn-secondary">Register Now</a>
+            <a href="#events" class="btn-primary"><?= t('hero_cta_events') ?></a>
+            <a href="/register.php" class="btn-secondary"><?= t('hero_cta_register') ?></a>
         </div>
     </div>
 
     <!-- Scroll indicator -->
     <div class="scroll-indicator" aria-hidden="true">
-        <span>Scroll</span>
+        <span><?= t('hero_scroll') ?></span>
         <div class="scroll-indicator-line"></div>
     </div>
 </section>
@@ -77,19 +81,19 @@ require_once __DIR__ . '/../templates/layout/header.php';
     <div class="stats-grid">
         <div class="stat-item reveal">
             <span class="stat-number" data-count="250" data-suffix="+">250+</span>
-            <span class="stat-label">Events Managed</span>
+            <span class="stat-label"><?= t('stat_events_label') ?></span>
         </div>
         <div class="stat-item reveal">
             <span class="stat-number" data-count="48" data-suffix="">48</span>
-            <span class="stat-label">Countries</span>
+            <span class="stat-label"><?= t('stat_countries_label') ?></span>
         </div>
         <div class="stat-item reveal">
             <span class="stat-number" data-count="2" data-prefix="€" data-suffix="M+">€2M+</span>
-            <span class="stat-label">Prize Pools Managed</span>
+            <span class="stat-label"><?= t('stat_prizes_label') ?></span>
         </div>
         <div class="stat-item reveal">
             <span class="stat-number" data-count="12000" data-suffix="">12,000</span>
-            <span class="stat-label">Registered Athletes</span>
+            <span class="stat-label"><?= t('stat_athletes_label') ?></span>
         </div>
     </div>
 
@@ -123,30 +127,30 @@ require_once __DIR__ . '/../templates/layout/header.php';
 <section class="events-section" id="events">
     <div class="events-header">
         <div class="events-title">
-            <span class="section-label">Live Competitions</span>
-            <h2>Active Events</h2>
+            <span class="section-label"><?= t('events_label') ?></span>
+            <h2><?= t('events_title') ?></h2>
         </div>
         <div class="filter-tabs" role="tablist" aria-label="Event type filter">
-            <button class="filter-tab active" data-filter="all"  role="tab" aria-selected="true">All</button>
-            <button class="filter-tab"         data-filter="lan"    role="tab" aria-selected="false">LAN</button>
-            <button class="filter-tab"         data-filter="online" role="tab" aria-selected="false">Online</button>
+            <button class="filter-tab active" data-filter="all"  role="tab" aria-selected="true"><?= t('filter_all') ?></button>
+            <button class="filter-tab"         data-filter="lan"    role="tab" aria-selected="false"><?= t('filter_lan') ?></button>
+            <button class="filter-tab"         data-filter="online" role="tab" aria-selected="false"><?= t('filter_online') ?></button>
         </div>
     </div>
 
     <div class="events-grid" role="list">
         <?php if (empty($events)): ?>
         <div class="events-empty">
-            <h3>No events scheduled yet</h3>
-            <p>Check back soon — the next competition is always around the corner.</p>
+            <h3><?= t('event_empty_title') ?></h3>
+            <p><?= t('event_empty_sub') ?></p>
             <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
-                <a href="/createEvent.php" class="btn-primary" style="margin-top:20px;display:inline-flex;">Create First Event</a>
+                <a href="/createEvent.php" class="btn-primary" style="margin-top:20px;display:inline-flex;"><?= t('event_create_first') ?></a>
             <?php endif; ?>
         </div>
         <?php else: ?>
         <?php foreach ($events as $ev):
             $hasCity  = !empty(trim((string)($ev['citta'] ?? '')));
             $type     = $hasCity ? 'lan' : 'online';
-            $typeLabel = $hasCity ? 'LAN' : 'Online';
+            $typeLabel = $hasCity ? t('filter_lan') : t('filter_online');
             $gameTag  = htmlspecialchars($ev['nomeGioco'] ?? 'Multi-title', ENT_QUOTES);
             $prize    = $ev['montePremi'] ? '€' . number_format((float)$ev['montePremi'], 0, '.', ',') : null;
             $location = trim(implode(', ', array_filter([
@@ -190,18 +194,18 @@ require_once __DIR__ . '/../templates/layout/header.php';
                         <path d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1z"/>
                         <path d="M8 4.5v4l2.5 2.5"/>
                     </svg>
-                    <?= (int)$ev['nPosti'] ?> slots available
+                    <?= (int)$ev['nPosti'] ?> <?= t('event_slots') ?>
                 </div>
             </div>
 
             <div class="event-footer">
                 <?php if ($prize): ?>
-                    <span class="event-prize"><?= $prize ?><small>prize pool</small></span>
+                    <span class="event-prize"><?= $prize ?><small><?= t('event_prize_pool') ?></small></span>
                 <?php else: ?>
-                    <span class="event-prize" style="color:var(--text-secondary);font-size:14px;">TBA</span>
+                    <span class="event-prize" style="color:var(--text-secondary);font-size:14px;"><?= t('event_tba') ?></span>
                 <?php endif; ?>
                 <a href="/dashboard.php?id=<?= (int)$ev['idEvento'] ?>" class="btn-primary" style="padding:8px 16px;font-size:13px;">
-                    View Details
+                    <?= t('event_view') ?>
                 </a>
             </div>
         </article>
@@ -217,23 +221,14 @@ require_once __DIR__ . '/../templates/layout/header.php';
     <div class="about-inner">
         <!-- Left: big statement -->
         <div class="about-left">
-            <span class="section-label">The Platform</span>
+            <span class="section-label"><?= t('about_label') ?></span>
             <p class="about-statement">
-                <span class="about-word">Built</span>
-                <span class="about-word">for</span>
-                <span class="about-word">organisations</span>
-                <span class="about-word">that</span>
-                <span class="about-word">refuse</span>
-                <span class="about-word">to</span>
-                <span class="about-word">compromise</span>
-                <span class="about-word">on</span>
-                <span class="about-word">infrastructure.</span>
+                <?php foreach (array_filter(explode(' ', t('about_statement'))) as $w): ?>
+                    <span class="about-word"><?= htmlspecialchars($w, ENT_QUOTES) ?></span>
+                <?php endforeach; ?>
             </p>
-            <p class="about-lead">
-                Tech Dragons Events powers the full lifecycle of professional competition — from bracket creation to broadcast-ready data feeds.
-                Every component is designed to operate at global scale without a single point of failure.
-            </p>
-            <a href="/register.php" class="btn-primary">Get Started Free</a>
+            <p class="about-lead"><?= t('about_lead') ?></p>
+            <a href="/register.php" class="btn-primary"><?= t('about_cta') ?></a>
         </div>
 
         <!-- Right: feature blocks -->
@@ -241,32 +236,32 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <div class="feature-block">
                 <div class="feature-block-icon">🛡️</div>
                 <div class="feature-block-content">
-                    <h3>RBAC Security</h3>
-                    <p>Role-based access control with Argon2ID password hashing. Separate permission layers for admins, organizers, and players — no privilege escalation possible.</p>
+                    <h3><?= t('feature_1_title') ?></h3>
+                    <p><?= t('feature_1_desc') ?></p>
                 </div>
             </div>
 
             <div class="feature-block">
                 <div class="feature-block-icon">🏆</div>
                 <div class="feature-block-content">
-                    <h3>Tournament Orchestration</h3>
-                    <p>Create, schedule, and manage tournaments linked to events. Assign game titles, set prize pools, and coordinate multi-bracket competitions from a single interface.</p>
+                    <h3><?= t('feature_2_title') ?></h3>
+                    <p><?= t('feature_2_desc') ?></p>
                 </div>
             </div>
 
             <div class="feature-block">
                 <div class="feature-block-icon">👥</div>
                 <div class="feature-block-content">
-                    <h3>Professional Organisations</h3>
-                    <p>Full roster management with sponsor integration. Track members, assign in-game roles, and link athlete profiles to verified user accounts.</p>
+                    <h3><?= t('feature_3_title') ?></h3>
+                    <p><?= t('feature_3_desc') ?></p>
                 </div>
             </div>
 
             <div class="feature-block">
                 <div class="feature-block-icon">📺</div>
                 <div class="feature-block-content">
-                    <h3>Broadcast Ready</h3>
-                    <p>Live API endpoints for overlay integration with Twitch, YouTube, and professional broadcast toolchains. Real-time data, zero latency.</p>
+                    <h3><?= t('feature_4_title') ?></h3>
+                    <p><?= t('feature_4_desc') ?></p>
                 </div>
             </div>
         </div>
@@ -274,73 +269,87 @@ require_once __DIR__ . '/../templates/layout/header.php';
 </section>
 
 <!-- ══════════════════════════════════════════════════════
-     5. ORGANIZERS / TEAM SECTION
+     5. TEAM SECTION
 ═══════════════════════════════════════════════════════ -->
 <section class="organizers-section" id="organizers">
     <div class="organizers-header reveal">
-        <span class="section-label">The Team</span>
-        <h2>Trusted by Elite Organisations</h2>
-        <p>From regional upstarts to established franchises, the world's top teams run their operations on Tech Dragons Events.</p>
+        <span class="section-label"><?= t('team_label') ?></span>
+        <h2><?= t('team_title') ?></h2>
+        <p><?= t('team_sub') ?></p>
     </div>
 
-    <div class="organizers-grid">
-        <!-- Profile cards — flip on hover to show bio -->
+    <div class="organizers-grid organizers-grid-5">
         <div class="profile-card">
             <div class="profile-card-inner">
-                <div class="card-face">
-                    <div class="card-avatar">AK</div>
-                    <span class="card-name">Alex Kowalski</span>
-                    <span class="card-role">Head of Operations</span>
+                <div class="card-face card-front">
+                    <div class="card-avatar">ER</div>
+                    <span class="card-name">Elisey Rotar</span>
+                    <span class="card-role">CEO &amp; Founder</span>
                 </div>
                 <div class="card-face card-back">
-                    <span class="card-name">Alex Kowalski</span>
-                    <span class="card-role">Head of Operations</span>
-                    <p class="card-bio">10 years in esports event logistics. Managed 40+ LAN events across Europe and North America with a combined 80,000 attendees.</p>
+                    <span class="card-name">Elisey Rotar</span>
+                    <span class="card-role">CEO &amp; Founder</span>
+                    <p class="card-bio">Visionary behind Tech Dragons Events. Leads product strategy, platform architecture, and the team driving professional esports infrastructure forward.</p>
                 </div>
             </div>
         </div>
 
         <div class="profile-card">
             <div class="profile-card-inner">
-                <div class="card-face">
-                    <div class="card-avatar">SR</div>
-                    <span class="card-name">Sofia Reyes</span>
-                    <span class="card-role">Tournament Director</span>
+                <div class="card-face card-front">
+                    <div class="card-avatar">AT</div>
+                    <span class="card-name">Aimen Tafihi</span>
+                    <span class="card-role">Co-Founder &amp; CTO</span>
                 </div>
                 <div class="card-face card-back">
-                    <span class="card-name">Sofia Reyes</span>
-                    <span class="card-role">Tournament Director</span>
-                    <p class="card-bio">Architect of 3 international circuit series. Specialises in Swiss format brackets and multi-region qualifier systems.</p>
+                    <span class="card-name">Aimen Tafihi</span>
+                    <span class="card-role">Co-Founder &amp; CTO</span>
+                    <p class="card-bio">Leads technical architecture and backend systems. Ensures the platform operates at scale across simultaneous major events with maximum reliability.</p>
                 </div>
             </div>
         </div>
 
         <div class="profile-card">
             <div class="profile-card-inner">
-                <div class="card-face">
-                    <div class="card-avatar">NM</div>
-                    <span class="card-name">Nikita Morozov</span>
-                    <span class="card-role">Platform Engineer</span>
+                <div class="card-face card-front">
+                    <div class="card-avatar">AV</div>
+                    <span class="card-name">Andrea Valente</span>
+                    <span class="card-role">Backend Engineer</span>
                 </div>
                 <div class="card-face card-back">
-                    <span class="card-name">Nikita Morozov</span>
-                    <span class="card-role">Platform Engineer</span>
-                    <p class="card-bio">Built the core tournament engine. Maintains 99.98% uptime across 12 simultaneous major events. Former backend lead at ESL Gaming.</p>
+                    <span class="card-name">Andrea Valente</span>
+                    <span class="card-role">Backend Engineer</span>
+                    <p class="card-bio">Designs and maintains the database architecture and server-side logic. Expert in high-performance PHP and MariaDB query optimisation.</p>
                 </div>
             </div>
         </div>
 
         <div class="profile-card">
             <div class="profile-card-inner">
-                <div class="card-face">
-                    <div class="card-avatar">LP</div>
-                    <span class="card-name">Lena Park</span>
-                    <span class="card-role">Partnerships Lead</span>
+                <div class="card-face card-front">
+                    <div class="card-avatar">FD</div>
+                    <span class="card-name">Francesco Daminelli</span>
+                    <span class="card-role">Frontend Developer</span>
                 </div>
                 <div class="card-face card-back">
-                    <span class="card-name">Lena Park</span>
-                    <span class="card-role">Partnerships Lead</span>
-                    <p class="card-bio">Manages sponsor relationships with 30+ global brands. Structured €1.2M in prize pool sponsorships across 2024 circuit events.</p>
+                    <span class="card-name">Francesco Daminelli</span>
+                    <span class="card-role">Frontend Developer</span>
+                    <p class="card-bio">Crafts the visual experience — from WebGL shaders to GSAP animation systems. Turns design specs into polished, high-performance interfaces.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-card-inner">
+                <div class="card-face card-front">
+                    <div class="card-avatar">MG</div>
+                    <span class="card-name">Manuel Greco</span>
+                    <span class="card-role">Operations Manager</span>
+                </div>
+                <div class="card-face card-back">
+                    <span class="card-name">Manuel Greco</span>
+                    <span class="card-role">Operations Manager</span>
+                    <p class="card-bio">Coordinates day-to-day platform operations and event logistics. Ensures smooth execution from team registration through to tournament completion.</p>
                 </div>
             </div>
         </div>
@@ -353,9 +362,9 @@ require_once __DIR__ . '/../templates/layout/header.php';
 <section class="contact-section" id="contact">
     <div class="contact-inner">
         <div class="contact-header reveal">
-            <span class="section-label">Get Involved</span>
-            <h2>Ready to Compete?</h2>
-            <p>Whether you're a player, organizer, or sponsor — we want to hear from you.</p>
+            <span class="section-label"><?= t('contact_label') ?></span>
+            <h2><?= t('contact_title') ?></h2>
+            <p><?= t('contact_sub') ?></p>
         </div>
 
         <!-- Contact form -->
@@ -363,40 +372,42 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <form class="contact-form" id="contact-form" novalidate>
                 <div class="form-grid-2">
                     <div class="form-group">
-                        <label class="form-label" for="c-name">Full Name</label>
-                        <input class="form-input" type="text" id="c-name" name="name" placeholder="Your name" required>
+                        <label class="form-label" for="c-name"><?= t('contact_name') ?></label>
+                        <input class="form-input" type="text" id="c-name" name="name" placeholder="<?= t('contact_name') ?>" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="c-email">Email Address</label>
+                        <label class="form-label" for="c-email"><?= t('contact_email') ?></label>
                         <input class="form-input" type="email" id="c-email" name="email" placeholder="you@organization.com" required>
                     </div>
                 </div>
 
                 <div class="form-grid-2">
                     <div class="form-group">
-                        <label class="form-label" for="c-org">Organisation</label>
-                        <input class="form-input" type="text" id="c-org" name="organization" placeholder="Team / Company name">
+                        <label class="form-label" for="c-org"><?= t('contact_org') ?></label>
+                        <input class="form-input" type="text" id="c-org" name="organization" placeholder="Team / Company">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="c-role">Your Role</label>
+                        <label class="form-label" for="c-role"><?= t('contact_role') ?></label>
                         <select class="form-select" id="c-role" name="role">
-                            <option value="">Select a role…</option>
-                            <option value="player">Player</option>
-                            <option value="organizer">Event Organizer</option>
-                            <option value="sponsor">Sponsor</option>
-                            <option value="broadcast">Broadcaster</option>
-                            <option value="other">Other</option>
+                            <option value=""><?= t('contact_role_opt') ?></option>
+                            <option value="player"><?= t('contact_role_player') ?></option>
+                            <option value="organizer"><?= t('contact_role_org') ?></option>
+                            <option value="sponsor"><?= t('contact_role_sponsor') ?></option>
+                            <option value="broadcast"><?= t('contact_role_broadcast') ?></option>
+                            <option value="other"><?= t('contact_role_other') ?></option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="c-msg">Message</label>
-                    <textarea class="form-textarea" id="c-msg" name="message" placeholder="Tell us about your event, team, or inquiry…" rows="5"></textarea>
+                    <label class="form-label" for="c-msg"><?= t('contact_message') ?></label>
+                    <textarea class="form-textarea" id="c-msg" name="message" placeholder="<?= t('contact_msg_ph') ?>" rows="5"></textarea>
                 </div>
 
                 <div class="form-submit-wrap">
-                    <button type="submit" class="btn-primary btn-submit">Send Message</button>
+                    <button type="submit" class="btn-primary btn-submit" data-send-label="<?= t('contact_send') ?>" data-sending-label="<?= t('contact_sending') ?>">
+                        <?= t('contact_send') ?>
+                    </button>
                 </div>
             </form>
 
@@ -406,9 +417,9 @@ require_once __DIR__ . '/../templates/layout/header.php';
                     <circle cx="26" cy="26" r="25"/>
                     <path d="M14 27l8 8 16-16"/>
                 </svg>
-                <h3>Message Received</h3>
-                <p>We'll be in touch within 24 hours. In the meantime, create your account to get started.</p>
-                <a href="/register.php" class="btn-primary" style="margin-top:8px;">Create Account</a>
+                <h3><?= t('contact_success_title') ?></h3>
+                <p><?= t('contact_success_sub') ?></p>
+                <a href="/register.php" class="btn-primary" style="margin-top:8px;"><?= t('contact_success_cta') ?></a>
             </div>
         </div>
     </div>

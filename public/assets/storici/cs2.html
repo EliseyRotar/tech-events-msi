@@ -1,92 +1,198 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS2 Matches — Tech Dragons Events</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>CS2 Matches — Tech Dragons Events Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
 </head>
 <body>
 
-    <nav>
-        <a href="/" class="nav-logo">Tech Dragons Events</a>
+<div id="page-overlay" aria-hidden="true"><span class="overlay-logo">TD</span></div>
+<div id="cursor-dot"  aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<nav class="glass-nav scrolled" id="navbar" role="navigation">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
         <div class="links">
-            <a href="/">Home</a>
-            <a href="storico.html">Storico</a>
-            <a href="/login.php" class="btn-nav">Accedi</a>
+            <a href="/">Overview</a>
+            <a href="storico.html">Archive</a>
+            <a href="/login.php" class="btn-secondary" style="padding:8px 18px;">Sign In</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Register</a>
         </div>
-    </nav>
-
-    <div class="page-header">
-        <div>
-            <p class="section-label">CS2 — via HLTV</p>
-            <h1>CS2 Matches</h1>
-            <p>Match professionali aggiornati in tempo reale</p>
-        </div>
-        <a href="storico.html" class="back-link">← Torna allo Storico</a>
     </div>
+</nav>
 
-    <div class="table-wrapper">
-        <table id="tabella">
-            <thead>
-                <tr>
-                    <th>Nome Evento</th>
-                    <th>Data</th>
-                    <th>Team 1</th>
-                    <th>Team 2</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div class="loading" id="loading"></div>
+<!-- Header -->
+<div class="game-page-header">
+    <div>
+        <span class="section-label">Counter-Strike 2 · HLTV</span>
+        <h1>CS2 Matches</h1>
+        <p>Live match data for Tier-1 CS2 events</p>
     </div>
+    <a href="storico.html" class="back-link">← Back to Archive</a>
+</div>
 
-    <div class="load-area">
-        <button id="start">Carica Match CS2</button>
-    </div>
+<!-- Controls -->
+<div class="game-controls">
+    <input class="game-search" type="text" id="search" placeholder="Search event or team…" autocomplete="off">
+    <span class="game-count" id="count"></span>
+    <button class="game-load-btn" id="refresh-btn">↻ Refresh</button>
+</div>
 
-    <footer>
-        <span class="footer-logo">Tech Dragons Events</span>
-        <p>© 2026 — Tech Dragons Events</p>
-    </footer>
+<!-- Table -->
+<div class="game-table-wrap">
+    <table class="game-table" id="table">
+        <thead>
+            <tr>
+                <th data-col="event">Event</th>
+                <th data-col="time">Date / Time</th>
+                <th data-col="team1">Team 1</th>
+                <th data-col="team2">Team 2</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+</div>
 
-    <script>
-        const tabella = document.getElementById('tabella').querySelector('tbody');
-        const btn = document.getElementById('start');
-        const loading = document.getElementById('loading');
+<div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="game-load-btn" id="load-more-btn">Load more</button>
+</div>
 
-        btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.textContent = 'Caricamento...';
-            loading.style.display = 'block';
-            try {
-                const obj = await API();
-                obj.forEach(element => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${element.event?.name ?? 'N/A'}</td>
-                        <td>${element.time ?? 'N/A'}</td>
-                        <td>${element.teams?.[0]?.name ?? 'N/A'}</td>
-                        <td>${element.teams?.[1]?.name ?? 'N/A'}</td>
-                    `;
-                    tabella.appendChild(tr);
-                });
-                btn.textContent = `${obj.length} match caricati`;
-            } catch (e) {
-                btn.textContent = 'Errore nel caricamento';
-                btn.disabled = false;
-                console.error(e);
-            } finally {
-                loading.style.display = 'none';
-            }
-        });
+<footer style="border-top:1px solid var(--border);padding:60px 24px;text-align:center;">
+    <span class="footer-logo">Tech<span style="color:var(--accent-blue)">Dragons</span></span>
+    <p style="color:var(--text-secondary);margin-top:12px;font-size:14px;">© 2026 Tech Dragons Events. All rights reserved.</p>
+</footer>
 
-        async function API() {
-            const res = await fetch('https://hltv-api.vercel.app/api/matchesByEvent.json');
-            return res.json();
+<script>
+(function () {
+    const tbody     = document.getElementById('tbody');
+    const countEl   = document.getElementById('count');
+    const searchEl  = document.getElementById('search');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const loadMoreWrap = document.getElementById('load-more-wrap');
+    const loadMoreBtn  = document.getElementById('load-more-btn');
+
+    const PAGE_SIZE = 25;
+    let allRows  = [];
+    let filtered = [];
+    let shown    = 0;
+    let sortCol  = null;
+    let sortAsc  = true;
+
+    // Skeleton loader
+    function showSkeleton(n = 8) {
+        tbody.innerHTML = '';
+        for (let i = 0; i < n; i++) {
+            const tr = document.createElement('tr');
+            tr.className = 'game-skeleton';
+            tr.innerHTML = `
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:${60+Math.random()*30}%"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:70px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:${50+Math.random()*30}%"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:${50+Math.random()*30}%"></div></td>
+            `;
+            tbody.appendChild(tr);
         }
-    </script>
+    }
 
+    function renderRows() {
+        const slice = filtered.slice(shown, shown + PAGE_SIZE);
+        slice.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${esc(row.event)}</td>
+                <td style="color:var(--text-secondary);font-size:13px;">${esc(row.time)}</td>
+                <td>${esc(row.team1)}</td>
+                <td>${esc(row.team2)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        shown += slice.length;
+        countEl.textContent = filtered.length + ' match' + (filtered.length !== 1 ? 'es' : '');
+        loadMoreWrap.style.display = shown < filtered.length ? '' : 'none';
+    }
+
+    function applyFilter() {
+        const q = searchEl.value.toLowerCase().trim();
+        filtered = allRows.filter(r =>
+            !q || r.event.toLowerCase().includes(q) ||
+                  r.team1.toLowerCase().includes(q)  ||
+                  r.team2.toLowerCase().includes(q)
+        );
+        tbody.innerHTML = '';
+        shown = 0;
+        renderRows();
+    }
+
+    function esc(s) {
+        if (!s || s === 'N/A') return '<span style="color:var(--text-secondary)">—</span>';
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    async function load() {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Loading…';
+        showSkeleton();
+        countEl.textContent = '';
+        try {
+            const res  = await fetch('https://hltv-api.vercel.app/api/matchesByEvent.json');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            allRows = (Array.isArray(data) ? data : []).map(m => ({
+                event: m.event?.name ?? 'N/A',
+                time:  m.time        ?? 'N/A',
+                team1: m.teams?.[0]?.name ?? 'N/A',
+                team2: m.teams?.[1]?.name ?? 'N/A',
+            }));
+            tbody.innerHTML = '';
+            shown = 0;
+            filtered = [...allRows];
+            renderRows();
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">
+                Failed to load data. The HLTV API may be temporarily unavailable. <button class="game-load-btn" onclick="location.reload()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
+            </td></tr>`;
+            countEl.textContent = '';
+        } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '↻ Refresh';
+        }
+    }
+
+    // Sort
+    document.querySelectorAll('.game-table th[data-col]').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (sortCol === col) sortAsc = !sortAsc;
+            else { sortCol = col; sortAsc = true; }
+
+            document.querySelectorAll('.game-table th').forEach(t => t.className = '');
+            th.className = sortAsc ? 'sort-asc' : 'sort-desc';
+
+            filtered.sort((a, b) => {
+                const av = a[col] ?? '';
+                const bv = b[col] ?? '';
+                return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+            });
+            tbody.innerHTML = '';
+            shown = 0;
+            renderRows();
+        });
+    });
+
+    searchEl.addEventListener('input', applyFilter);
+    refreshBtn.addEventListener('click', load);
+    loadMoreBtn.addEventListener('click', renderRows);
+
+    load();
+})();
+</script>
 </body>
 </html>

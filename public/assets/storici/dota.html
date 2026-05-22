@@ -1,92 +1,219 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dota 2 Teams — Tech Dragons Events</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Dota 2 Teams — Tech Dragons Events Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
 </head>
 <body>
 
-    <nav>
-        <a href="/" class="nav-logo">Tech Dragons Events</a>
+<div id="page-overlay" aria-hidden="true"><span class="overlay-logo">TD</span></div>
+<div id="cursor-dot"  aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<nav class="glass-nav scrolled" id="navbar" role="navigation">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
         <div class="links">
-            <a href="/">Home</a>
-            <a href="storico.html">Storico</a>
-            <a href="/login.php" class="btn-nav">Accedi</a>
+            <a href="/">Overview</a>
+            <a href="storico.html">Archive</a>
+            <a href="/login.php" class="btn-secondary" style="padding:8px 18px;">Sign In</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Register</a>
         </div>
-    </nav>
-
-    <div class="page-header">
-        <div>
-            <p class="section-label">Dota 2 — via OpenDota</p>
-            <h1>Dota 2 Teams</h1>
-            <p>Lista completa dei team professionali con statistiche</p>
-        </div>
-        <a href="storico.html" class="back-link">← Torna allo Storico</a>
     </div>
+</nav>
 
-    <div class="table-wrapper">
-        <table id="tabella">
-            <thead>
-                <tr>
-                    <th>Nome Team</th>
-                    <th>Rating</th>
-                    <th>Vittorie</th>
-                    <th>Sconfitte</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div class="loading" id="loading"></div>
+<!-- Header -->
+<div class="game-page-header">
+    <div>
+        <span class="section-label">Dota 2 · OpenDota</span>
+        <h1>Dota 2 Teams</h1>
+        <p>Professional teams with win/loss records and ratings</p>
     </div>
+    <a href="storico.html" class="back-link">← Back to Archive</a>
+</div>
 
-    <div class="load-area">
-        <button id="start">Carica Team Dota 2</button>
-    </div>
+<!-- Controls -->
+<div class="game-controls">
+    <input class="game-search" type="text" id="search" placeholder="Search team name…" autocomplete="off">
+    <span class="game-count" id="count"></span>
+    <button class="game-load-btn" id="refresh-btn">↻ Refresh</button>
+</div>
 
-    <footer>
-        <span class="footer-logo">Tech Dragons Events</span>
-        <p>© 2026 — Tech Dragons Events</p>
-    </footer>
+<!-- Table -->
+<div class="game-table-wrap">
+    <table class="game-table" id="table">
+        <thead>
+            <tr>
+                <th data-col="name">Team</th>
+                <th data-col="rating">Rating</th>
+                <th data-col="wins">Wins</th>
+                <th data-col="losses">Losses</th>
+                <th data-col="winrate">Win Rate</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+</div>
 
-    <script>
-        const tabella = document.getElementById('tabella').querySelector('tbody');
-        const btn = document.getElementById('start');
-        const loading = document.getElementById('loading');
+<div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="game-load-btn" id="load-more-btn">Load more</button>
+</div>
 
-        btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.textContent = 'Caricamento...';
-            loading.style.display = 'block';
-            try {
-                const obj = await API();
-                obj.forEach(team => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${team.name ?? 'N/A'}</td>
-                        <td>${team.rating ?? 'N/A'}</td>
-                        <td>${team.wins ?? 0}</td>
-                        <td>${team.losses ?? 0}</td>
-                    `;
-                    tabella.appendChild(tr);
-                });
-                btn.textContent = `${obj.length} team caricati`;
-            } catch (e) {
-                btn.textContent = 'Errore nel caricamento';
-                btn.disabled = false;
-                console.error(e);
-            } finally {
-                loading.style.display = 'none';
-            }
-        });
+<footer style="border-top:1px solid var(--border);padding:60px 24px;text-align:center;">
+    <span class="footer-logo">Tech<span style="color:var(--accent-blue)">Dragons</span></span>
+    <p style="color:var(--text-secondary);margin-top:12px;font-size:14px;">© 2026 Tech Dragons Events. All rights reserved.</p>
+</footer>
 
-        async function API() {
-            const res = await fetch('https://api.opendota.com/api/teams');
-            return res.json();
+<script>
+(function () {
+    const tbody      = document.getElementById('tbody');
+    const countEl    = document.getElementById('count');
+    const searchEl   = document.getElementById('search');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const loadMoreWrap = document.getElementById('load-more-wrap');
+    const loadMoreBtn  = document.getElementById('load-more-btn');
+
+    const PAGE_SIZE = 25;
+    let allRows  = [];
+    let filtered = [];
+    let shown    = 0;
+    let sortCol  = 'rating';
+    let sortAsc  = false;
+
+    function showSkeleton(n = 8) {
+        tbody.innerHTML = '';
+        for (let i = 0; i < n; i++) {
+            const tr = document.createElement('tr');
+            tr.className = 'game-skeleton';
+            tr.innerHTML = `
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:${50+Math.random()*40}%"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:60px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:50px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:50px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:55px"></div></td>
+            `;
+            tbody.appendChild(tr);
         }
-    </script>
+    }
 
+    function winrateColor(wr) {
+        if (wr >= 60) return 'color:var(--success)';
+        if (wr >= 50) return 'color:var(--accent-blue)';
+        if (wr >= 40) return 'color:#ff9500';
+        return 'color:var(--text-secondary)';
+    }
+
+    function renderRows() {
+        const slice = filtered.slice(shown, shown + PAGE_SIZE);
+        slice.forEach(row => {
+            const wr   = row.wins + row.losses > 0
+                ? ((row.wins / (row.wins + row.losses)) * 100).toFixed(1)
+                : '—';
+            const wrStyle = wr !== '—' ? winrateColor(parseFloat(wr)) : '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:600;">${esc(row.name)}</td>
+                <td style="font-family:var(--font-mono);color:var(--accent-blue);">${row.rating ? row.rating.toFixed(0) : '—'}</td>
+                <td style="color:var(--success);">${row.wins}</td>
+                <td style="color:#ff3b30;">${row.losses}</td>
+                <td style="${wrStyle};font-family:var(--font-mono);">${wr !== '—' ? wr + '%' : '—'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        shown += slice.length;
+        countEl.textContent = filtered.length + ' team' + (filtered.length !== 1 ? 's' : '');
+        loadMoreWrap.style.display = shown < filtered.length ? '' : 'none';
+    }
+
+    function applyFilter() {
+        const q = searchEl.value.toLowerCase().trim();
+        filtered = allRows.filter(r => !q || r.name.toLowerCase().includes(q));
+        tbody.innerHTML = '';
+        shown = 0;
+        renderRows();
+    }
+
+    function esc(s) {
+        if (!s) return '<span style="color:var(--text-secondary)">—</span>';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function sortRows() {
+        filtered.sort((a, b) => {
+            const av = a[sortCol] ?? '';
+            const bv = b[sortCol] ?? '';
+            if (typeof av === 'number' && typeof bv === 'number') {
+                return sortAsc ? av - bv : bv - av;
+            }
+            return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+        });
+    }
+
+    async function load() {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Loading…';
+        showSkeleton();
+        countEl.textContent = '';
+        try {
+            const res  = await fetch('https://api.opendota.com/api/teams');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            allRows = (Array.isArray(data) ? data : []).map(t => ({
+                name:   t.name   ?? 'Unknown',
+                rating: parseFloat(t.rating) || 0,
+                wins:   parseInt(t.wins)   || 0,
+                losses: parseInt(t.losses) || 0,
+            })).filter(t => t.name !== 'Unknown');
+
+            filtered = [...allRows];
+            sortRows();
+            tbody.innerHTML = '';
+            shown = 0;
+            renderRows();
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:40px;">
+                Failed to load data. Please try again. <button class="game-load-btn" onclick="location.reload()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
+            </td></tr>`;
+            countEl.textContent = '';
+        } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '↻ Refresh';
+        }
+    }
+
+    // Sort columns
+    document.querySelectorAll('.game-table th[data-col]').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (sortCol === col) sortAsc = !sortAsc;
+            else { sortCol = col; sortAsc = col === 'name'; }
+
+            document.querySelectorAll('.game-table th').forEach(t => t.className = '');
+            th.className = sortAsc ? 'sort-asc' : 'sort-desc';
+
+            sortRows();
+            tbody.innerHTML = '';
+            shown = 0;
+            renderRows();
+        });
+    });
+
+    // Mark default sort column
+    document.querySelector('[data-col="rating"]').className = 'sort-desc';
+
+    searchEl.addEventListener('input', applyFilter);
+    refreshBtn.addEventListener('click', load);
+    loadMoreBtn.addEventListener('click', renderRows);
+
+    load();
+})();
+</script>
 </body>
 </html>

@@ -1,91 +1,212 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valorant Events — Tech Dragons Events</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Valorant Events — Tech Dragons Events Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
 </head>
 <body>
 
-    <nav>
-        <a href="/" class="nav-logo">Tech Dragons Events</a>
+<div id="page-overlay" aria-hidden="true"><span class="overlay-logo">TD</span></div>
+<div id="cursor-dot"  aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<nav class="glass-nav scrolled" id="navbar" role="navigation">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
         <div class="links">
-            <a href="/">Home</a>
-            <a href="storico.html">Storico</a>
-            <a href="/login.php" class="btn-nav">Accedi</a>
+            <a href="/">Overview</a>
+            <a href="storico.html">Archive</a>
+            <a href="/login.php" class="btn-secondary" style="padding:8px 18px;">Sign In</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Register</a>
         </div>
-    </nav>
-
-    <div class="page-header">
-        <div>
-            <p class="section-label">Valorant — via VLR.gg</p>
-            <h1>Valorant Events</h1>
-            <p>Tutti gli eventi completati nel circuito professionistico</p>
-        </div>
-        <a href="storico.html" class="back-link">← Torna allo Storico</a>
     </div>
+</nav>
 
-    <div class="table-wrapper">
-        <table id="tabella">
-            <thead>
-                <tr>
-                    <th>Nome Evento</th>
-                    <th>Prize Pool</th>
-                    <th>Regione</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div class="loading" id="loading"></div>
+<!-- Header -->
+<div class="game-page-header">
+    <div>
+        <span class="section-label">Valorant · VLR.gg</span>
+        <h1>Valorant Events</h1>
+        <p>Completed VCT circuit events with prize pools and regions</p>
     </div>
+    <a href="storico.html" class="back-link">← Back to Archive</a>
+</div>
 
-    <div class="load-area">
-        <button id="start">Carica Eventi Valorant</button>
-    </div>
+<!-- Controls -->
+<div class="game-controls">
+    <input class="game-search" type="text" id="search" placeholder="Search event or region…" autocomplete="off">
+    <span class="game-count" id="count"></span>
+    <button class="game-load-btn" id="refresh-btn">↻ Refresh</button>
+</div>
 
-    <footer>
-        <span class="footer-logo">Tech Dragons Events</span>
-        <p>© 2026 — Tech Dragons Events</p>
-    </footer>
+<!-- Table -->
+<div class="game-table-wrap">
+    <table class="game-table" id="table">
+        <thead>
+            <tr>
+                <th data-col="title">Event</th>
+                <th data-col="prize">Prize Pool</th>
+                <th data-col="region">Region</th>
+                <th data-col="status">Status</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+</div>
 
-    <script>
-        const tabella = document.getElementById('tabella').querySelector('tbody');
-        const btn = document.getElementById('start');
-        const loading = document.getElementById('loading');
+<div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="game-load-btn" id="load-more-btn">Load more</button>
+</div>
 
-        btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.textContent = 'Caricamento...';
-            loading.style.display = 'block';
-            try {
-                const obj = await API();
-                const eventi = obj.data;
-                eventi.forEach(element => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${element.title ?? 'N/A'}</td>
-                        <td>${element.prize ?? 'N/A'}</td>
-                        <td>${element.region ?? 'N/A'}</td>
-                    `;
-                    tabella.appendChild(tr);
-                });
-                btn.textContent = `${eventi.length} eventi caricati`;
-            } catch (e) {
-                btn.textContent = 'Errore nel caricamento';
-                btn.disabled = false;
-                console.error(e);
-            } finally {
-                loading.style.display = 'none';
-            }
-        });
+<footer style="border-top:1px solid var(--border);padding:60px 24px;text-align:center;">
+    <span class="footer-logo">Tech<span style="color:var(--accent-blue)">Dragons</span></span>
+    <p style="color:var(--text-secondary);margin-top:12px;font-size:14px;">© 2026 Tech Dragons Events. All rights reserved.</p>
+</footer>
 
-        async function API() {
-            const res = await fetch('https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed');
-            return res.json();
+<script>
+(function () {
+    const tbody      = document.getElementById('tbody');
+    const countEl    = document.getElementById('count');
+    const searchEl   = document.getElementById('search');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const loadMoreWrap = document.getElementById('load-more-wrap');
+    const loadMoreBtn  = document.getElementById('load-more-btn');
+
+    const PAGE_SIZE = 25;
+    let allRows  = [];
+    let filtered = [];
+    let shown    = 0;
+    let sortCol  = null;
+    let sortAsc  = true;
+
+    function showSkeleton(n = 8) {
+        tbody.innerHTML = '';
+        for (let i = 0; i < n; i++) {
+            const tr = document.createElement('tr');
+            tr.className = 'game-skeleton';
+            tr.innerHTML = `
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:${55+Math.random()*35}%"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:80px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:70px"></div></td>
+                <td><div class="skeleton-pulse" style="height:14px;border-radius:4px;width:60px"></div></td>
+            `;
+            tbody.appendChild(tr);
         }
-    </script>
+    }
 
+    function renderRows() {
+        const slice = filtered.slice(shown, shown + PAGE_SIZE);
+        slice.forEach(row => {
+            const statusStyle = row.status === 'completed'
+                ? 'background:rgba(0,232,120,0.1);color:var(--success);padding:2px 8px;border-radius:4px;font-size:11px;font-family:var(--font-mono);letter-spacing:0.5px;text-transform:uppercase'
+                : 'background:rgba(0,212,255,0.1);color:var(--accent-blue);padding:2px 8px;border-radius:4px;font-size:11px;font-family:var(--font-mono);letter-spacing:0.5px;text-transform:uppercase';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:600;">${esc(row.title)}</td>
+                <td style="font-family:var(--font-mono);color:var(--accent-blue);">${esc(row.prize)}</td>
+                <td style="color:var(--text-secondary);">${esc(row.region)}</td>
+                <td><span style="${statusStyle}">${esc(row.status)}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        shown += slice.length;
+        countEl.textContent = filtered.length + ' event' + (filtered.length !== 1 ? 's' : '');
+        loadMoreWrap.style.display = shown < filtered.length ? '' : 'none';
+    }
+
+    function applyFilter() {
+        const q = searchEl.value.toLowerCase().trim();
+        filtered = allRows.filter(r =>
+            !q || r.title.toLowerCase().includes(q) || r.region.toLowerCase().includes(q)
+        );
+        tbody.innerHTML = '';
+        shown = 0;
+        renderRows();
+    }
+
+    function esc(s) {
+        if (s == null || s === '') return '<span style="color:var(--text-secondary)">—</span>';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    async function load() {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Loading…';
+        showSkeleton();
+        countEl.textContent = '';
+        try {
+            // Try direct then fallback proxy
+            let data = null;
+            const endpoints = [
+                'https://vlrggapi.vercel.app/events?q=completed',
+                'https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed',
+            ];
+            for (const url of endpoints) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) { data = await res.json(); break; }
+                } catch { /* try next */ }
+            }
+
+            if (!data) throw new Error('All endpoints failed');
+
+            const events = Array.isArray(data) ? data : (data.data ?? []);
+            allRows = events.map(e => ({
+                title:  e.title  ?? e.name ?? 'Unknown',
+                prize:  e.prize  ?? e.prizePool ?? '',
+                region: e.region ?? '',
+                status: e.status ?? 'completed',
+            }));
+            filtered = [...allRows];
+            tbody.innerHTML = '';
+            shown = 0;
+            renderRows();
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">
+                Failed to load Valorant events. The VLR.gg API may be temporarily unavailable.
+                <button class="game-load-btn" onclick="location.reload()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
+            </td></tr>`;
+            countEl.textContent = '';
+        } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '↻ Refresh';
+        }
+    }
+
+    // Sort columns
+    document.querySelectorAll('.game-table th[data-col]').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (sortCol === col) sortAsc = !sortAsc;
+            else { sortCol = col; sortAsc = true; }
+
+            document.querySelectorAll('.game-table th').forEach(t => t.className = '');
+            th.className = sortAsc ? 'sort-asc' : 'sort-desc';
+
+            filtered.sort((a, b) => {
+                const av = a[col] ?? '';
+                const bv = b[col] ?? '';
+                return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+            });
+            tbody.innerHTML = '';
+            shown = 0;
+            renderRows();
+        });
+    });
+
+    searchEl.addEventListener('input', applyFilter);
+    refreshBtn.addEventListener('click', load);
+    loadMoreBtn.addEventListener('click', renderRows);
+
+    load();
+})();
+</script>
 </body>
 </html>

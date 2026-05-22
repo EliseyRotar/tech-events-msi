@@ -2,7 +2,7 @@
 require '../config.php';
 \App\Auth::requireLogin();
 
-$pageTitle = "Register Organization — Tech Events";
+$pageTitle = "Register Organization — Tech Dragons Events";
 
 $sql = 'SELECT * FROM sponsor';
 $stm = $pdo->prepare($sql);
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
         <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">New Organization</h1>
 
         <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= $error ?></p>
+            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <p>Organization Name</p>

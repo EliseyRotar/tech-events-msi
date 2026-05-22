@@ -1,21 +1,21 @@
 <?php
-    require '../config.php';
-    session_start();
+require '../config.php';
+\App\Auth::requireLogin();
 
-    $idT = isset($_GET['id']) ? $_GET['id'] : "";
-    $teamInfo = null;
+$idT = isset($_GET['id']) ? $_GET['id'] : "";
+$teamInfo = null;
 
-    if ($idT != "") {
-        $sql = "SELECT s.idSquadra, s.nomeSquadra, s.nComponenti, sp.nomeAzienda 
-                FROM squadre s 
-                LEFT JOIN sponsor sp ON s.idSponsor = sp.idSponsor 
-                JOIN tornei_squadre ts ON s.idSquadra = ts.idSquadra 
-                WHERE ts.idTorneo = :id";
-        $stm = $pdo->prepare($sql);
-        $stm->bindParam(':id', $idT);
-        $stm->execute();
-        $teamInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
-    }
+if ($idT != "") {
+    $sql = "SELECT s.idSquadra, s.nomeSquadra, s.nComponenti, sp.nomeAzienda
+            FROM squadre s
+            LEFT JOIN sponsor sp ON s.idSponsor = sp.idSponsor
+            JOIN tornei_squadre ts ON s.idSquadra = ts.idSquadra
+            WHERE ts.idTorneo = :id";
+    $stm = $pdo->prepare($sql);
+    $stm->bindParam(':id', $idT);
+    $stm->execute();
+    $teamInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +23,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Roster — Tech Events</title>
+    <title>Team Roster — Tech Dragons Events</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -63,11 +63,11 @@
                 <tbody>
                     <?php foreach ($teamInfo as $team): ?>
                         <tr>
-                            <td style="font-weight: 600;"><?= $team['nomeSquadra'] ?></td>
-                            <td><?= $team['nComponenti'] ?> Players</td>
-                            <td style="color: var(--primary); font-weight: 600;"><?= $team['nomeAzienda'] ?? 'Independent' ?></td>
+                            <td style="font-weight: 600;"><?= htmlspecialchars($team['nomeSquadra']) ?></td>
+                            <td><?= htmlspecialchars((string)$team['nComponenti']) ?> Players</td>
+                            <td style="color: var(--primary); font-weight: 600;"><?= htmlspecialchars($team['nomeAzienda'] ?? 'Independent') ?></td>
                             <td>
-                                <a href="addMember.php?id=<?= $team['idSquadra'] ?>" class="btn-primary" style="padding: 4px 12px; font-size: 12px;">Manage Roster</a>
+                                <a href="addMember.php?id=<?= urlencode($team['idSquadra']) ?>" class="btn-primary" style="padding: 4px 12px; font-size: 12px;">Manage Roster</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -76,7 +76,7 @@
         <?php else: ?>
             <div style="background: var(--surface); border: 1px solid var(--border); padding: 40px; border-radius: 8px; text-align: center;">
                 <p style="margin: 0;">No teams registered for this competition yet.</p>
-                <a href="signTeam.php?id=<?= $idT ?>" class="btn-primary" style="margin-top: 20px;">Register First Team</a>
+                <a href="signTeam.php?id=<?= urlencode($idT) ?>" class="btn-primary" style="margin-top: 20px;">Register First Team</a>
             </div>
         <?php endif; ?>
 
@@ -86,7 +86,7 @@
     </div>
 
     <footer style="margin-top: 120px;">
-        <span class="footer-logo">Tech Events</span>
+        <span class="footer-logo">Tech Dragons Events</span>
         <p>© 2026 — Professional Esports Systems</p>
     </footer>
 

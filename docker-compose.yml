@@ -9,7 +9,7 @@ services:
       - .:/var/www/html
     environment:
       - DB_HOST=db
-      - DB_NAME=tech_events
+      - DB_NAME=tech_dragons_events
       - DB_USER=user
       - DB_PASS=password
     depends_on:
@@ -18,7 +18,7 @@ services:
   db:
     image: mariadb:10.6
     environment:
-      - MYSQL_DATABASE=tech_events
+      - MYSQL_DATABASE=tech_dragons_events
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
       - MYSQL_ROOT_PASSWORD=root_password

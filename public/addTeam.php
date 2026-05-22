@@ -1,68 +1,82 @@
-<?php 
+<?php
 require '../config.php';
 \App\Auth::requireLogin();
 
-$pageTitle = "Register Organization — Tech Dragons Events";
-
-$sql = 'SELECT * FROM sponsor';
-$stm = $pdo->prepare($sql);
+$stm = $pdo->prepare('SELECT idSponsor, nomeAzienda FROM sponsor ORDER BY nomeAzienda');
 $stm->execute();
 $sponsors = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['nameTxt']);
+    $name  = trim($_POST['nameTxt']);
     $nComp = (int)$_POST['nCompTxt'];
-    $idS = $_POST['idSTxt'];
+    $idS   = $_POST['idSTxt'] ?: null;
 
     try {
         $pdo->beginTransaction();
-        $sql = "INSERT INTO squadre (nomeSquadra, nComponenti, idSponsor) VALUES (:n, :nc, :ids)";
-        $stm = $pdo->prepare($sql);
-        $stm->bindParam(':n', $name);
-        $stm->bindParam(':nc', $nComp);
+        $stm = $pdo->prepare(
+            "INSERT INTO squadre (nomeSquadra, nComponenti, idSponsor) VALUES (:n, :nc, :ids)"
+        );
+        $stm->bindParam(':n',   $name);
+        $stm->bindParam(':nc',  $nComp);
         $stm->bindParam(':ids', $idS);
-        
-        if ($stm->execute()) {
-            $pdo->commit();
-            header('Location: dashboard.php');
-            exit;
-        }
+        $stm->execute();
+        $pdo->commit();
+        header('Location: dashboard.php');
+        exit;
     } catch (PDOException $e) {
         $pdo->rollBack();
-        $error = "Failed to register organization: " . $e->getMessage();
+        $error = 'Failed to register organisation: ' . $e->getMessage();
     }
 }
 
+$pageTitle = 'Register Organisation — Tech Dragons Events';
 require_once __DIR__ . '/../templates/layout/header.php';
 ?>
 
-<div class="container" style="margin-top: 100px; display: flex; align-items: center; justify-content: center; min-height: 70vh;">
-    <form method="POST" style="margin: 0;">
-        <p class="section-label" style="text-align: left; margin-bottom: 8px;">Organization Management</p>
-        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">New Organization</h1>
+<main class="page-main">
+    <div class="container" style="max-width:540px;">
+        <div class="form-card" style="margin-top:0;">
+            <span class="section-label">Organisation Management</span>
+            <h1 style="font-family:var(--font-display);font-size:26px;font-weight:700;letter-spacing:-0.8px;margin-bottom:8px;">Register Organisation</h1>
+            <p class="lead" style="color:var(--text-secondary);font-size:15px;margin-bottom:32px;line-height:1.6;">Add your team to the platform to enter tournaments.</p>
 
-        <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <div class="error-msg"><?= htmlspecialchars($error, ENT_QUOTES) ?></div>
+            <?php endif; ?>
 
-        <p>Organization Name</p>
-        <input type="text" name="nameTxt" placeholder="Team Liquid / NAVI" required>
+            <form method="POST" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="nameTxt">Organisation Name</label>
+                    <input class="form-input" type="text" id="nameTxt" name="nameTxt"
+                           placeholder="Team Liquid / NAVI" required>
+                </div>
 
-        <p>Roster Capacity</p>
-        <input type="number" name="nCompTxt" placeholder="5" required>
+                <div class="form-group">
+                    <label class="form-label" for="nCompTxt">Roster Capacity</label>
+                    <input class="form-input" type="number" id="nCompTxt" name="nCompTxt"
+                           placeholder="5" min="1" required>
+                </div>
 
-        <p>Primary Sponsor</p>
-        <select name="idSTxt" required>
-            <option value="">Select a partner</option>
-            <?php foreach($sponsors as $s): ?>
-                <option value="<?= $s['idSponsor'] ?>"><?= htmlspecialchars($s['nomeAzienda']) ?></option>
-            <?php endforeach; ?>
-        </select>
+                <div class="form-group">
+                    <label class="form-label" for="idSTxt">Primary Sponsor</label>
+                    <select class="form-select form-input" id="idSTxt" name="idSTxt">
+                        <option value="">Independent (no sponsor)</option>
+                        <?php foreach ($sponsors as $s): ?>
+                            <option value="<?= (int)$s['idSponsor'] ?>">
+                                <?= htmlspecialchars($s['nomeAzienda'], ENT_QUOTES) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <br><br>
-        <button type="submit">Register Organization</button>
-        <p style="text-align: center; margin-top: 24px;"><a href="dashboard.php" style="color: var(--text-muted);">Cancel and return</a></p>
-    </form>
-</div>
+                <button type="submit" class="btn-primary btn-submit">Register Organisation</button>
+            </form>
+
+            <p style="text-align:center;margin-top:24px;font-size:14px;">
+                <a href="/dashboard.php" style="color:var(--text-secondary);">← Cancel and return</a>
+            </p>
+        </div>
+    </div>
+</main>
 
 <?php require_once __DIR__ . '/../templates/layout/footer.php'; ?>

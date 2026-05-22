@@ -14,6 +14,10 @@ $stm = $pdo->prepare($sql);
 $stm->bindParam(':id', $idTorneo);
 $stm->execute();
 $tournament = $stm->fetch(PDO::FETCH_ASSOC);
+if (!$tournament) {
+    header('Location: dashboard.php');
+    exit;
+}
 
 // Get available teams
 $sql = "SELECT idSquadra, nomeSquadra FROM squadre";
@@ -21,7 +25,7 @@ $stm = $pdo->prepare($sql);
 $stm->execute();
 $teams = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-$pageTitle = "Tournament Registration — Tech Events";
+$pageTitle = "Tournament Registration — Tech Dragons Events";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idS = $_POST['idSTxt'];
@@ -35,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($stm->execute()) {
             $pdo->commit();
-            header('Location: dashboard.php?id=' . $_GET['event_id']); // Optional event_id for redirect
+            header('Location: dashboard.php');
             exit;
         }
     } catch (PDOException $e) {
@@ -54,7 +58,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
         <p style="color: var(--text-muted); margin-bottom: 32px;">Register your organization for the upcoming competition.</p>
 
         <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= $error ?></p>
+            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <p>Select Your Team</p>

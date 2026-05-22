@@ -2,6 +2,15 @@
 require_once '../config.php';
 require_once '../src/helpers.php';
 
+// Lang switch handler (mirrors templates/layout/header.php)
+if (isset($_GET['lang'])) {
+    $supported = ['it', 'en'];
+    $lang = in_array($_GET['lang'], $supported, true) ? $_GET['lang'] : 'it';
+    setcookie('lang', $lang, time() + 365 * 24 * 3600, '/');
+    header('Location: /register.php');
+    exit;
+}
+
 $pageTitle = t('register_title') . ' — Tech Dragons Events';
 $errors = [];
 
@@ -111,6 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="links">
             <a href="/">Overview</a>
             <a href="/login.php" class="btn-secondary" style="padding:8px 18px;"><?= t('nav_signin') ?></a>
+        </div>
+        <div class="lang-switch">
+            <a href="?lang=it" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'it') ? 'lang-active' : '' ?>">IT</a>
+            <span style="color:var(--border-bright)">/</span>
+            <a href="?lang=en" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'en') ? 'lang-active' : '' ?>">EN</a>
         </div>
     </div>
 </nav>

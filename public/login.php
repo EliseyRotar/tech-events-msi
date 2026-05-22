@@ -1,5 +1,8 @@
 <?php
 require_once '../config.php';
+require_once '../src/helpers.php';
+
+$pageTitle = t('login_title') . ' — Tech Dragons Events';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['emailTxt'] ?? '');
@@ -26,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $registered = isset($_GET['registered']);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= htmlspecialchars($_COOKIE['lang'] ?? 'en', ENT_QUOTES) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In — Tech Dragons Events</title>
+    <title><?= htmlspecialchars($pageTitle, ENT_QUOTES) ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -50,7 +53,12 @@ $registered = isset($_GET['registered']);
         <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
         <div class="links">
             <a href="/">Overview</a>
-            <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Create Account</a>
+            <a href="/register.php" class="btn-primary" style="padding:8px 18px;"><?= t('nav_register') ?></a>
+        </div>
+        <div class="lang-switch">
+            <a href="?lang=it" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'it') ? 'lang-active' : '' ?>">IT</a>
+            <span style="color:var(--border-bright)">/</span>
+            <a href="?lang=en" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'en') ? 'lang-active' : '' ?>">EN</a>
         </div>
     </div>
 </nav>
@@ -58,12 +66,14 @@ $registered = isset($_GET['registered']);
 <!-- Form page -->
 <div class="form-page">
     <div class="form-card">
-        <span class="section-label">Portal Access</span>
-        <h1>Sign In</h1>
-        <p class="lead">Welcome back. Enter your credentials to continue.</p>
+        <span class="section-label"><?= t('login_label') ?></span>
+        <h1><?= t('login_title') ?></h1>
+        <p class="lead"><?= t('login_lead') ?></p>
 
         <?php if ($registered): ?>
-            <div class="success-msg">Account created successfully — sign in to continue.</div>
+            <div class="error-msg" style="background:rgba(0,232,120,0.08);border-color:rgba(0,232,120,0.3);color:var(--success);">
+                Account created successfully — sign in to continue.
+            </div>
         <?php endif; ?>
 
         <?php if (isset($error)): ?>
@@ -72,23 +82,24 @@ $registered = isset($_GET['registered']);
 
         <form method="POST" novalidate>
             <div class="form-group">
-                <label class="form-label" for="emailTxt">Email Address</label>
+                <label class="form-label" for="emailTxt"><?= t('login_email') ?></label>
                 <input class="form-input" type="email" id="emailTxt" name="emailTxt"
+                       value="<?= htmlspecialchars($_POST['emailTxt'] ?? '', ENT_QUOTES) ?>"
                        placeholder="name@organization.com" required autocomplete="email">
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="pswdTxt">Password</label>
+                <label class="form-label" for="pswdTxt"><?= t('login_password') ?></label>
                 <input class="form-input" type="password" id="pswdTxt" name="pswdTxt"
                        placeholder="••••••••" required autocomplete="current-password">
             </div>
 
-            <button type="submit" class="btn-primary btn-submit">Authorize Session</button>
+            <button type="submit" class="btn-primary btn-submit"><?= t('login_submit') ?></button>
         </form>
 
         <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--text-secondary);">
-            New here?
-            <a href="/register.php" style="color:var(--accent-blue);font-weight:600;">Create an account</a>
+            <?= t('login_register_prompt') ?>
+            <a href="/register.php" style="color:var(--accent-blue);font-weight:600;"><?= t('login_register_link') ?></a>
         </p>
     </div>
 </div>

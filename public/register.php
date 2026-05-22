@@ -1,7 +1,7 @@
 <?php
 require_once '../config.php';
 
-$pageTitle = "Organization Registration — Tech Events";
+$pageTitle = "Organization Registration — Tech Dragons Events";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['emailTxt'] ?? '');
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">Create Account</h1>
 
         <?php if (isset($error)): ?>
-            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= $error ?></p>
+            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <div class="grid-inputs">

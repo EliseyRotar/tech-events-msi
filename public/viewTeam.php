@@ -40,7 +40,7 @@
         <div class="nav-container">
             <a href="/" class="nav-logo">Tech<span>Events</span></a>
             <div class="links">
-                <a href="showeventstest.php">Dashboard</a>
+                <a href="dashboard.php">Dashboard</a>
                 <a href="/logout.php" class="btn-secondary">Log Out</a>
             </div>
         </div>
@@ -81,7 +81,7 @@
         <?php endif; ?>
 
         <div style="margin-top: 40px;">
-            <a href="showeventstest.php" class="btn-secondary">← Back to Tournament Details</a>
+            <a href="dashboard.php" class="btn-secondary">← Back to Tournament Details</a>
         </div>
     </div>
 

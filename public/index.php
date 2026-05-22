@@ -91,7 +91,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <h2 style="margin-bottom: 24px;">Ready to Elevate Your Competition?</h2>
             <p style="color: var(--text-muted); margin-bottom: 40px;">Join the elite organizations using Tech Events to power their esports ecosystems.</p>
             <div class="hero-actions">
-                <a href="/sign_in.php" class="btn-primary">Create Organization Account</a>
+                <a href="/register.php" class="btn-primary">Create Organization Account</a>
                 <a href="/#tournaments" class="btn-secondary">Request Demo</a>
             </div>
         </div>

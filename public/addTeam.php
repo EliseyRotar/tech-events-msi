@@ -1,81 +1,68 @@
 <?php 
-    require '../config.php';
+require '../config.php';
+\App\Auth::requireLogin();
+
+$pageTitle = "Register Organization — Tech Events";
+
+$sql = 'SELECT * FROM sponsor';
+$stm = $pdo->prepare($sql);
+$stm->execute();
+$sponsors = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['nameTxt']);
+    $nComp = (int)$_POST['nCompTxt'];
+    $idS = $_POST['idSTxt'];
 
     try {
-
-        $sql = 'SELECT idSponsor, nomeAzienda FROM sponsor';
-        $stm = $pdo ->prepare($sql);
-        $stm->execute();
-        $sponsors = $stm->fetchAll();
+        $pdo->beginTransaction();
+        $sql = "INSERT INTO squadre (nomeSquadra, nComponenti, idSponsor) VALUES (:n, :nc, :ids)";
+        $stm = $pdo->prepare($sql);
+        $stm->bindParam(':n', $name);
+        $stm->bindParam(':nc', $nComp);
+        $stm->bindParam(':ids', $idS);
+        
+        if ($stm->execute()) {
+            $pdo->commit();
+            header('Location: dashboard.php');
+            exit;
+        }
     } catch (PDOException $e) {
-        echo $e;
+        $pdo->rollBack();
+        $error = "Failed to register organization: " . $e->getMessage();
     }
+}
 
+require_once __DIR__ . '/../templates/layout/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/assets/css/php-pages.css">
-</head>
-<body>
-    <form method="POST">
-    
-        <p>nome:</p>
-        <input type="text" name="nameTxt" required>
-        
-        <p>numero componenti:</p>
-        <input type="number" name="membersTxt" required>
-        
-        <select name="sponsor">
-            <?php foreach($sponsor as $spo): ?>
-                <option value="<?= $spo["idSponsor"] ?>"> <?= $spo['nomeAzienda']?></option>
+<div class="container" style="margin-top: 100px; display: flex; align-items: center; justify-content: center; min-height: 70vh;">
+    <form method="POST" style="margin: 0;">
+        <p class="section-label" style="text-align: left; margin-bottom: 8px;">Organization Management</p>
+        <h1 style="font-family: var(--font-display); font-size: 28px; margin-bottom: 32px; font-weight: 800;">New Organization</h1>
+
+        <?php if (isset($error)): ?>
+            <p style="color: #ff3b30; font-weight: 600; text-align: center; margin-bottom: 24px;"><?= $error ?></p>
+        <?php endif; ?>
+
+        <p>Organization Name</p>
+        <input type="text" name="nameTxt" placeholder="Team Liquid / NAVI" required>
+
+        <p>Roster Capacity</p>
+        <input type="number" name="nCompTxt" placeholder="5" required>
+
+        <p>Primary Sponsor</p>
+        <select name="idSTxt" required>
+            <option value="">Select a partner</option>
+            <?php foreach($sponsors as $s): ?>
+                <option value="<?= $s['idSponsor'] ?>"><?= htmlspecialchars($s['nomeAzienda']) ?></option>
             <?php endforeach; ?>
         </select>
-        <br>
-        <br>
-        <button>crea</button>
+
+        <br><br>
+        <button type="submit">Register Organization</button>
+        <p style="text-align: center; margin-top: 24px;"><a href="dashboard.php" style="color: var(--text-muted);">Cancel and return</a></p>
     </form>
+</div>
 
-    <?php 
-    
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $name = $_POST['nameTxt'];
-            $numberC = $_POST['membersTxt'];
-            $idS = $_POST['sponsor'];
-
-            try{
-                $pdo -> exec("SET SESSION idle_transaction_timeout = 5");
-                $pdo -> exec("BEGIN WORK");
-                $pdo -> exec("LOCK TABLES squadre WRITE");
-    
-                $sql = 'INSERT INTO squadre VALUES (null, :n, :num, :idS)';
-    
-                $stm = $pdo ->prepare($sql);
-    
-                $stm -> bindParam(':n', $name);
-                $stm -> bindParam(':num', $numberC);
-                $stm -> bindParam(':idS', $idS);
-    
-                $stm -> execute();
-    
-                $pdo -> exec('COMMIT WORK');
-
-                header("location: showeventstest.php");
-            } catch (PDOException $e) {
-                echo ''. $e -> getMessage() .'';
-                $pdo -> exec('ROLLBACK WORK');
-            } finally {
-                $pdo -> exec('UNLOCK TABLES');
-            }
-        }
-
-
-    ?>
-
-
-</body>
-</html>
+<?php require_once __DIR__ . '/../templates/layout/footer.php'; ?>

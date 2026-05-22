@@ -59,7 +59,7 @@
     
                 $pdo -> exec('COMMIT WORK');
 
-                header("location: showeventstest.php");
+                header("location: dashboard.php");
             } catch (PDOException $e) {
                 echo ''. $e -> getMessage() .'';
                 $pdo -> exec('ROLLBACK WORK');

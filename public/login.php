@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION["id"] = $credentials['idUtente'];
         $_SESSION["accept"] = "ACCEPT";
         $_SESSION["admin"] = $credentials['isAdmin'];
-        header("Location: showeventstest.php");
+        header("Location: dashboard.php");
         exit;
     } else {
         $error = "Email o password errate.";
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="/" class="nav-logo">Tech<span>Events</span></a>
             <div class="links">
                 <a href="/">Overview</a>
-                <a href="/sign_in.php" class="btn-primary-outline">Register</a>
+                <a href="/register.php" class="btn-primary-outline">Register</a>
             </div>
         </div>
     </nav>
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p style="color: #ff3b30; font-weight: 600; text-align: center;"><?php echo $error; ?></p>
         <?php endif; ?>
 
-        <p style="text-align: center; margin-top: 24px;">New organization? <a href="sign_in.php" style="font-weight: 700;">Create account</a></p>
+        <p style="text-align: center; margin-top: 24px;">New organization? <a href="register.php" style="font-weight: 700;">Create account</a></p>
     </form>
 </body>
 </html>

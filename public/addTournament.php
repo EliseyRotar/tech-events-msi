@@ -9,7 +9,7 @@
 
     $idE = $_GET['id'] ?? null;
     if (!$idE) {
-        header("Location: showeventstest.php");
+        header("Location: dashboard.php");
         exit;
     }
 ?>
@@ -67,7 +67,7 @@
     
                 if ($stm->execute()) {
                     $pdo->commit();
-                    header("location: showeventstest.php");
+                    header("location: dashboard.php");
                     exit;
                 }
             } catch (PDOException $e) {

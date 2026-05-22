@@ -58,7 +58,7 @@
     
                 $stm->execute();
                 $pdo->commit();
-                header("location: showeventstest.php");
+                header("location: dashboard.php");
                 exit;
             } catch (PDOException $e) {
                 $pdo->rollBack();

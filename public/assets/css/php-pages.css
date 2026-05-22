@@ -1,120 +1,141 @@
-:root {
-    --bg: #050505;
-    --surface: #121212;
-    --border: #242426;
-    --primary: #2563eb;
-    --text: #f9f9f9;
-    --text-muted: #a1a1aa;
-    --font-main: 'Inter', sans-serif;
-    --radius: 8px;
-}
+/* ============================================================
+   PHP PAGES — Form & Admin page overrides
+   Loaded in addition to main.css on standalone pages
+   ============================================================ */
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Center the body for auth / form pages */
+body.page-form {
+    display: block;
     min-height: 100vh;
-    margin: 0;
 }
 
-form {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 48px;
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 440px;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+/* Standalone pages that don't use the layout header need
+   the glass-nav styles — they inherit from main.css.
+   Extra layout just for inline form pages below: */
+
+/* Scrollable form page (wider than auth) */
+.form-page-scroll {
+    padding-top: 100px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 }
 
-h1, p {
-    margin-bottom: 24px;
-}
-
-p {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-}
-
+/* Legacy input styles: keep old selectors working
+   for any pages not yet using .form-input class */
 input[type="text"],
 input[type="password"],
 input[type="number"],
 input[type="date"],
-select {
+input[type="email"],
+select,
+textarea {
     width: 100%;
-    padding: 12px 16px;
-    background: #000;
+    padding: 13px 16px;
+    background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    color: var(--text);
-    font-size: 16px;
-    margin-bottom: 24px;
-    transition: all 0.2s;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: var(--font-main);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-bottom: 20px;
 }
 
-input:focus, select:focus {
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
     outline: none;
-    border-color: var(--primary);
-    background: #080808;
+    border-color: var(--accent-blue);
+    background: rgba(0, 212, 255, 0.04);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
-button {
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+button[type="submit"],
+button:not([class]) {
     width: 100%;
     padding: 14px;
-    background: var(--primary);
-    color: #fff;
+    background: var(--accent-blue);
+    color: #000;
     border: none;
     border-radius: var(--radius);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font-main);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
 }
 
-button:hover {
-    background: #1d4ed8;
+button[type="submit"]:hover,
+button:not([class]):hover {
+    box-shadow: 0 0 24px rgba(0, 212, 255, 0.4);
     transform: translateY(-1px);
 }
 
-a {
-    color: var(--primary);
-    text-decoration: none;
+/* Standalone form card label (legacy p tag style) */
+form > p,
+.form-card > p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
+/* Table styles for pages using old markup */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 40px;
-    background: var(--surface);
+    background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
 }
 
 th, td {
-    padding: 16px;
+    padding: 16px 20px;
     text-align: left;
     border-bottom: 1px solid var(--border);
 }
 
 th {
-    background: #1a1a1c;
-    font-size: 12px;
+    background: rgba(255,255,255,0.02);
+    font-family: var(--font-mono);
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
 }
 
-tr:hover {
-    background: rgba(255, 255, 255, 0.02);
+tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

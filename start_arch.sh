@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Tech Events - Arch Linux Startup Script
+# Tech Dragons Events - Arch Linux Startup Script
 
 set -e
 
-echo "🚀 Starting Tech Events Setup for Arch Linux..."
+echo "🚀 Starting Tech Dragons Events Setup for Arch Linux..."
 
 # Check for Docker
 if ! command -v docker &> /dev/null; then
@@ -31,7 +31,7 @@ echo "🐳 Spinning up Docker containers..."
 docker compose up -d
 
 echo ""
-echo "✅ Tech Events is now running!"
+echo "✅ Tech Dragons Events is now running!"
 echo "🌐 Access the application at: http://localhost:8080"
 echo "🛠️ To stop the app, run: docker compose down"
 echo ""

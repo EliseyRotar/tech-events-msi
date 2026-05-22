@@ -1,8 +1,137 @@
 <?php
 return [
-    'title_home' => 'Tech Dragons Events — Gestione Professionale Esports',
-    'hero_badge' => 'Infrastruttura Esports',
-    'hero_cta_start' => 'Inizia — Gratis',
-    'hero_cta_cases' => 'Vedi Casi Studio',
-    // Add more keys as needed
+    // ── Page titles ────────────────────────────────────────
+    'title_home'            => 'Tech Dragons Events — L\'Infrastruttura per la Competizione Professionale',
+
+    // ── Nav ────────────────────────────────────────────────
+    'nav_archive'           => 'Archivio',
+    'nav_events'            => 'Eventi',
+    'nav_platform'          => 'Piattaforma',
+    'nav_contact'           => 'Contatto',
+    'nav_dashboard'         => 'Dashboard',
+    'nav_signout'           => 'Esci',
+    'nav_signin'            => 'Accedi',
+    'nav_register'          => 'Registrati',
+
+    // ── Hero ───────────────────────────────────────────────
+    'hero_badge'            => 'Infrastruttura Esports',
+    'hero_line1'            => 'L\'Infrastruttura per',
+    'hero_line2'            => 'la Competizione Professionale',
+    'hero_sub'              => 'Implementa una piattaforma completa per l\'orchestrazione di tornei, il coordinamento dei team e la biglietteria digitale. Costruita per le organizzazioni che competono al massimo livello.',
+    'hero_cta_events'       => 'Esplora gli Eventi',
+    'hero_cta_register'     => 'Registrati Ora',
+    'hero_scroll'           => 'Scorri',
+
+    // ── Stats bar ──────────────────────────────────────────
+    'stat_events_label'     => 'Eventi Gestiti',
+    'stat_countries_label'  => 'Paesi',
+    'stat_prizes_label'     => 'Montepremi Gestiti',
+    'stat_athletes_label'   => 'Atleti Registrati',
+
+    // ── Events section ─────────────────────────────────────
+    'events_label'          => 'Competizioni Live',
+    'events_title'          => 'Eventi Attivi',
+    'filter_all'            => 'Tutti',
+    'filter_lan'            => 'LAN',
+    'filter_online'         => 'Online',
+    'event_view'            => 'Dettagli',
+    'event_slots'           => 'posti disponibili',
+    'event_tba'             => 'TBD',
+    'event_prize_pool'      => 'montepremi',
+    'event_empty_title'     => 'Nessun evento programmato',
+    'event_empty_sub'       => 'Torna presto — la prossima competizione è sempre dietro l\'angolo.',
+    'event_create_first'    => 'Crea il Primo Evento',
+
+    // ── About / Platform ───────────────────────────────────
+    'about_label'           => 'La Piattaforma',
+    'about_statement'       => 'Costruita per le organizzazioni che rifiutano di compromettere l\'infrastruttura.',
+    'about_lead'            => 'Tech Dragons Events alimenta l\'intero ciclo di vita della competizione professionale — dalla creazione dei bracket ai feed di dati pronti per la trasmissione. Ogni componente è progettato per operare su scala globale senza un singolo punto di guasto.',
+    'about_cta'             => 'Inizia Gratis',
+
+    'feature_1_title'       => 'Sicurezza RBAC',
+    'feature_1_desc'        => 'Controllo degli accessi basato su ruoli con hashing Argon2ID. Livelli di autorizzazione separati per admin, organizzatori e giocatori — nessuna escalation di privilegi possibile.',
+    'feature_2_title'       => 'Orchestrazione Tornei',
+    'feature_2_desc'        => 'Crea, pianifica e gestisci tornei collegati agli eventi. Assegna titoli di gioco, imposta montepremi e coordina competizioni multi-bracket da un\'unica interfaccia.',
+    'feature_3_title'       => 'Organizzazioni Professionali',
+    'feature_3_desc'        => 'Gestione completa del roster con integrazione sponsor. Monitora i membri, assegna ruoli in-game e collega i profili degli atleti agli account verificati.',
+    'feature_4_title'       => 'Pronto per il Broadcast',
+    'feature_4_desc'        => 'Feed di dati live per l\'integrazione overlay con Twitch, YouTube e toolchain professionali. Dati in tempo reale, latenza zero.',
+
+    // ── Team section ───────────────────────────────────────
+    'team_label'            => 'Il Team',
+    'team_title'            => 'Incontra i Fondatori',
+    'team_sub'              => 'Le persone dietro Tech Dragons Events — costruiamo l\'infrastruttura che alimenta gli esports professionistici.',
+
+    // ── Contact section ────────────────────────────────────
+    'contact_label'         => 'Partecipa',
+    'contact_title'         => 'Pronto a Competere?',
+    'contact_sub'           => 'Che tu sia un giocatore, un organizzatore o uno sponsor — vogliamo sentirti.',
+    'contact_name'          => 'Nome Completo',
+    'contact_email'         => 'Indirizzo Email',
+    'contact_org'           => 'Organizzazione',
+    'contact_role'          => 'Il Tuo Ruolo',
+    'contact_role_opt'      => 'Seleziona un ruolo…',
+    'contact_role_player'   => 'Giocatore',
+    'contact_role_org'      => 'Organizzatore di Eventi',
+    'contact_role_sponsor'  => 'Sponsor',
+    'contact_role_broadcast'=> 'Broadcaster',
+    'contact_role_other'    => 'Altro',
+    'contact_message'       => 'Messaggio',
+    'contact_msg_ph'        => 'Parlaci del tuo evento, del tuo team o della tua richiesta…',
+    'contact_send'          => 'Invia Messaggio',
+    'contact_sending'       => 'Invio in corso…',
+    'contact_success_title' => 'Messaggio Ricevuto',
+    'contact_success_sub'   => 'Ti risponderemo entro 24 ore. Nel frattempo, crea il tuo account per iniziare.',
+    'contact_success_cta'   => 'Crea Account',
+
+    // ── Footer ─────────────────────────────────────────────
+    'footer_tagline'        => 'Il livello infrastrutturale per gli esports professionistici. Costruito per gli organizzatori che competono al massimo livello.',
+    'footer_platform'       => 'Piattaforma',
+    'footer_account'        => 'Account',
+    'footer_games'          => 'Giochi',
+    'footer_events'         => 'Eventi',
+    'footer_features'       => 'Funzionalità',
+    'footer_dashboard'      => 'Dashboard',
+    'footer_archive'        => 'Archivio',
+    'footer_create_account' => 'Crea Account',
+    'footer_signin'         => 'Accedi',
+    'footer_register_team'  => 'Registra Team',
+    'footer_copyright'      => '© 2026 Tech Dragons Events. Tutti i diritti riservati.',
+    'footer_privacy'        => 'Privacy',
+    'footer_terms'          => 'Termini',
+    'footer_status'         => 'Stato',
+
+    // ── Register page ──────────────────────────────────────
+    'register_label'        => 'Portale Organizzazioni',
+    'register_title'        => 'Crea Account',
+    'register_lead'         => 'Unisciti alla piattaforma che alimenta gli esports professionistici mondiali.',
+    'register_firstname'    => 'Nome',
+    'register_lastname'     => 'Cognome',
+    'register_email'        => 'Indirizzo Email',
+    'register_fiscal'       => 'Codice Fiscale / ID Governo',
+    'register_dob'          => 'Data di Nascita',
+    'register_password'     => 'Password',
+    'register_submit'       => 'Crea Account',
+    'register_signin_prompt'=> 'Hai già un account?',
+    'register_signin_link'  => 'Accedi',
+
+    // Register errors
+    'err_missing_fields'    => 'Compila tutti i campi obbligatori.',
+    'err_invalid_email'     => 'Inserisci un indirizzo email valido.',
+    'err_invalid_date'      => 'Inserisci una data di nascita valida.',
+    'err_future_date'       => 'La data di nascita non può essere nel futuro.',
+    'err_min_age'           => 'Devi avere almeno 13 anni per registrarti.',
+    'err_pswd_length'       => 'La password deve contenere almeno 8 caratteri.',
+    'err_email_taken'       => 'Questo indirizzo email è già registrato.',
+    'err_registration'      => 'Registrazione fallita. Riprova.',
+
+    // ── Login page ─────────────────────────────────────────
+    'login_label'           => 'Accesso Sicuro',
+    'login_title'           => 'Accedi',
+    'login_lead'            => 'Accedi alla dashboard della tua organizzazione e ai controlli degli eventi.',
+    'login_email'           => 'Indirizzo Email',
+    'login_password'        => 'Password',
+    'login_submit'          => 'Autenticati',
+    'login_register_prompt' => 'Non hai un account?',
+    'login_register_link'   => 'Creane uno',
 ];

@@ -31,10 +31,18 @@
 
 <!-- Header -->
 <div class="game-page-header">
-    <div>
-        <span class="section-label">Valorant · VLR.gg</span>
-        <h1>Valorant Events</h1>
-        <p>Completed VCT circuit events with prize pools and regions</p>
+    <div style="display:flex;align-items:center;gap:20px;">
+        <div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(255,70,85,0.08);border:1px solid rgba(255,70,85,0.2);flex-shrink:0;">
+            <svg width="36" height="36" viewBox="0 0 44 44" fill="none">
+                <path d="M22 8L36 18V26L22 36L8 26V18L22 8Z" fill="#FF4655" opacity="0.2"/>
+                <path d="M10 14L22 32L34 14H28L22 26L16 14H10Z" fill="#FF4655"/>
+            </svg>
+        </div>
+        <div>
+            <span class="section-label">Valorant · VLR.gg</span>
+            <h1>Valorant Events</h1>
+            <p>Completed VCT circuit events with prize pools and regions</p>
+        </div>
     </div>
     <a href="storico.html" class="back-link">← Back to Archive</a>
 </div>
@@ -52,6 +60,7 @@
         <thead>
             <tr>
                 <th data-col="title">Event</th>
+                <th data-col="dates">Dates</th>
                 <th data-col="prize">Prize Pool</th>
                 <th data-col="region">Region</th>
                 <th data-col="status">Status</th>
@@ -110,8 +119,9 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td style="font-weight:600;">${esc(row.title)}</td>
+                <td style="color:var(--text-secondary);font-size:13px;">${esc(row.dates)}</td>
                 <td style="font-family:var(--font-mono);color:var(--accent-blue);">${esc(row.prize)}</td>
-                <td style="color:var(--text-secondary);">${esc(row.region)}</td>
+                <td><span style="background:rgba(0,212,255,0.1);color:var(--accent-blue);padding:2px 8px;border-radius:4px;font-size:11px;font-family:var(--font-mono);letter-spacing:0.5px;text-transform:uppercase">${esc(row.region)}</span></td>
                 <td><span style="${statusStyle}">${esc(row.status)}</span></td>
             `;
             tbody.appendChild(tr);
@@ -142,26 +152,17 @@
         showSkeleton();
         countEl.textContent = '';
         try {
-            // Try direct then fallback proxy
-            let data = null;
-            const endpoints = [
-                'https://vlrggapi.vercel.app/events?q=completed',
-                'https://corsproxy.io/?https://vlrggapi.vercel.app/events?q=completed',
-            ];
-            for (const url of endpoints) {
-                try {
-                    const res = await fetch(url);
-                    if (res.ok) { data = await res.json(); break; }
-                } catch { /* try next */ }
-            }
+            // Use server-side PHP proxy to avoid CORS restrictions
+            const res  = await fetch('/api/valorant.php');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+            if (!json.success) throw new Error('API error');
 
-            if (!data) throw new Error('All endpoints failed');
-
-            const events = Array.isArray(data) ? data : (data.data ?? []);
-            allRows = events.map(e => ({
-                title:  e.title  ?? e.name ?? 'Unknown',
-                prize:  e.prize  ?? e.prizePool ?? '',
+            allRows = (json.data ?? []).map(e => ({
+                title:  e.title  ?? '',
+                prize:  e.prize  ?? '',
                 region: e.region ?? '',
+                dates:  e.dates  ?? '',
                 status: e.status ?? 'completed',
             }));
             filtered = [...allRows];
@@ -169,9 +170,9 @@
             shown = 0;
             renderRows();
         } catch (e) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">
-                Failed to load Valorant events. The VLR.gg API may be temporarily unavailable.
-                <button class="game-load-btn" onclick="location.reload()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:40px;">
+                Failed to load Valorant events. Please try again.
+                <button class="game-load-btn" onclick="load()" style="margin-left:12px;display:inline-block;padding:8px 16px;">Retry</button>
             </td></tr>`;
             countEl.textContent = '';
         } finally {

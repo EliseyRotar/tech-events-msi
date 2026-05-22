@@ -57,7 +57,19 @@
 <!-- Cards -->
 <div class="archive-cards" id="cards-container">
     <a href="cs2.html" class="archive-card" data-game="cs2" data-title="cs2 championship counter-strike">
-        <div class="archive-card-icon">🔫</div>
+        <!-- CS2 Logo SVG -->
+        <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(245,142,0,0.2);margin-bottom:4px;">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- CS2 flame/star mark: simplified from CS2 visual identity -->
+                <path d="M24 4L28.5 14.5L40 13L32 22L36 34L24 28L12 34L16 22L8 13L19.5 14.5Z" fill="#F58E00" opacity="0.15"/>
+                <path d="M24 7L27.8 15.8L37.5 14.8L30.8 21.5L33.5 31.5L24 26.5L14.5 31.5L17.2 21.5L10.5 14.8L20.2 15.8Z" fill="#F58E00" opacity="0.5"/>
+                <path d="M24 11L26.9 17.6L34.2 17L29.2 22L31.2 29.5L24 25.8L16.8 29.5L18.8 22L13.8 17L21.1 17.6Z" fill="#F58E00"/>
+                <circle cx="24" cy="22" r="4" fill="#0a0a0a"/>
+                <circle cx="24" cy="22" r="2.5" fill="#F58E00"/>
+                <!-- CS2 text indicator -->
+                <text x="24" y="43" text-anchor="middle" fill="#F58E00" font-size="7" font-weight="700" font-family="monospace" letter-spacing="1">CS2</text>
+            </svg>
+        </div>
         <span class="section-label" style="margin-bottom:8px;">Counter-Strike 2</span>
         <h3>CS2 Matches</h3>
         <p>Live match data and bracket outcomes for CS2 Tier-1 events sourced via HLTV. Filter by event, sort by date.</p>
@@ -65,7 +77,19 @@
     </a>
 
     <a href="dota.html" class="archive-card" data-game="dota" data-title="dota 2 internationals opendota teams">
-        <div class="archive-card-icon">⚔️</div>
+        <!-- Dota 2 Logo SVG -->
+        <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(196,35,35,0.2);margin-bottom:4px;">
+            <svg width="44" height="48" viewBox="0 0 44 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Dota 2 shield / droplet shape -->
+                <path d="M22 3L40 11V26C40 35 31 43 22 46C13 43 4 35 4 26V11L22 3Z" fill="#C42323" opacity="0.15"/>
+                <path d="M22 6L37 13V26C37 33.5 29.5 40.5 22 43.5C14.5 40.5 7 33.5 7 26V13L22 6Z" fill="#C42323" opacity="0.4"/>
+                <path d="M22 10L34 16.5V26C34 31.5 28.5 37.5 22 40C15.5 37.5 10 31.5 10 26V16.5L22 10Z" fill="#C42323"/>
+                <!-- D letter -->
+                <path d="M16 19H23C27 19 29 21 29 25C29 29 27 31 23 31H16V19Z" fill="#0a0a0a"/>
+                <path d="M18 21H22.5C25 21 27 22.5 27 25C27 27.5 25 29 22.5 29H18V21Z" fill="#C42323" opacity="0.3"/>
+                <text x="22" y="26.5" text-anchor="middle" fill="#0a0a0a" font-size="9" font-weight="900" font-family="sans-serif">D2</text>
+            </svg>
+        </div>
         <span class="section-label" style="margin-bottom:8px;">Dota 2</span>
         <h3>Dota 2 Teams</h3>
         <p>Professional team roster and performance tracking for major Dota 2 circuits. Win/loss records and ratings.</p>
@@ -73,7 +97,18 @@
     </a>
 
     <a href="valorant.html" class="archive-card" data-game="valorant" data-title="valorant challengers vct events">
-        <div class="archive-card-icon">🎯</div>
+        <!-- Valorant Logo SVG -->
+        <div class="archive-card-icon" style="width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#0a0a0a;border:1px solid rgba(255,70,85,0.2);margin-bottom:4px;">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Valorant V-diamond mark -->
+                <path d="M22 4L40 16V28L22 40L4 28V16L22 4Z" fill="#FF4655" opacity="0.12"/>
+                <path d="M22 8L36 18V26L22 36L8 26V18L22 8Z" fill="#FF4655" opacity="0.3"/>
+                <!-- Valorant V shape -->
+                <path d="M10 14L22 32L34 14H28L22 26L16 14H10Z" fill="#FF4655"/>
+                <!-- Diagonal slash (the valorant mark accent) -->
+                <line x1="19" y1="14" x2="25" y2="14" stroke="#FF4655" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+            </svg>
+        </div>
         <span class="section-label" style="margin-bottom:8px;">Valorant</span>
         <h3>Valorant Events</h3>
         <p>Regional tournament logs and prize pool history for the VCT ecosystem. Completed events with full metadata.</p>

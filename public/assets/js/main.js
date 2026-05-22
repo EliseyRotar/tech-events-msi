@@ -112,7 +112,8 @@
 
   /* ── GSAP Initialization ───────────────────────────────── */
   if (typeof gsap === 'undefined') return;
-  gsap.registerPlugin(ScrollTrigger);
+  const hasST = typeof ScrollTrigger !== 'undefined';
+  if (hasST) gsap.registerPlugin(ScrollTrigger);
 
   /* ── Hero Text Reveal ──────────────────────────────────── */
   const heroWords = document.querySelectorAll('.hero-word');
@@ -126,6 +127,9 @@
       delay: 0.8,
     });
   }
+
+  /* ── All scroll-dependent code requires ScrollTrigger ───── */
+  if (!hasST) return;
 
   /* ── Scroll Reveal: generic .reveal elements ───────────── */
   const revealEls = document.querySelectorAll('.reveal');

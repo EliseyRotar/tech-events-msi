@@ -3,25 +3,25 @@
             <div class="footer-top">
                 <div class="footer-brand">
                     <span class="footer-logo">Tech<span>Dragons</span></span>
-                    <p>The infrastructure layer for professional esports. Built for organizers who compete at the highest level.</p>
+                    <p><?= t('footer_tagline') ?></p>
                 </div>
 
                 <div class="footer-links">
                     <div class="footer-col">
-                        <h4>Platform</h4>
-                        <a href="/#events">Events</a>
-                        <a href="/#about">Features</a>
-                        <a href="/dashboard.php">Dashboard</a>
-                        <a href="/assets/storici/storico.html">Archive</a>
+                        <h4><?= t('footer_platform') ?></h4>
+                        <a href="/#events"><?= t('footer_events') ?></a>
+                        <a href="/#about"><?= t('footer_features') ?></a>
+                        <a href="/dashboard.php"><?= t('footer_dashboard') ?></a>
+                        <a href="/assets/storici/storico.html"><?= t('footer_archive') ?></a>
                     </div>
                     <div class="footer-col">
-                        <h4>Account</h4>
-                        <a href="/register.php">Create Account</a>
-                        <a href="/login.php">Sign In</a>
-                        <a href="/addTeam.php">Register Team</a>
+                        <h4><?= t('footer_account') ?></h4>
+                        <a href="/register.php"><?= t('footer_create_account') ?></a>
+                        <a href="/login.php"><?= t('footer_signin') ?></a>
+                        <a href="/addTeam.php"><?= t('footer_register_team') ?></a>
                     </div>
                     <div class="footer-col">
-                        <h4>Games</h4>
+                        <h4><?= t('footer_games') ?></h4>
                         <a href="/assets/storici/cs2.html">CS2</a>
                         <a href="/assets/storici/valorant.html">Valorant</a>
                         <a href="/assets/storici/dota.html">Dota 2</a>
@@ -30,11 +30,11 @@
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> Tech Dragons Events. All rights reserved.</p>
+                <p><?= t('footer_copyright') ?></p>
                 <div class="footer-bottom-links">
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Status</a>
+                    <a href="#"><?= t('footer_privacy') ?></a>
+                    <a href="#"><?= t('footer_terms') ?></a>
+                    <a href="#"><?= t('footer_status') ?></a>
                 </div>
             </div>
         </div>

@@ -15,9 +15,12 @@ if (isset($_GET['lang'])) {
     header('Location: ' . $url);
     exit;
 }
+
+// Load translations so t() is available to all pages that include this header
+require_once __DIR__ . '/../../src/helpers.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= htmlspecialchars($_COOKIE['lang'] ?? 'en', ENT_QUOTES) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,23 +61,23 @@ if (isset($_GET['lang'])) {
         </a>
 
         <div class="links" role="list">
-            <a href="/assets/storici/storico.html" role="listitem">Archive</a>
-            <a href="/#events" role="listitem">Events</a>
-            <a href="/#about" role="listitem">Platform</a>
-            <a href="/#contact" role="listitem">Contact</a>
+            <a href="/assets/storici/storico.html" role="listitem"><?= t('nav_archive') ?></a>
+            <a href="/#events" role="listitem"><?= t('nav_events') ?></a>
+            <a href="/#about" role="listitem"><?= t('nav_platform') ?></a>
+            <a href="/#contact" role="listitem"><?= t('nav_contact') ?></a>
             <?php if (isset($_SESSION['email'])): ?>
-                <a href="/dashboard.php" class="btn-secondary" style="padding:8px 18px;">Dashboard</a>
-                <a href="/logout.php" class="btn-ghost" style="padding:8px 18px;">Sign Out</a>
+                <a href="/dashboard.php" class="btn-secondary" style="padding:8px 18px;"><?= t('nav_dashboard') ?></a>
+                <a href="/logout.php" class="btn-ghost" style="padding:8px 18px;"><?= t('nav_signout') ?></a>
             <?php else: ?>
-                <a href="/login.php" class="btn-secondary" style="padding:8px 18px;">Sign In</a>
-                <a href="/register.php" class="btn-primary" style="padding:8px 18px;">Register</a>
+                <a href="/login.php" class="btn-secondary" style="padding:8px 18px;"><?= t('nav_signin') ?></a>
+                <a href="/register.php" class="btn-primary" style="padding:8px 18px;"><?= t('nav_register') ?></a>
             <?php endif; ?>
         </div>
 
         <div class="lang-switch" aria-label="Language selector">
-            <a href="?lang=it" class="lang-btn" aria-label="Italian">IT</a>
+            <a href="?lang=it" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'it') ? 'lang-active' : '' ?>" aria-label="Italian">IT</a>
             <span style="color:var(--border-bright)">/</span>
-            <a href="?lang=en" class="lang-btn" aria-label="English">EN</a>
+            <a href="?lang=en" class="lang-btn <?= (($_COOKIE['lang'] ?? 'it') === 'en') ? 'lang-active' : '' ?>" aria-label="English">EN</a>
         </div>
 
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -85,15 +88,15 @@ if (isset($_GET['lang'])) {
 
 <!-- Mobile menu -->
 <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
-    <a href="/assets/storici/storico.html">Archive</a>
-    <a href="/#events">Events</a>
-    <a href="/#about">Platform</a>
-    <a href="/#contact">Contact</a>
+    <a href="/assets/storici/storico.html"><?= t('nav_archive') ?></a>
+    <a href="/#events"><?= t('nav_events') ?></a>
+    <a href="/#about"><?= t('nav_platform') ?></a>
+    <a href="/#contact"><?= t('nav_contact') ?></a>
     <?php if (isset($_SESSION['email'])): ?>
-        <a href="/dashboard.php">Dashboard</a>
-        <a href="/logout.php">Sign Out</a>
+        <a href="/dashboard.php"><?= t('nav_dashboard') ?></a>
+        <a href="/logout.php"><?= t('nav_signout') ?></a>
     <?php else: ?>
-        <a href="/login.php">Sign In</a>
-        <a href="/register.php">Register →</a>
+        <a href="/login.php"><?= t('nav_signin') ?></a>
+        <a href="/register.php"><?= t('nav_register') ?> →</a>
     <?php endif; ?>
 </nav>

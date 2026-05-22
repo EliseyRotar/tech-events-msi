@@ -1,6 +1,6 @@
-# Contributing to Tech Events - Esports Event Manager
+# Contributing to Tech Dragons Events - Esports Event Manager
 
-Thank you for your interest in contributing to Tech Events! We welcome contributions from the community to help make this the best esports management platform.
+Thank you for your interest in contributing to Tech Dragons Events! We welcome contributions from the community to help make this the best esports management platform.
 
 ## How to Contribute
 

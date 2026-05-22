@@ -4,34 +4,44 @@ require '../config.php';
 
 $idE = $_GET['id'] ?? null;
 if (!$idE) {
-    header("Location: dashboard.php");
+    header('Location: dashboard.php');
     exit;
 }
 
-$sql = 'SELECT idGioco, nomeGioco FROM giochi';
-$stm = $pdo->prepare($sql);
+$stm = $pdo->prepare('SELECT idGioco, nomeGioco FROM giochi ORDER BY nomeGioco');
 $stm->execute();
 $gamesInfo = $stm->fetchAll(PDO::FETCH_ASSOC);
 
+$stm2 = $pdo->prepare('SELECT nome FROM evento WHERE idEvento = :id');
+$stm2->bindParam(':id', $idE);
+$stm2->execute();
+$event = $stm2->fetch(PDO::FETCH_ASSOC);
+if (!$event) {
+    header('Location: dashboard.php');
+    exit;
+}
+
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name  = trim($_POST['nameTxt'] ?? '');
+    $name  = trim($_POST['nameTxt']  ?? '');
     $money = trim($_POST['moneyTxt'] ?? '');
     $date  = trim($_POST['dateSTxt'] ?? '');
-    $idG   = (int)($_POST['gioco'] ?? 0);
+    $idG   = (int)($_POST['gioco']   ?? 0);
 
     try {
         $pdo->beginTransaction();
-        $sql = 'INSERT INTO tornei (nomeTorneo, montePremi, giornoSvolgimento, idEvento, idGioco) VALUES (:n, :m, :d, :idE, :idG)';
-        $stm = $pdo->prepare($sql);
-        $stm->bindParam(':n', $name);
-        $stm->bindParam(':m', $money);
-        $stm->bindParam(':d', $date);
+        $stm = $pdo->prepare(
+            'INSERT INTO tornei (nomeTorneo, montePremi, giornoSvolgimento, idEvento, idGioco)
+             VALUES (:n, :m, :d, :idE, :idG)'
+        );
+        $stm->bindParam(':n',   $name);
+        $stm->bindParam(':m',   $money);
+        $stm->bindParam(':d',   $date);
         $stm->bindParam(':idE', $idE);
         $stm->bindParam(':idG', $idG);
         $stm->execute();
         $pdo->commit();
-        header("Location: dashboard.php");
+        header('Location: dashboard.php');
         exit;
     } catch (PDOException $e) {
         $pdo->rollBack();
@@ -40,39 +50,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aggiungi Torneo — Tech Dragons Events</title>
+    <title>Add Tournament — Tech Dragons Events</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/php-pages.css">
 </head>
-<body>
-    <form method="POST">
-        <p>Nome Torneo:</p>
-        <input type="text" name="nameTxt" required>
+<body class="page-form">
 
-        <p>Montepremi:</p>
-        <input type="number" name="moneyTxt" required>
+<div id="page-overlay" aria-hidden="true"><span class="overlay-logo">TD</span></div>
+<div id="cursor-dot"  aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
 
-        <p>Giorno Svolgimento:</p>
-        <input type="date" name="dateSTxt" required>
-        <br><br>
+<nav class="glass-nav scrolled" id="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Tech<span>Dragons</span></a>
+        <div class="links">
+            <a href="/dashboard.php" class="btn-secondary" style="padding:8px 18px;">Dashboard</a>
+        </div>
+    </div>
+</nav>
 
-        <select name="gioco">
-            <?php foreach ($gamesInfo as $game): ?>
-                <option value="<?= htmlspecialchars($game['idGioco'], ENT_QUOTES) ?>">
-                    <?= htmlspecialchars($game['nomeGioco']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+<div class="form-page">
+    <div class="form-card form-card-wide">
+        <span class="section-label">Admin — Tournament Management</span>
+        <h1>Add Tournament</h1>
+        <p class="lead">
+            Adding to: <strong><?= htmlspecialchars($event['nome'], ENT_QUOTES) ?></strong>
+        </p>
 
         <?php if ($error): ?>
-            <p style="color: #ff3b30; margin-top: 12px;">Errore: <?= htmlspecialchars($error) ?></p>
+            <div class="error-msg">Error: <?= htmlspecialchars($error, ENT_QUOTES) ?></div>
         <?php endif; ?>
 
-        <br><br>
-        <button type="submit">Crea Torneo</button>
-    </form>
+        <form method="POST" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="nameTxt">Tournament Name</label>
+                <input class="form-input" type="text" id="nameTxt" name="nameTxt"
+                       placeholder="e.g. CS2 Open Bracket" required>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    <label class="form-label" for="moneyTxt">Prize Pool (€)</label>
+                    <input class="form-input" type="number" id="moneyTxt" name="moneyTxt"
+                           placeholder="50000" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dateSTxt">Tournament Date</label>
+                    <input class="form-input" type="date" id="dateSTxt" name="dateSTxt" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="gioco">Game Title</label>
+                <select class="form-select form-input" id="gioco" name="gioco" required>
+                    <option value="">Select a game…</option>
+                    <?php foreach ($gamesInfo as $game): ?>
+                        <option value="<?= (int)$game['idGioco'] ?>">
+                            <?= htmlspecialchars($game['nomeGioco'], ENT_QUOTES) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary btn-submit">Create Tournament</button>
+        </form>
+
+        <p style="text-align:center;margin-top:24px;font-size:14px;">
+            <a href="/dashboard.php" style="color:var(--text-secondary);">← Back to Dashboard</a>
+        </p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
 </body>
 </html>

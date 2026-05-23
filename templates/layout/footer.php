@@ -32,9 +32,9 @@
             <div class="footer-bottom">
                 <p><?= t('footer_copyright') ?></p>
                 <div class="footer-bottom-links">
-                    <a href="#"><?= t('footer_privacy') ?></a>
-                    <a href="#"><?= t('footer_terms') ?></a>
-                    <a href="#"><?= t('footer_status') ?></a>
+                    <a href="/privacy.php"><?= t('footer_privacy') ?></a>
+                    <a href="/terms.php"><?= t('footer_terms') ?></a>
+                    <a href="https://status.render.com" target="_blank" rel="noopener"><?= t('footer_status') ?></a>
                 </div>
             </div>
         </div>

@@ -2025,3 +2025,247 @@ h2 {
   .game-controls { flex-direction: column; }
   .game-search { width: 100%; }
 }
+
+/* ════════════════════════════════════════════════════════
+   SCROLLYTELLING SECTION — Enter the Arena
+   Three.js particle morph + pinned canvas + scrubbed text
+   ════════════════════════════════════════════════════════ */
+
+.scrollytell {
+  position: relative;
+  width: 100%;
+  background: #050507;
+  /* Children .story-acts sets total scroll length */
+  isolation: isolate;
+}
+
+.scrollytell-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(0,30,50,0.4) 0%, transparent 60%),
+    #050507;
+}
+
+#story-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.scrollytell-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at center, transparent 0%, transparent 45%, rgba(5,5,7,0.92) 100%),
+    linear-gradient(180deg, rgba(5,5,7,0.6) 0%, transparent 18%, transparent 82%, rgba(5,5,7,0.85) 100%);
+}
+
+.scrollytell-grid {
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+  background-size: 90px 90px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, black 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 60% at center, black 30%, transparent 80%);
+  opacity: 0.7;
+}
+
+.scrollytell-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ── Chrome overlays ─────────────────────────────────── */
+.story-chrome {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: none;
+  text-align: center;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.story-chrome-top    { top: clamp(70px, 11vh, 110px); }
+.story-chrome-bottom { bottom: clamp(40px, 7vh, 70px); }
+
+.story-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 600;
+  margin-top: 10px;
+  color: var(--text-primary);
+  letter-spacing: -0.6px;
+  text-shadow: 0 2px 30px rgba(0,212,255,0.2);
+}
+
+.story-progress {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.story-progress-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.story-progress-label #story-act-num {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.story-progress-sep { margin: 0 4px; color: var(--text-dim); }
+
+.story-progress-track {
+  width: clamp(180px, 26vw, 320px);
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.story-progress-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent-blue), #ffffff);
+  transform: scaleX(0);
+  transform-origin: left center;
+  box-shadow: 0 0 16px rgba(0,212,255,0.6);
+  will-change: transform;
+}
+
+/* ── Acts (drives scroll) ────────────────────────────── */
+.story-acts {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.story-act {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 clamp(20px, 8vw, 120px);
+  position: relative;
+}
+
+.story-act-right {
+  justify-content: flex-end;
+}
+
+.story-text {
+  pointer-events: auto;
+  max-width: 460px;
+  background: rgba(8, 8, 12, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  padding: 34px 36px;
+  border-radius: var(--radius);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  will-change: transform, opacity;
+  position: relative;
+}
+
+.story-text::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.35), transparent 40%, transparent 60%, rgba(0,212,255,0.15));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+.story-chapter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3.5px;
+  color: var(--accent-blue);
+  display: inline-block;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.story-text h3 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.6vw, 42px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  margin-bottom: 18px;
+  color: var(--text-primary);
+}
+
+.story-text p {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+}
+
+.story-text p:last-of-type { margin-bottom: 0; }
+
+.story-cta {
+  display: inline-flex;
+  padding: 12px 26px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* ── Mobile fallback (≤ 768px): static, no pinning ─── */
+@media (max-width: 768px) {
+  .scrollytell-sticky {
+    position: relative;
+    height: 70vh;
+    min-height: 480px;
+  }
+  .story-chrome-top    { top: 40px; }
+  .story-chrome-bottom { bottom: 24px; }
+  .story-section-title { font-size: 20px; }
+  .story-act, .story-act-right {
+    justify-content: center;
+    padding: 0 22px;
+    height: auto;
+    min-height: 80vh;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .story-text { padding: 26px 24px; }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scrollytell-sticky { position: relative; height: 80vh; }
+  .story-act, .story-act-right { height: auto; min-height: 60vh; padding: 60px 24px; }
+  #story-canvas { opacity: 0.4; }
+}

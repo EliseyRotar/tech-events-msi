@@ -122,6 +122,73 @@ $words2 = array_filter(explode(' ', $line2));
 </section>
 
 <!-- ══════════════════════════════════════════════════════
+     2.5 SCROLLYTELLING — Enter the Arena
+═══════════════════════════════════════════════════════ -->
+<section class="scrollytell" id="story" aria-label="Tech Dragons story">
+    <!-- Pinned 3D canvas + chrome -->
+    <div class="scrollytell-sticky">
+        <canvas id="story-canvas" aria-hidden="true"></canvas>
+        <div class="scrollytell-grid" aria-hidden="true"></div>
+        <div class="scrollytell-vignette" aria-hidden="true"></div>
+        <div class="scrollytell-noise" aria-hidden="true"></div>
+
+        <!-- Top chrome: section label + progress -->
+        <div class="story-chrome story-chrome-top">
+            <span class="section-label"><?= t('story_section_label') ?></span>
+            <h2 class="story-section-title"><?= t('story_section_title') ?></h2>
+        </div>
+
+        <div class="story-chrome story-chrome-bottom">
+            <div class="story-progress">
+                <span class="story-progress-label">
+                    <?= t('story_act_label') ?>
+                    <span id="story-act-num">1</span>
+                    <span class="story-progress-sep">/</span>
+                    <span class="story-progress-total">4</span>
+                </span>
+                <div class="story-progress-track"><div class="story-progress-fill"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acts (drive the scroll) -->
+    <div class="story-acts">
+        <article class="story-act" data-act="1">
+            <div class="story-text">
+                <span class="story-chapter">01 — Origin</span>
+                <h3><?= t('story_t1') ?></h3>
+                <p><?= t('story_b1') ?></p>
+            </div>
+        </article>
+
+        <article class="story-act story-act-right" data-act="2">
+            <div class="story-text">
+                <span class="story-chapter">02 — Network</span>
+                <h3><?= t('story_t2') ?></h3>
+                <p><?= t('story_b2') ?></p>
+            </div>
+        </article>
+
+        <article class="story-act" data-act="3">
+            <div class="story-text">
+                <span class="story-chapter">03 — Scale</span>
+                <h3><?= t('story_t3') ?></h3>
+                <p><?= t('story_b3') ?></p>
+            </div>
+        </article>
+
+        <article class="story-act story-act-right" data-act="4">
+            <div class="story-text">
+                <span class="story-chapter">04 — Stage</span>
+                <h3><?= t('story_t4') ?></h3>
+                <p><?= t('story_b4') ?></p>
+                <a href="/register.php" class="btn-primary story-cta"><?= t('story_cta') ?> →</a>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
      3. EVENTS
 ═══════════════════════════════════════════════════════ -->
 <section class="events-section" id="events">
@@ -426,4 +493,5 @@ $words2 = array_filter(explode(' ', $line2));
 </section>
 
 <script src="/assets/js/hero-bg.js"></script>
+<script src="/assets/js/scrollytelling.js" defer></script>
 <?php require_once __DIR__ . '/../templates/layout/footer.php'; ?>

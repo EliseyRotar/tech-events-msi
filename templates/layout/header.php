@@ -27,6 +27,11 @@ require_once __DIR__ . '/../../src/helpers.php';
     <title><?php echo htmlspecialchars($pageTitle ?? 'Tech Dragons Events — Esports Infrastructure', ENT_QUOTES, 'UTF-8'); ?></title>
     <meta name="description" content="Professional esports event management. Tournament orchestration, team coordination, and digital ticketing.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon"  href="/favicon.ico">
+    <link rel="icon" type="image/png"     href="/favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon"          href="/apple-touch-icon.png">
+
     <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +54,7 @@ require_once __DIR__ . '/../../src/helpers.php';
 
 <!-- Page load overlay -->
 <div id="page-overlay" aria-hidden="true">
-    <span class="overlay-logo">TD</span>
+    <img src="/assets/img/logo.png" class="overlay-logo-img" alt="Tech Dragons Events">
 </div>
 
 <!-- Custom cursor -->
@@ -60,6 +65,7 @@ require_once __DIR__ . '/../../src/helpers.php';
 <nav class="glass-nav" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
         <a href="/" class="nav-logo" aria-label="Tech Dragons Events — Home">
+            <img src="/assets/img/logo.png" alt="Tech Dragons" class="nav-logo-img">
             Tech<span>Dragons</span>
         </a>
 

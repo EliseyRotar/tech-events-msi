@@ -3,10 +3,12 @@
 namespace App;
 
 /**
- * Sends email via Gmail SMTP using cURL.
- * Configure via environment variables:
- *   MAIL_FROM       — Gmail address (e.g. techdragonevents@gmail.com)
- *   MAIL_APP_PASS   — Gmail App Password (16 chars, spaces optional)
+ * Sends transactional email via Brevo (formerly Sendinblue) HTTP API.
+ * Works on Render free tier (no SMTP needed — pure HTTPS on port 443).
+ *
+ * Required environment variables:
+ *   BREVO_API_KEY   — Brevo API key (starts with xkeysib-)
+ *   MAIL_FROM       — Verified sender email (e.g. techdragonevents@gmail.com)
  *   MAIL_FROM_NAME  — Display name shown in email clients
  *   CONTACT_EMAIL   — Where contact form submissions are delivered
  */
@@ -14,65 +16,51 @@ class Mailer
 {
     public static function send(string $to, string $subject, string $text, ?string $html = null): bool
     {
-        $from = getenv('MAIL_FROM') ?: '';
-        $pass = str_replace(' ', '', getenv('MAIL_APP_PASS') ?: '');
-        $name = getenv('MAIL_FROM_NAME') ?: 'Tech Dragons Events';
+        $apiKey  = getenv('BREVO_API_KEY') ?: '';
+        $from    = getenv('MAIL_FROM') ?: '';
+        $name    = getenv('MAIL_FROM_NAME') ?: 'Tech Dragons Events';
 
-        if ($from === '' || $pass === '') {
-            error_log('[Mailer] MAIL_FROM or MAIL_APP_PASS not configured');
+        if ($apiKey === '' || $from === '') {
+            error_log('[Mailer] BREVO_API_KEY or MAIL_FROM not configured');
             return false;
         }
 
-        // Build RFC 2822 MIME message
-        $boundary = '=_Part_' . md5(uniqid('', true));
-
-        $headers = "From: {$name} <{$from}>\r\n"
-                 . "To: {$to}\r\n"
-                 . "Subject: {$subject}\r\n"
-                 . "MIME-Version: 1.0\r\n";
+        $payload = [
+            'sender'      => ['name' => $name, 'email' => $from],
+            'to'          => [['email' => $to]],
+            'subject'     => $subject,
+            'textContent' => $text,
+        ];
 
         if ($html !== null) {
-            $headers .= "Content-Type: multipart/alternative; boundary=\"{$boundary}\"\r\n";
-            $body     = "\r\n--{$boundary}\r\n"
-                      . "Content-Type: text/plain; charset=UTF-8\r\n\r\n"
-                      . $text . "\r\n"
-                      . "--{$boundary}\r\n"
-                      . "Content-Type: text/html; charset=UTF-8\r\n\r\n"
-                      . $html . "\r\n"
-                      . "--{$boundary}--\r\n";
-        } else {
-            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-            $body     = "\r\n" . $text . "\r\n";
+            $payload['htmlContent'] = $html;
         }
 
-        $message = $headers . $body;
-        $pos     = 0;
-
-        $ch = curl_init('smtps://smtp.gmail.com:465');
+        $ch = curl_init('https://api.brevo.com/v3/smtp/email');
         curl_setopt_array($ch, [
-            CURLOPT_MAIL_FROM      => "<{$from}>",
-            CURLOPT_MAIL_RCPT      => ["<{$to}>"],
-            CURLOPT_USERPWD        => "{$from}:{$pass}",
-            CURLOPT_USE_SSL        => CURLUSESSL_ALL,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_UPLOAD         => true,
-            CURLOPT_READFUNCTION   => static function ($ch, $fd, $len) use (&$message, &$pos) {
-                $chunk = substr($message, $pos, $len);
-                $pos  += strlen($chunk);
-                return $chunk;
-            },
-            CURLOPT_INFILESIZE     => strlen($message),
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode($payload),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 15,
-            CURLOPT_VERBOSE        => false,
+            CURLOPT_HTTPHEADER     => [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                "api-key: {$apiKey}",
+            ],
         ]);
 
-        curl_exec($ch);
-        $err = curl_error($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err      = curl_error($ch);
         curl_close($ch);
 
         if ($err !== '') {
-            error_log("[Mailer] Gmail SMTP error: {$err}");
+            error_log("[Mailer] cURL error: {$err}");
+            return false;
+        }
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            error_log("[Mailer] Brevo API error {$httpCode}: {$response}");
             return false;
         }
 

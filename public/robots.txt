@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Block admin/auth-only pages from indexing
+Disallow: /dashboard.php
+Disallow: /createEvent.php
+Disallow: /addTournament.php
+Disallow: /addGame.php
+Disallow: /addTeam.php
+Disallow: /addMember.php
+Disallow: /signTeam.php
+Disallow: /assignGame.php
+Disallow: /assignRole.php
+Disallow: /logout.php
+
+Sitemap: https://tech-events-msi.onrender.com/sitemap.xml

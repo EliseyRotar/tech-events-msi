@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://tech-events-msi.onrender.com/?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tech-events-msi.onrender.com/?lang=en"/>
+  </url>
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/register.php</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://tech-events-msi.onrender.com/register.php?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tech-events-msi.onrender.com/register.php?lang=en"/>
+  </url>
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/login.php</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://tech-events-msi.onrender.com/login.php?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tech-events-msi.onrender.com/login.php?lang=en"/>
+  </url>
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/viewTeam.php</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/privacy.php</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://tech-events-msi.onrender.com/privacy.php?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tech-events-msi.onrender.com/privacy.php?lang=en"/>
+  </url>
+
+  <url>
+    <loc>https://tech-events-msi.onrender.com/terms.php</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://tech-events-msi.onrender.com/terms.php?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tech-events-msi.onrender.com/terms.php?lang=en"/>
+  </url>
+
+</urlset>

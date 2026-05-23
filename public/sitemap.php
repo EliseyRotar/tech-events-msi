@@ -6,7 +6,6 @@
 declare(strict_types=1);
 
 header('Content-Type: application/xml; charset=UTF-8');
-header('X-Robots-Tag: noindex');   // don't index the sitemap itself
 
 $base    = 'https://tech-events-msi.onrender.com';
 $today   = date('Y-m-d');

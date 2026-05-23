@@ -86,13 +86,12 @@ input, select, textarea { font-family: inherit; }
 
 #page-overlay.hidden { opacity: 0; }
 
-.overlay-logo {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent-blue);
-  letter-spacing: -0.5px;
+.overlay-logo-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
   animation: overlayPulse 0.6s ease-in-out;
+  filter: drop-shadow(0 0 24px rgba(0,212,255,0.5));
 }
 
 @keyframes overlayPulse {
@@ -187,6 +186,16 @@ body:has(button:hover) #cursor-ring {
   color: var(--text-primary);
   letter-spacing: -0.5px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-logo-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));
 }
 
 .nav-logo span { color: var(--accent-blue); }

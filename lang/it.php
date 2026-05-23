@@ -28,6 +28,21 @@ return [
     'stat_prizes_label'     => 'Montepremi Gestiti',
     'stat_athletes_label'   => 'Atleti Registrati',
 
+    // ── Scrollytelling story section ───────────────────────
+    'story_section_label'   => 'La Storia',
+    'story_section_title'   => 'Entra nell\'Arena',
+    'story_act_label'       => 'Atto',
+    'story_scroll_hint'     => 'Scorri per iniziare',
+    'story_t1'              => 'Tutto inizia con una scintilla.',
+    'story_b1'              => 'Ogni campione è stato un ragazzino con una console e un sogno fuori scala. Tech Dragons nasce per quel sogno — l\'istante prima che diventi un movimento.',
+    'story_t2'              => 'Continenti connessi, un solo protocollo.',
+    'story_b2'              => 'Giocatori a Tokyo si iscrivono contro team a Berlino. Sponsor a San Paolo finanziano roster a Seoul. Una piattaforma attraversa 48 paesi — ogni fuso orario, ogni valuta, ogni lega.',
+    'story_t3'              => 'Dalla cameretta allo stadio.',
+    'story_b3'              => 'Che tu stia organizzando una LAN del sabato tra amici o un Major da milioni di euro in diretta mondiale, la stessa orchestrazione ti regge. La piattaforma scala — tu pensi al gioco.',
+    'story_t4'              => 'Ora il palco è tuo.',
+    'story_b4'              => 'L\'infrastruttura c\'è. Le competizioni girano. Il pubblico guarda. Manca solo l\'unica cosa che solo tu puoi portare: il gioco.',
+    'story_cta'             => 'Entra nella piattaforma',
+
     // ── Events section ─────────────────────────────────────
     'events_label'          => 'Competizioni Live',
     'events_title'          => 'Eventi Attivi',

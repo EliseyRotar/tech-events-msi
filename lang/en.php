@@ -28,6 +28,21 @@ return [
     'stat_prizes_label'     => 'Prize Pools Managed',
     'stat_athletes_label'   => 'Registered Athletes',
 
+    // ── Scrollytelling story section ───────────────────────
+    'story_section_label'   => 'The Story',
+    'story_section_title'   => 'Enter the Arena',
+    'story_act_label'       => 'Act',
+    'story_scroll_hint'     => 'Scroll to begin',
+    'story_t1'              => 'It starts with a spark.',
+    'story_b1'              => 'Every champion was once a kid with a console and an unreasonable dream. We built Tech Dragons for that dream — the moment before it becomes a movement.',
+    'story_t2'              => 'Continents connected, one playbook.',
+    'story_b2'              => 'Players in Tokyo register against teams in Berlin. Sponsors in São Paulo back rosters in Seoul. One platform threads through 48 countries — every clock, every currency, every league.',
+    'story_t3'              => 'From bedroom to stadium.',
+    'story_b3'              => 'Whether you\'re running a Saturday LAN with friends or stewarding a million-dollar Major broadcast, the same orchestration carries you. The platform scales — you stay focused on the play.',
+    'story_t4'              => 'Now the stage is yours.',
+    'story_b4'              => 'The infrastructure is here. The competitions are running. The audience is watching. All that\'s left is the one thing only you can bring: the game.',
+    'story_cta'             => 'Join the platform',
+
     // ── Events section ─────────────────────────────────────
     'events_label'          => 'Live Competitions',
     'events_title'          => 'Active Events',

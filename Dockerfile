@@ -3,8 +3,9 @@ FROM php:8.2-apache
 # Install PDO MySQL extension
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Enable Apache mod_rewrite
+# Enable Apache mod_rewrite and allow .htaccess overrides
 RUN a2enmod rewrite
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 # Update Apache configuration to point to /public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public

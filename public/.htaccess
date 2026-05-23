@@ -1,0 +1,8 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve sitemap.xml dynamically from sitemap.php
+    RewriteRule ^sitemap\.xml$ sitemap.php [L,QSA]
+</IfModule>

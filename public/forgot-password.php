@@ -31,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "UPDATE utenti SET reset_token = :t, reset_expires_at = :e WHERE idUtente = :id"
             )->execute([':t' => $token, ':e' => $expiresAt, ':id' => $user['idUtente']]);
 
-            $scheme    = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            $host      = $_SERVER['HTTP_HOST'] ?? 'localhost';
-            $resetUrl  = "{$scheme}://{$host}/reset-password.php?token={$token}";
+            $appUrl    = rtrim(getenv('APP_URL') ?: 'https://tech-events-msi.onrender.com', '/');
+            $resetUrl  = "{$appUrl}/reset-password.php?token={$token}";
             $name      = $user['nome'];
 
             Mailer::send($email, 'Reset your Tech Dragons password', <<<TXT

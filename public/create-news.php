@@ -7,11 +7,13 @@ $error   = null;
 $success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $titolo    = trim($_POST['titolo']    ?? '');
     $contenuto = trim($_POST['contenuto'] ?? '');
     $tag       = in_array($_POST['tag'] ?? '', ['announcement','tournament','update','event'], true)
                    ? $_POST['tag'] : 'announcement';
-    $imgUrl    = trim($_POST['immagine_url'] ?? '') ?: null;
+    $rawImg    = trim($_POST['immagine_url'] ?? '');
+    $imgUrl    = ($rawImg !== '' && preg_match('#^https?://#i', $rawImg)) ? $rawImg : null;
 
     if ($titolo === '' || $contenuto === '') {
         $error = 'Title and content are required.';
@@ -58,6 +60,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="titolo">Title</label>
                 <input class="form-input" type="text" id="titolo" name="titolo"

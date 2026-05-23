@@ -17,12 +17,41 @@ if (!$tournament) {
     exit;
 }
 
-$stm = $pdo->prepare('SELECT idSquadra, nomeSquadra FROM squadre ORDER BY nomeSquadra');
-$stm->execute();
+$isAdmin = (int)($_SESSION['admin'] ?? 0) === 1;
+$userId  = (int)$_SESSION['id'];
+
+// Non-admins only see teams they belong to
+if ($isAdmin) {
+    $stm = $pdo->prepare('SELECT idSquadra, nomeSquadra FROM squadre ORDER BY nomeSquadra');
+    $stm->execute();
+} else {
+    $stm = $pdo->prepare(
+        'SELECT s.idSquadra, s.nomeSquadra
+         FROM squadre s
+         JOIN membri m ON m.idSquadra = s.idSquadra
+         WHERE m.idUtente = :uid
+         ORDER BY s.nomeSquadra'
+    );
+    $stm->execute([':uid' => $userId]);
+}
 $teams = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $idS = (int)$_POST['idSTxt'];
+
+    // Ownership check: verify the user is a member of the selected team
+    if (!$isAdmin) {
+        $ownerCheck = $pdo->prepare(
+            "SELECT idMembro FROM membri WHERE idUtente = :uid AND idSquadra = :sid LIMIT 1"
+        );
+        $ownerCheck->execute([':uid' => $userId, ':sid' => $idS]);
+        if (!$ownerCheck->fetch()) {
+            $error = 'You are not a member of that team.';
+            goto render;
+        }
+    }
+
     try {
         $pdo->beginTransaction();
         $stm = $pdo->prepare(
@@ -32,13 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stm->bindParam(':is', $idS);
         $stm->execute();
         $pdo->commit();
-        header('Location: dashboard.php');
+        header('Location: /dashboard.php');
         exit;
     } catch (PDOException $e) {
         $pdo->rollBack();
         $error = 'Registration failed: ' . $e->getMessage();
     }
 }
+render:
 
 $pageTitle = 'Tournament Entry — Tech Dragons Events';
 require_once __DIR__ . '/../templates/layout/header.php';
@@ -60,6 +90,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                 <div class="form-group">
                     <label class="form-label" for="idSTxt">Select Your Team</label>
                     <select class="form-select form-input" id="idSTxt" name="idSTxt" required>

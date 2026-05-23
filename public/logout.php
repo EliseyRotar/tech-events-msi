@@ -8,6 +8,6 @@ $_SESSION = [];
 session_destroy();
 
 // reindirizza al login
-header("Location: dashboard.php");
+header("Location: /login.php");
 exit;
 ?>

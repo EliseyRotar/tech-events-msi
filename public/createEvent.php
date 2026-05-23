@@ -1,9 +1,11 @@
 <?php
 require '../config.php';
+require_once __DIR__ . '/../src/helpers.php';
 \App\Auth::requireAdmin();
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $name   = trim($_POST['nameTxt']   ?? '');
     $nSits  = trim($_POST['sitsTxt']   ?? '');
     $city   = trim($_POST['cityTxt']   ?? '');
@@ -71,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="nameTxt">Event Name</label>
                 <input class="form-input" type="text" id="nameTxt" name="nameTxt"

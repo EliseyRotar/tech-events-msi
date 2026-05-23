@@ -5,6 +5,7 @@ require_once __DIR__ . '/../src/helpers.php';
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $name = trim($_POST['nameTxt'] ?? '');
     $copy = trim($_POST['copyTxt'] ?? '');
     $error = runInTransaction($pdo, function() use ($pdo, $name, $copy) {
@@ -53,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="nameTxt">Game Name</label>
                 <input class="form-input" type="text" id="nameTxt" name="nameTxt"

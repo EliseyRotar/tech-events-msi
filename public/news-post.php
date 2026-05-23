@@ -61,7 +61,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
 
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border);">
             <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:11px;color:var(--accent-blue);">
-                <?= strtoupper(substr($post['nome'], 0, 1) . substr($post['cognome'], 0, 1)) ?>
+                <?= htmlspecialchars(strtoupper(substr($post['nome'], 0, 1) . substr($post['cognome'], 0, 1)), ENT_QUOTES) ?>
             </div>
             <span style="font-size:14px;font-weight:500;color:var(--text-primary);">
                 <?= htmlspecialchars($post['nome'] . ' ' . $post['cognome'], ENT_QUOTES) ?>

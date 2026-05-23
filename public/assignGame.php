@@ -1,6 +1,7 @@
 <?php
 require '../config.php';
-\App\Auth::requireLogin();
+require_once __DIR__ . '/../src/helpers.php';
+\App\Auth::requireAdmin();
 
 $idM = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if (!$idM) {
@@ -19,6 +20,7 @@ try {
 
 $success = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $game = (int)$_POST['game'];
     try {
         $pdo->beginTransaction();
@@ -73,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="game">Game Title</label>
                 <select class="form-select form-input" id="game" name="game" required>

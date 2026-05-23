@@ -11,7 +11,7 @@ if (!$id) {
 
 // Team info + sponsor
 $stm = $pdo->prepare(
-    "SELECT s.*, sp.nomeAzienda, sp.emailResponsabile
+    "SELECT s.*, sp.nomeAzienda
      FROM squadre s
      LEFT JOIN sponsor sp ON sp.idSponsor = s.idSponsor
      WHERE s.idSquadra = :id"
@@ -113,7 +113,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
     <div class="reveal" style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;margin-bottom:40px;">
         <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
             <div style="width:72px;height:72px;border-radius:16px;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(102,126,234,0.3));border:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--accent-blue);flex-shrink:0;">
-                <?= strtoupper(substr($team['nomeSquadra'], 0, 2)) ?>
+                <?= htmlspecialchars(strtoupper(substr($team['nomeSquadra'], 0, 2)), ENT_QUOTES) ?>
             </div>
             <div>
                 <h1 style="font-size:clamp(22px,4vw,36px);font-weight:800;letter-spacing:-1px;margin-bottom:6px;">
@@ -167,7 +167,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
                 <?php foreach ($members as $m): ?>
                 <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px;">
                     <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:12px;color:var(--accent-blue);flex-shrink:0;">
-                        <?= strtoupper(substr($m['nickname'], 0, 2)) ?>
+                        <?= htmlspecialchars(strtoupper(substr($m['nickname'], 0, 2)), ENT_QUOTES) ?>
                     </div>
                     <div>
                         <div style="font-weight:600;font-size:14px;"><?= htmlspecialchars($m['nickname'], ENT_QUOTES) ?></div>

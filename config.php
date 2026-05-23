@@ -25,5 +25,7 @@ try {
     $pdo = new PDO($dsn, $user, $pass, $ssl_opts);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die('Errore di connessione: ' . $e->getMessage());
+    error_log('DB connection failed: ' . $e->getMessage());
+    http_response_code(503);
+    exit('Service temporarily unavailable. Please try again later.');
 }

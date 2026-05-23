@@ -1,10 +1,13 @@
 <?php
+session_start();
 require_once '../config.php';
 require_once '../src/helpers.php';
 
 $pageTitle = t('login_title') . ' — Tech Dragons Events';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
+
     $email    = trim($_POST['emailTxt'] ?? '');
     $password = trim($_POST['pswdTxt'] ?? '');
 
@@ -15,15 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($credentials && password_verify($password, $credentials['pswd'])) {
         if (!(int)($credentials['email_verified'] ?? 1)) {
-            // Account exists but email not verified yet
             $unverifiedEmail = $email;
         } else {
-            session_start();
+            session_regenerate_id(true);
             $_SESSION['email']  = $email;
             $_SESSION['id']     = $credentials['idUtente'];
             $_SESSION['accept'] = 'ACCEPT';
             $_SESSION['admin']  = $credentials['isAdmin'];
-            header('Location: dashboard.php');
+            header('Location: /dashboard.php');
             exit;
         }
     } else {
@@ -93,6 +95,7 @@ $registered = isset($_GET['registered']);
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="emailTxt"><?= t('login_email') ?></label>
                 <input class="form-input" type="email" id="emailTxt" name="emailTxt"

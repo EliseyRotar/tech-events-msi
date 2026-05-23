@@ -49,9 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "UPDATE utenti SET verification_token = :tok, token_expires_at = :exp WHERE idUtente = :id"
                 )->execute([':tok' => $token, ':exp' => $expiresAt, ':id' => $row['idUtente']]);
 
-                $scheme    = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-                $host      = $_SERVER['HTTP_HOST'] ?? 'localhost';
-                $verifyUrl = "{$scheme}://{$host}/verify.php?token={$token}";
+                $appUrl    = rtrim(getenv('APP_URL') ?: 'https://tech-events-msi.onrender.com', '/');
+                $verifyUrl = "{$appUrl}/verify.php?token={$token}";
                 $name      = $row['nome'] ?? 'there';
 
                 $text = "Hi {$name},\n\nHere's your new verification link:\n\n{$verifyUrl}\n\nThis link expires in 24 hours.\n\n— Tech Dragons Events";

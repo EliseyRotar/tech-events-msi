@@ -14,8 +14,21 @@ $stm->bindParam(':id', $idSquadra);
 $stm->execute();
 $team = $stm->fetch(PDO::FETCH_ASSOC);
 if (!$team) {
-    header('Location: dashboard.php');
+    header('Location: /dashboard.php');
     exit;
+}
+
+// Ownership check: non-admins can only add members to teams they belong to
+$isAdmin = (int)($_SESSION['admin'] ?? 0) === 1;
+if (!$isAdmin) {
+    $ownerCheck = $pdo->prepare(
+        "SELECT idMembro FROM membri WHERE idUtente = :uid AND idSquadra = :sid LIMIT 1"
+    );
+    $ownerCheck->execute([':uid' => (int)$_SESSION['id'], ':sid' => $idSquadra]);
+    if (!$ownerCheck->fetch()) {
+        header('Location: /dashboard.php');
+        exit;
+    }
 }
 
 $stm = $pdo->prepare('SELECT idUtente, nome, cognome FROM utenti ORDER BY nome');
@@ -23,6 +36,7 @@ $stm->execute();
 $users = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $nickname = trim($_POST['nickTxt'] ?? '');
     $idU      = (int)($_POST['idUTxt'] ?? 0);
 
@@ -64,6 +78,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                 <div class="form-group">
                     <label class="form-label" for="nickTxt">In-Game Nickname</label>
                     <input class="form-input" type="text" id="nickTxt" name="nickTxt"

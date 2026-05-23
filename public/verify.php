@@ -37,6 +37,7 @@ if ($token !== '' && strlen($token) === 64 && ctype_xdigit($token)) {
         $name   = $row['nome'];
 
         // Log the user in immediately
+        session_regenerate_id(true);
         $_SESSION['email']  = $row['email'];
         $_SESSION['id']     = $row['idUtente'];
         $_SESSION['accept'] = 'ACCEPT';

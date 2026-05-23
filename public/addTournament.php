@@ -1,5 +1,6 @@
 <?php
 require '../config.php';
+require_once __DIR__ . '/../src/helpers.php';
 \App\Auth::requireAdmin();
 
 $idE = $_GET['id'] ?? null;
@@ -23,6 +24,7 @@ if (!$event) {
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $name  = trim($_POST['nameTxt']  ?? '');
     $money = trim($_POST['moneyTxt'] ?? '');
     $date  = trim($_POST['dateSTxt'] ?? '');
@@ -89,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="form-group">
                 <label class="form-label" for="nameTxt">Tournament Name</label>
                 <input class="form-input" type="text" id="nameTxt" name="nameTxt"

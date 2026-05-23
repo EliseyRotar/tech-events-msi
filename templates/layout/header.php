@@ -1,4 +1,9 @@
 <?php
+header('X-Frame-Options: SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+
 if (isset($_GET['lang'])) {
     $supported = ['it', 'en'];
     $lang = in_array($_GET['lang'], $supported, true) ? $_GET['lang'] : 'it';

@@ -12,13 +12,37 @@ function runInTransaction(PDO $pdo, callable $action, ?string $redirect = null):
         $action();
         $pdo->commit();
         if ($redirect !== null) {
-            header("Location: $redirect");
+            // Only allow relative paths to prevent open redirect
+            if (!preg_match('#^/[^/]#', $redirect) && $redirect !== '/') {
+                throw new \InvalidArgumentException('Redirect must be a relative path');
+            }
+            header('Location: ' . $redirect);
             exit;
         }
         return null;
     } catch (\Throwable $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) $pdo->rollBack();
         return $e->getMessage();
+    }
+}
+
+function csrf_token(): string
+{
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_verify(): void
+{
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $submitted = $_POST['csrf_token'] ?? '';
+    $stored    = $_SESSION['csrf_token'] ?? '';
+    if ($stored === '' || !hash_equals($stored, $submitted)) {
+        http_response_code(403);
+        exit('Invalid security token. Please go back and try again.');
     }
 }
 

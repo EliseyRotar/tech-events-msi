@@ -186,7 +186,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <a href="/team.php?id=<?= (int)$team['idSquadra'] ?>" style="text-decoration:none;">
                 <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:14px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)'" onmouseout="this.style.borderColor='var(--border)'">
                     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(102,126,234,0.2));border:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--accent-blue);flex-shrink:0;">
-                        <?= strtoupper(substr($team['nomeSquadra'], 0, 2)) ?>
+                        <?= htmlspecialchars(strtoupper(substr($team['nomeSquadra'], 0, 2)), ENT_QUOTES) ?>
                     </div>
                     <div style="min-width:0;">
                         <div style="font-weight:600;font-size:14px;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($team['nomeSquadra'], ENT_QUOTES) ?></div>

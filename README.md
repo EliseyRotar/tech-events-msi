@@ -274,8 +274,15 @@ mariadb -u root -p tech_dragons_events < database/02_elements.sql
 
 ---
 
+## Contributors
+
 <div align="center">
 
-Built by [Elisey Rotar](https://github.com/EliseyRotar)
+| | Contributor | GitHub | Commits |
+|---|---|---|---|
+| <img src="https://github.com/EliseyRotar.png" width="36" style="border-radius:50%"> | Elisey Rotar | [@EliseyRotar](https://github.com/EliseyRotar) | project lead |
+| <img src="https://github.com/DaminelliF.png" width="36" style="border-radius:50%"> | DaminelliF | [@DaminelliF](https://github.com/DaminelliF) | 14 commits |
+| <img src="https://github.com/manuel-greco-s.png" width="36" style="border-radius:50%"> | Manuel Greco | [@manuel-greco-s](https://github.com/manuel-greco-s) | 6 commits |
+| <img src="https://github.com/Andrea-Valente08.png" width="36" style="border-radius:50%"> | Andrea Valente | [@Andrea-Valente08](https://github.com/Andrea-Valente08) | 1 commit |
 
 </div>

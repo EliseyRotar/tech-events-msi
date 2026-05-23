@@ -1,5 +1,7 @@
 <div align="center">
 
+🌐 **Language / Lingua:** [🇬🇧 English](README.md) · [🇮🇹 Italiano](README.it.md)
+
 <img src="public/assets/img/logo.jpg" width="80" alt="Tech Dragons Events logo">
 
 # Tech Dragons Events

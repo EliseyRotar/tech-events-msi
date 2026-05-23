@@ -19,7 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stm->execute([':e' => $email]);
         $user = $stm->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
+        // Check if reset_token column exists (migration may not have run yet)
+        $dbCols      = $pdo->query("SHOW COLUMNS FROM utenti")->fetchAll(PDO::FETCH_COLUMN);
+        $hasReset    = in_array('reset_token', $dbCols);
+
+        if ($user && $hasReset) {
             $token     = bin2hex(random_bytes(32));
             $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1 hour
 

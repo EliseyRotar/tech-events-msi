@@ -61,8 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = t('err_email_taken');
         }
     }
-    // Check duplicate username
-    if (empty($errors) && $username !== '') {
+    // Detect whether migration has run (username column) or old column name is still in use
+    $dbCols      = $pdo->query("SHOW COLUMNS FROM utenti")->fetchAll(PDO::FETCH_COLUMN);
+    $usernameCol = in_array('username', $dbCols) ? 'username' : 'codice_fiscale';
+
+    // Check duplicate username (only if column exists)
+    if (empty($errors) && $username !== '' && $usernameCol === 'username') {
         $check2 = $pdo->prepare("SELECT idUtente FROM utenti WHERE username = :u");
         $check2->execute([':u' => $username]);
         if ($check2->fetch()) {
@@ -79,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->beginTransaction();
             $stm = $pdo->prepare(
-                "INSERT INTO utenti (username, nome, cognome, dataNascita, isAdmin, email, pswd,
+                "INSERT INTO utenti ({$usernameCol}, nome, cognome, dataNascita, isAdmin, email, pswd,
                                     email_verified, verification_token, token_expires_at)
                  VALUES (:c, :n, :s, :d, 0, :e, :h, 0, :tok, :exp)"
             );

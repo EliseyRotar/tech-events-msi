@@ -25,7 +25,87 @@ require_once __DIR__ . '/../../src/helpers.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle ?? 'Tech Dragons Events — Esports Infrastructure', ENT_QUOTES, 'UTF-8'); ?></title>
-    <meta name="description" content="Professional esports event management. Tournament orchestration, team coordination, and digital ticketing.">
+
+    <?php
+    $metaDesc = 'Tech Dragons Events — professional esports tournament platform. Create and join LAN and online competitions, manage team rosters, track prize pools. Free to register.';
+    $metaDescIt = 'Tech Dragons Events — piattaforma professionale per tornei esports. Crea e partecipa a competizioni LAN e online, gestisci roster, monitorizza prize pool. Registrazione gratuita.';
+    $isIt = (($_COOKIE['lang'] ?? 'it') === 'it');
+    $canonicalBase = 'https://tech-events-msi.onrender.com';
+    $canonicalPath = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+    $canonical = $canonicalBase . $canonicalPath;
+    $ogTitle = htmlspecialchars($pageTitle ?? 'Tech Dragons Events — Esports Infrastructure', ENT_QUOTES);
+    $ogDesc  = $isIt ? $metaDescIt : $metaDesc;
+    ?>
+    <meta name="description" content="<?= $isIt ? htmlspecialchars($metaDescIt, ENT_QUOTES) : htmlspecialchars($metaDesc, ENT_QUOTES) ?>">
+    <meta name="keywords" content="esports, tournament, LAN, online competition, team management, prize pool, gaming events, tech dragons, torneo esports, competizione online">
+    <meta name="author" content="Tech Dragons Events">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES) ?>">
+
+    <!-- Open Graph (Facebook, LinkedIn, Discord, WhatsApp) -->
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="Tech Dragons Events">
+    <meta property="og:title"       content="<?= $ogTitle ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($ogDesc, ENT_QUOTES) ?>">
+    <meta property="og:url"         content="<?= htmlspecialchars($canonical, ENT_QUOTES) ?>">
+    <meta property="og:image"       content="<?= $canonicalBase ?>/assets/img/logo.jpg">
+    <meta property="og:image:width"  content="500">
+    <meta property="og:image:height" content="553">
+    <meta property="og:locale"      content="<?= $isIt ? 'it_IT' : 'en_GB' ?>">
+    <meta property="og:locale:alternate" content="<?= $isIt ? 'en_GB' : 'it_IT' ?>">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card"        content="summary">
+    <meta name="twitter:title"       content="<?= $ogTitle ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($ogDesc, ENT_QUOTES) ?>">
+    <meta name="twitter:image"       content="<?= $canonicalBase ?>/assets/img/logo.jpg">
+
+    <!-- hreflang for bilingual pages -->
+    <link rel="alternate" hreflang="it" href="<?= htmlspecialchars($canonicalBase . $canonicalPath . '?lang=it', ENT_QUOTES) ?>">
+    <link rel="alternate" hreflang="en" href="<?= htmlspecialchars($canonicalBase . $canonicalPath . '?lang=en', ENT_QUOTES) ?>">
+    <link rel="alternate" hreflang="x-default" href="<?= htmlspecialchars($canonical, ENT_QUOTES) ?>">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://tech-events-msi.onrender.com/#organization",
+          "name": "Tech Dragons Events",
+          "url": "https://tech-events-msi.onrender.com",
+          "logo": "https://tech-events-msi.onrender.com/assets/img/logo.png",
+          "description": "Professional esports event management platform for tournaments, teams, and competitions.",
+          "foundingDate": "2026",
+          "email": "techdragonevents@gmail.com",
+          "sameAs": [
+            "https://github.com/EliseyRotar/tech-events-msi"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://tech-events-msi.onrender.com/#website",
+          "url": "https://tech-events-msi.onrender.com",
+          "name": "Tech Dragons Events",
+          "publisher": {"@id": "https://tech-events-msi.onrender.com/#organization"},
+          "inLanguage": ["it", "en"],
+          "potentialAction": {
+            "@type": "RegisterAction",
+            "target": "https://tech-events-msi.onrender.com/register.php",
+            "name": "Join the platform"
+          }
+        },
+        {
+          "@type": "SportsOrganization",
+          "name": "Tech Dragons Events",
+          "sport": "Esports",
+          "url": "https://tech-events-msi.onrender.com",
+          "logo": "https://tech-events-msi.onrender.com/assets/img/logo.png"
+        }
+      ]
+    }
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon"  href="/favicon.ico">

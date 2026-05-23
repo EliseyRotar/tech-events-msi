@@ -28,6 +28,7 @@ function alts(string $base, string $path): array {
 $urls[] = url($base . '/',             $today, 'weekly',  '1.0', alts($base, '/'));
 $urls[] = url($base . '/register.php', $today, 'monthly', '0.8', alts($base, '/register.php'));
 $urls[] = url($base . '/login.php',    $today, 'monthly', '0.5', alts($base, '/login.php'));
+$urls[] = url($base . '/news.php',     $today, 'weekly',  '0.7', alts($base, '/news.php'));
 $urls[] = url($base . '/privacy.php',  '2026-05-23', 'yearly', '0.3', alts($base, '/privacy.php'));
 $urls[] = url($base . '/terms.php',    '2026-05-23', 'yearly', '0.3', alts($base, '/terms.php'));
 
@@ -73,20 +74,21 @@ try {
     );
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Add individual event pages
     foreach ($events as $ev) {
-        // Individual anchor on the homepage events section
         $lastmod = $ev['dataFine'] ?? $today;
-        // Clamp future dates to today for sitemap validity
         if ($lastmod > $today) $lastmod = $today;
-
         $urls[] = url(
-            $base . '/#events',
-            $today,
+            $base . '/event.php?id=' . (int)$ev['idEvento'],
+            $lastmod,
             'weekly',
             '0.9',
-            alts($base, '/')
+            alts($base, '/event.php?id=' . (int)$ev['idEvento'])
         );
-        break; // The events section is one URL; include only once
+    }
+    // Events section anchor (once)
+    if (!empty($events)) {
+        $urls[] = url($base . '/#events', $today, 'weekly', '0.8', alts($base, '/'));
     }
 
     // Tournaments: each tournament day as a distinct content update

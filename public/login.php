@@ -101,7 +101,10 @@ $registered = isset($_GET['registered']);
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="pswdTxt"><?= t('login_password') ?></label>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                    <label class="form-label" for="pswdTxt" style="margin-bottom:0;"><?= t('login_password') ?></label>
+                    <a href="/forgot-password.php" style="font-size:13px;color:var(--accent-blue);font-weight:500;text-decoration:none;">Forgot password?</a>
+                </div>
                 <input class="form-input" type="password" id="pswdTxt" name="pswdTxt"
                        placeholder="••••••••" required autocomplete="current-password">
             </div>

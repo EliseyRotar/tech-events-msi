@@ -17,6 +17,15 @@ $eventsStm = $pdo->query(
 );
 $events = $eventsStm ? $eventsStm->fetchAll(PDO::FETCH_ASSOC) : [];
 
+// Real platform stats from DB
+$statsRow = $pdo->query(
+    "SELECT
+        (SELECT COUNT(*) FROM evento)                              AS eventCount,
+        (SELECT COUNT(*) FROM utenti WHERE email_verified = 1)    AS userCount,
+        (SELECT COALESCE(SUM(montePremi), 0) FROM tornei)         AS totalPrize,
+        (SELECT COUNT(*) FROM squadre)                             AS teamCount"
+)->fetch(PDO::FETCH_ASSOC);
+
 require_once __DIR__ . '/../templates/layout/header.php';
 
 // Build hero headline word spans
@@ -78,21 +87,28 @@ $words2 = array_filter(explode(' ', $line2));
      2. STATS BAR
 ═══════════════════════════════════════════════════════ -->
 <section class="stats-bar" aria-label="Platform statistics">
+    <?php
+    $evCount   = (int)($statsRow['eventCount'] ?? 0);
+    $prize     = (float)($statsRow['totalPrize'] ?? 0);
+    $teamCount = (int)($statsRow['teamCount'] ?? 0);
+    $userCount = (int)($statsRow['userCount'] ?? 0);
+    $prizeK    = $prize >= 1000 ? round($prize / 1000) . 'K' : (int)$prize;
+    ?>
     <div class="stats-grid">
         <div class="stat-item reveal">
-            <span class="stat-number" data-count="250" data-suffix="+">250+</span>
+            <span class="stat-number" data-count="<?= $evCount ?>" data-suffix=""><?= $evCount ?></span>
             <span class="stat-label"><?= t('stat_events_label') ?></span>
         </div>
         <div class="stat-item reveal">
-            <span class="stat-number" data-count="48" data-suffix="">48</span>
-            <span class="stat-label"><?= t('stat_countries_label') ?></span>
+            <span class="stat-number" data-count="<?= $teamCount ?>" data-suffix=""><?= $teamCount ?></span>
+            <span class="stat-label"><?= t('stat_teams_label') ?></span>
         </div>
         <div class="stat-item reveal">
-            <span class="stat-number" data-count="2" data-prefix="€" data-suffix="M+">€2M+</span>
+            <span class="stat-number" data-count="<?= (int)($prize / max($prize, 1) * $prize) ?>" data-prefix="€" data-suffix=""><?= $prize > 0 ? '€' . $prizeK : '—' ?></span>
             <span class="stat-label"><?= t('stat_prizes_label') ?></span>
         </div>
         <div class="stat-item reveal">
-            <span class="stat-number" data-count="12000" data-suffix="">12,000</span>
+            <span class="stat-number" data-count="<?= $userCount ?>" data-suffix=""><?= $userCount ?></span>
             <span class="stat-label"><?= t('stat_athletes_label') ?></span>
         </div>
     </div>
@@ -271,7 +287,7 @@ $words2 = array_filter(explode(' ', $line2));
                 <?php else: ?>
                     <span class="event-prize" style="color:var(--text-secondary);font-size:14px;"><?= t('event_tba') ?></span>
                 <?php endif; ?>
-                <a href="/dashboard.php?id=<?= (int)$ev['idEvento'] ?>" class="btn-primary" style="padding:8px 16px;font-size:13px;">
+                <a href="/event.php?id=<?= (int)$ev['idEvento'] ?>" class="btn-primary" style="padding:8px 16px;font-size:13px;">
                     <?= t('event_view') ?>
                 </a>
             </div>

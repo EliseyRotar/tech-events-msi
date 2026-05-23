@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Submit URLs to Bing, Yandex, and all IndexNow engines
         run: |
-          PAYLOAD='{"host":"tech-events-msi.onrender.com","key":"a1f7a6416f8bdea032a24b8274930e11","keyLocation":"https://tech-events-msi.onrender.com/a1f7a6416f8bdea032a24b8274930e11.txt","urlList":["https://tech-events-msi.onrender.com/","https://tech-events-msi.onrender.com/register.php","https://tech-events-msi.onrender.com/login.php","https://tech-events-msi.onrender.com/viewTeam.php","https://tech-events-msi.onrender.com/privacy.php","https://tech-events-msi.onrender.com/terms.php"]}'
+          PAYLOAD='{"host":"tech-events-msi.onrender.com","key":"a1f7a6416f8bdea032a24b8274930e11","keyLocation":"https://tech-events-msi.onrender.com/a1f7a6416f8bdea032a24b8274930e11.txt","urlList":["https://tech-events-msi.onrender.com/","https://tech-events-msi.onrender.com/register.php","https://tech-events-msi.onrender.com/login.php","https://tech-events-msi.onrender.com/news.php","https://tech-events-msi.onrender.com/privacy.php","https://tech-events-msi.onrender.com/terms.php"]}'
 
           echo "Submitting to Bing..."
           curl -sf -o /dev/null -w "Bing: %{http_code}\n" -X POST "https://www.bing.com/indexnow" \

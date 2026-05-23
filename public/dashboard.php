@@ -44,6 +44,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
             <div class="page-header-actions">
                 <a href="/createEvent.php" class="btn-primary">+ Create Event</a>
                 <a href="/addGame.php" class="btn-secondary">Add Discipline</a>
+                <a href="/create-news.php" class="btn-secondary">+ News Post</a>
             </div>
             <?php endif; ?>
         </div>

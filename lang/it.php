@@ -6,6 +6,7 @@ return [
     // ── Nav ────────────────────────────────────────────────
     'nav_archive'           => 'Archivio',
     'nav_events'            => 'Eventi',
+    'nav_news'              => 'Notizie',
     'nav_platform'          => 'Piattaforma',
     'nav_contact'           => 'Contatto',
     'nav_dashboard'         => 'Dashboard',
@@ -23,10 +24,10 @@ return [
     'hero_scroll'           => 'Scorri',
 
     // ── Stats bar ──────────────────────────────────────────
-    'stat_events_label'     => 'Eventi Gestiti',
-    'stat_countries_label'  => 'Paesi',
-    'stat_prizes_label'     => 'Montepremi Gestiti',
-    'stat_athletes_label'   => 'Atleti Registrati',
+    'stat_events_label'     => 'Eventi Ospitati',
+    'stat_teams_label'      => 'Team Registrati',
+    'stat_prizes_label'     => 'Montepremi Totale',
+    'stat_athletes_label'   => 'Giocatori Attivi',
 
     // ── Scrollytelling story section ───────────────────────
     'story_section_label'   => 'La Storia',
@@ -174,13 +175,13 @@ return [
     'terms_s8_body'         => 'Possiamo aggiornare i presenti Termini in qualsiasi momento. L\'uso continuato della Piattaforma dopo la pubblicazione delle modifiche costituisce accettazione dei Termini aggiornati. Informeremo gli utenti registrati delle modifiche sostanziali via email.',
 
     // ── Register page ──────────────────────────────────────
-    'register_label'        => 'Portale Organizzazioni',
+    'register_label'        => 'Unisciti alla Piattaforma',
     'register_title'        => 'Crea Account',
-    'register_lead'         => 'Unisciti alla piattaforma che alimenta gli esports professionistici mondiali.',
+    'register_lead'         => 'Account gratuito. Partecipa ai tornei, registra il tuo team e segui i risultati.',
     'register_firstname'    => 'Nome',
     'register_lastname'     => 'Cognome',
     'register_email'        => 'Indirizzo Email',
-    'register_fiscal'       => 'Codice Fiscale / ID Governo',
+    'register_username'     => 'Username / Gamertag',
     'register_dob'          => 'Data di Nascita',
     'register_password'     => 'Password',
     'register_submit'       => 'Crea Account',
@@ -195,6 +196,8 @@ return [
     'err_min_age'           => 'Devi avere almeno 13 anni per registrarti.',
     'err_pswd_length'       => 'La password deve contenere almeno 8 caratteri.',
     'err_email_taken'       => 'Questo indirizzo email è già registrato.',
+    'err_username_taken'    => 'Questo username è già in uso. Scegline un altro.',
+    'err_invalid_username'  => 'Lo username deve essere 3–30 caratteri: lettere, numeri, _ e - soltanto.',
     'err_registration'      => 'Registrazione fallita. Riprova.',
 
     // ── Login page ─────────────────────────────────────────

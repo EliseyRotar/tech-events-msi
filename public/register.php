@@ -19,16 +19,19 @@ $errors    = [];
 $pending   = false; // show "check your email" state
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email   = trim($_POST['emailTxt'] ?? '');
-    $name    = trim($_POST['nameTxt'] ?? '');
-    $surname = trim($_POST['surnameTxt'] ?? '');
-    $codFisc = trim($_POST['fiscTxt'] ?? '');
-    $date    = trim($_POST['dateTxt'] ?? '');
-    $pswd    = $_POST['pswdTxt'] ?? '';
+    $email    = trim($_POST['emailTxt']    ?? '');
+    $name     = trim($_POST['nameTxt']     ?? '');
+    $surname  = trim($_POST['surnameTxt']  ?? '');
+    $username = trim($_POST['usernameTxt'] ?? '');
+    $date     = trim($_POST['dateTxt']     ?? '');
+    $pswd     = $_POST['pswdTxt'] ?? '';
 
     // Validate required fields
-    if ($name === '' || $surname === '' || $email === '' || $codFisc === '' || $date === '' || $pswd === '') {
+    if ($name === '' || $surname === '' || $email === '' || $username === '' || $date === '' || $pswd === '') {
         $errors[] = t('err_missing_fields');
+    }
+    if ($username !== '' && !preg_match('/^[a-zA-Z0-9_\-]{3,30}$/', $username)) {
+        $errors[] = t('err_invalid_username');
     }
     if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = t('err_invalid_email');
@@ -58,6 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = t('err_email_taken');
         }
     }
+    // Check duplicate username
+    if (empty($errors) && $username !== '') {
+        $check2 = $pdo->prepare("SELECT idUtente FROM utenti WHERE username = :u");
+        $check2->execute([':u' => $username]);
+        if ($check2->fetch()) {
+            $errors[] = t('err_username_taken');
+        }
+    }
 
     // Insert with unverified status
     if (empty($errors)) {
@@ -68,12 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->beginTransaction();
             $stm = $pdo->prepare(
-                "INSERT INTO utenti (codice_fiscale, nome, cognome, dataNascita, isAdmin, email, pswd,
+                "INSERT INTO utenti (username, nome, cognome, dataNascita, isAdmin, email, pswd,
                                     email_verified, verification_token, token_expires_at)
                  VALUES (:c, :n, :s, :d, 0, :e, :h, 0, :tok, :exp)"
             );
             $stm->execute([
-                ':c'   => $codFisc,
+                ':c'   => $username,
                 ':n'   => $name,
                 ':s'   => $surname,
                 ':d'   => $date,
@@ -250,10 +261,12 @@ HTML;
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="fiscTxt"><?= t('register_fiscal') ?></label>
-                <input class="form-input" type="text" id="fiscTxt" name="fiscTxt"
-                       value="<?= htmlspecialchars($_POST['fiscTxt'] ?? '', ENT_QUOTES) ?>"
-                       placeholder="AAABBB00C11D222E" required>
+                <label class="form-label" for="usernameTxt"><?= t('register_username') ?></label>
+                <input class="form-input" type="text" id="usernameTxt" name="usernameTxt"
+                       value="<?= htmlspecialchars($_POST['usernameTxt'] ?? '', ENT_QUOTES) ?>"
+                       placeholder="DragonSlayer99" required autocomplete="username"
+                       pattern="[a-zA-Z0-9_\-]{3,30}">
+                <small style="color:var(--text-secondary);font-size:12px;margin-top:4px;display:block;">3–30 characters. Letters, numbers, _ and - only.</small>
             </div>
 
             <div class="form-row-2">

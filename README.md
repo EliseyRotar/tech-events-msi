@@ -1,290 +1,99 @@
 <div align="center">
 
-🌐 **Language / Lingua:** [🇬🇧 English](README.md) · [🇮🇹 Italiano](README.it.md)
+🌐 **Language / Lingua:** 🇬🇧 English · [🇮🇹 Italiano](README.it.md)
 
-<img src="public/assets/img/logo.jpg" width="80" alt="Tech Dragons Events logo">
+<img src="public/assets/img/logo.png" width="100" alt="Tech Dragons Events">
 
 # Tech Dragons Events
 
-**The infrastructure for professional esports competition**
+**The professional platform for esports tournaments**
 
-[![Live](https://img.shields.io/badge/Live-tech--events--msi.onrender.com-00d4ff?style=flat-square&logo=render&logoColor=white)](https://tech-events-msi.onrender.com)
-[![PHP](https://img.shields.io/badge/PHP-8.2-777bb4?style=flat-square&logo=php&logoColor=white)](https://php.net)
-[![TiDB](https://img.shields.io/badge/TiDB-Cloud-e85c4a?style=flat-square&logo=mysql&logoColor=white)](https://tidbcloud.com)
-[![Docker](https://img.shields.io/badge/Docker-ready-2496ed?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
-[![WebGL](https://img.shields.io/badge/WebGL-shader-00d4ff?style=flat-square&logo=opengl&logoColor=white)](#frontend)
-[![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
+[🎮 Visit the Platform](https://tech-events-msi.onrender.com) · [Register Free](https://tech-events-msi.onrender.com/register.php) · [Browse Events](https://tech-events-msi.onrender.com/#events) · [News](https://tech-events-msi.onrender.com/news.php)
 
-**[🌐 tech-events-msi.onrender.com](https://tech-events-msi.onrender.com)**
-
-[Overview](#overview) · [Architecture](#architecture) · [Features](#features) · [Frontend](#frontend) · [Quickstart](#quickstart) · [Security](#security) · [Contributing](#contributing)
+![Live](https://img.shields.io/badge/Status-Live-brightgreen?style=flat-square)
+![Free](https://img.shields.io/badge/Free_to_Join-Yes-00d4ff?style=flat-square)
+![Languages](https://img.shields.io/badge/Languages-EN%20%7C%20IT-blueviolet?style=flat-square)
 
 </div>
 
 ---
 
-## Overview
+## What is Tech Dragons Events?
 
-Tech Dragons Events is a full-stack web application for running professional esports events end-to-end — from event creation and tournament scheduling to team registration and roster management. It pairs a hardened PHP 8.2 / TiDB Cloud backend with a cinematic frontend: a custom WebGL fluid shader, GSAP scroll animations, a scroll-driven 3D particle storytelling section (Three.js), glassmorphism cards, and a complete CSS design system — deployed on Render.com via Docker.
+Tech Dragons Events is a live esports tournament platform where players and organisations can register teams, enter competitions, and track results across multiple game titles — for free.
 
----
-
-## Live Demo
-
-**[https://tech-events-msi.onrender.com](https://tech-events-msi.onrender.com)**
-
-> Hosted on Render.com (free tier) — may take ~30 seconds to wake from idle.  
-> Database: TiDB Cloud Serverless (MySQL-compatible, free tier).
+**→ [tech-events-msi.onrender.com](https://tech-events-msi.onrender.com)**
 
 ---
 
-## Architecture
+## For Players & Teams
 
-Only the `public/` directory is exposed to the web server. All application logic, credentials, and templates live outside the web root.
-
-```
-tech-events-msi/
-├── public/                       # Web root (Apache document root)
-│   ├── assets/
-│   │   ├── css/
-│   │   │   ├── main.css          # Full design system — tokens, components, layout
-│   │   │   └── php-pages.css     # Form/admin page overrides
-│   │   ├── js/
-│   │   │   ├── hero-bg.js        # WebGL fragment shader (domain-warped FBM fluid)
-│   │   │   ├── main.js           # GSAP animations, custom cursor, interactions
-│   │   │   └── scrollytelling.js # Three.js 4000-particle morphing 3D section
-│   │   ├── img/
-│   │   │   ├── logo.png          # Logo with transparent background (web)
-│   │   │   ├── logo.jpg          # Logo (opaque, used in README / OG)
-│   │   │   └── logo.svg          # Vector logo
-│   │   └── storici/              # Static game-history HTML archives
-│   ├── favicon.ico               # Multi-size favicon (16/32/48)
-│   ├── favicon-32.png            # PNG favicon for modern browsers
-│   ├── apple-touch-icon.png      # 180×180 touch icon
-│   ├── index.php                 # Landing: Hero · Story · Stats · Events · About · Contact
-│   ├── dashboard.php             # Authenticated event management portal
-│   ├── login.php
-│   ├── register.php
-│   ├── createEvent.php           # Admin: create events
-│   ├── addTournament.php         # Admin: attach tournaments to events
-│   ├── addGame.php               # Admin: register game titles
-│   ├── addTeam.php               # Register a new organisation
-│   ├── addMember.php             # Add players to a roster
-│   ├── signTeam.php              # Enter a team into a tournament
-│   ├── viewTeam.php              # View registered rosters
-│   ├── assignGame.php            # Link a game discipline to a member
-│   └── assignRole.php            # Assign a competitive role to a member
-├── templates/
-│   └── layout/
-│       ├── header.php            # <head>, favicon, fonts, GSAP/Three.js CDN, nav, overlay
-│       └── footer.php            # Footer columns + main.js include
-├── src/
-│   ├── Auth.php                  # RBAC — session, login guard, admin guard
-│   ├── EnvLoader.php             # Reads .env without leaking values into $_ENV
-│   └── helpers.php               # runInTransaction(), t() i18n helper
-├── lang/
-│   ├── en.php                    # English translation strings
-│   └── it.php                    # Italian translation strings
-├── database/
-│   ├── 01_tables.sql             # Full schema
-│   ├── 02_elements.sql           # Seed data
-│   └── combined_migration.sql    # Single-file migration for production
-├── config.php                    # PDO bootstrap + env loading + TiDB SSL
-├── Dockerfile
-└── docker-compose.yml
-```
+1. [Create a free account](https://tech-events-msi.onrender.com/register.php) — 30 seconds, no payment required
+2. Browse upcoming events and tournaments on the [homepage](https://tech-events-msi.onrender.com/)
+3. Register your team for any open tournament
+4. Track rosters, brackets, and prize pools
 
 ---
 
-## Features
+## For Event Organizers
 
-### Event Management
-- Create LAN and online events with date range, location, and capacity
-- Admin-only creation and tournament assignment
-- Dashboard with event listing, tournament drill-down, and badge indicators
+Admin accounts can create multi-bracket events, assign game titles, set prize pools, manage team registrations, and post news to the community.
 
-### Tournament System
-- Multiple tournaments per event, each tied to a specific game title
-- Prize pool tracking in EUR
-- Team registration and per-tournament roster viewing
-
-### Team & Roster Management
-- Register organisations with optional sponsor associations
-- Add players to rosters using unique in-game nicknames
-- Assign game disciplines and competitive roles to individual members
-
-### Internationalisation (i18n)
-- Language switcher (Italian / English) in the global nav
-- Cookie-based persistence (1-year TTL)
-- Add new languages by dropping a file in `lang/`
+Contact **techdragonevents@gmail.com** to request organizer access.
 
 ---
 
-## Frontend
+## Platform Features
 
-The entire frontend was rebuilt as a dark futuristic design system — no CSS framework, no component library, just hand-crafted CSS custom properties and vanilla JS.
-
-### Design system
-
-| Token | Value |
+| Feature | |
 |---|---|
-| `--bg-primary` | `#0a0a0a` |
-| `--bg-secondary` | `#111111` |
-| `--accent-blue` | `#00d4ff` |
-| `--text-primary` | `#ffffff` |
-| `--text-secondary` | `#888888` |
-| `--border` | `rgba(255,255,255,0.08)` |
-| Heading font | Space Grotesk (700) |
-| Body font | Inter (400/500/600) |
-
-### WebGL hero background (`hero-bg.js`)
-
-Real-time GPU fluid shader — raw WebGL 1.0:
-
-- **Domain-warped FBM** (Inigo Quilez technique): two layers of fractal Brownian motion that warp each other, producing organic flowing patterns that never repeat
-- **Mouse interaction**: the fluid field distorts toward the cursor in real time with exponential smoothing
-- **Click shockwave**: clicking fires two concentric expanding rings plus an origin burst, all physically decayed
-- Optimised to run at **~60 fps** at 35% of screen resolution
-
-### 3D Scrollytelling section (`scrollytelling.js`)
-
-Scroll-driven immersive experience powered by **Three.js r128** + **GSAP ScrollTrigger**:
-
-- **4 000 additive sprite particles** morph through 5 procedural shapes as you scroll: cloud → Fibonacci globe → tiered arena → tournament bracket → TD emblem
-- Per-particle shimmer wobble, ambient camera drift, mouse/touch parallax
-- Per-act frosted-glass text panels scrub in/out independently
-- Soft glow halo mesh behind the particle field
-
-### Animations (`main.js`)
-
-| Effect | Implementation |
-|---|---|
-| Page load overlay | Logo fade-out on `window.load` |
-| Custom cursor | Dot + lagging ring via `requestAnimationFrame` lerp |
-| Hero headline | Word-by-word `translateY` stagger on load |
-| Navbar | Transparent → frosted glass on scroll |
-| Stats counters | GSAP tween from 0 → target on scroll enter |
-| About words | Scrubbed word light-up tied to scroll progress |
+| 🏆 **Multi-bracket Tournaments** | Multiple tournaments per event, each with its own game, prize pool, and schedule |
+| 👥 **Team & Roster Management** | Register organisations, manage player rosters, assign in-game roles |
+| 🔍 **Public Event Pages** | Browse all events, teams, and rosters without an account |
+| 📰 **News & Announcements** | Tournament results, upcoming events, platform updates |
+| 🔒 **Secure Authentication** | Email verification, Argon2ID hashing, role-based access control |
+| 🌍 **EN / IT Bilingual** | Full English and Italian interface with cookie-based switching |
+| 📱 **Responsive Design** | Works on desktop, tablet, and mobile |
 
 ---
 
-## Deployment
+## Supported Games
 
-### Production (Render.com)
-
-The app is automatically deployed to [Render.com](https://render.com) on every push to `main`.
-
-**Required environment variables:**
-
-| Variable | Description |
-|---|---|
-| `DB_HOST` | TiDB Cloud host |
-| `DB_PORT` | `4000` |
-| `DB_USER` | TiDB user |
-| `DB_PASS` | TiDB password |
-| `DB_NAME` | Database name |
-| `RESEND_API_KEY` | [Resend](https://resend.com) API key for transactional email |
-| `MAIL_FROM` | Sender email address |
-| `CONTACT_EMAIL` | Recipient for contact form |
-| `MAIL_FROM_NAME` | Sender display name |
-
-### Local (Docker)
-
-**Linux / Arch Linux:**
-```bash
-./start_arch.sh
-```
-
-**Windows 10/11:**
-```bat
-start_windows.bat
-```
-
-Both scripts build the image, start Apache + PHP 8.2 + MariaDB 10.6, and seed the database. Open **http://localhost:8080**.
-
-### Manual setup
-
-**Requirements:** PHP 8.2+, MariaDB 10.6+ (or TiDB Cloud)
-
-```bash
-# 1. Clone
-git clone https://github.com/EliseyRotar/tech-events-msi.git
-cd tech-events-msi
-
-# 2. Configure environment
-cp .env.example .env
-# edit .env — set DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
-
-# 3. Import schema + seed data
-mariadb -u root -p               < database/01_tables.sql
-mariadb -u root -p tech_dragons_events < database/02_elements.sql
-# or for production: use database/combined_migration.sql
-
-# 4. Point your web server document root to ./public
-```
-
-### Default seeded accounts
-
-| Email | Role | Note |
-|---|---|---|
-| mario@example.com | Admin | Use register.php to create a fresh account, then set `isAdmin = 1` in DB |
-| luigi@example.com | User | Same |
+CS2 · Valorant · Dota 2 · League of Legends · and any title organizers add
 
 ---
 
-## Security
+## Links
 
-| Concern | Implementation |
+| | |
 |---|---|
-| SQL injection | 100% PDO prepared statements — zero string interpolation in any query |
-| XSS | `htmlspecialchars($val, ENT_QUOTES, 'UTF-8')` on every `<?=` output |
-| Auth bypass | `Auth::requireLogin()` / `Auth::requireAdmin()` at top of every protected page |
-| Password storage | `password_hash(..., PASSWORD_ARGON2ID)` |
-| Transaction safety | `runInTransaction()` wraps every write; catches `\Throwable` and rolls back |
-| Open redirect | `?lang=` handler validates URL starts with `/` and not `//` |
-| Credential exposure | `.env` is gitignored; `EnvLoader` reads it without leaking into `$_ENV` |
-| Web root isolation | `src/`, `templates/`, `lang/`, `database/` are all outside `public/` |
-| TiDB SSL | PDO connects with CA cert; `SSL_VERIFY_SERVER_CERT=false` for serverless |
+| 🌐 Platform | [tech-events-msi.onrender.com](https://tech-events-msi.onrender.com) |
+| 📧 Contact | techdragonevents@gmail.com |
+| 📰 News | [/news.php](https://tech-events-msi.onrender.com/news.php) |
+| 📜 Privacy Policy | [/privacy.php](https://tech-events-msi.onrender.com/privacy.php) |
+| 📋 Terms of Service | [/terms.php](https://tech-events-msi.onrender.com/terms.php) |
 
 ---
 
-## Tech Stack
+## Team
 
-| Layer | Technology |
+| Name | Role |
 |---|---|
-| Language | PHP 8.2 |
-| Database | TiDB Cloud Serverless (MySQL-compatible) |
-| Web server | Apache 2.4 (Docker) |
-| Hosting | Render.com (free tier, auto-deploy) |
-| Containerisation | Docker |
-| 3D / WebGL | Three.js r128 (particle morph) + raw WebGL 1.0 (fluid shader) |
-| Animations | GSAP 3.12 + ScrollTrigger |
-| CSS | Custom design system — CSS custom properties, no framework |
-| Typography | Space Grotesk + Inter (Google Fonts) |
-| Auth | Custom RBAC (`src/Auth.php`) |
-| i18n | Cookie-based, file-per-locale (`lang/*.php`) |
-| Email | Resend HTTP API |
-
----
-
-## Contributing
-
-1. Fork and create a feature branch off `main`
-2. Backend: PDO prepared statements, `htmlspecialchars()` on all output, wrap writes in `runInTransaction()`
-3. Frontend: no frameworks — extend `main.css` tokens, animate via GSAP
-4. Open a pull request against `main` — Render auto-deploys on merge
+| [Elisey Rotar](https://github.com/EliseyRotar) | CEO & Founder |
+| Aimen Tafihi | Co-Founder & CTO |
+| Andrea Valente | Backend Engineer |
+| Francesco Daminelli | Frontend Developer |
+| Manuel Greco | Operations Manager |
 
 ---
 
 ## Contributors
 
+<a href="https://github.com/EliseyRotar"><img src="https://avatars.githubusercontent.com/EliseyRotar?s=48" width="48" title="EliseyRotar" style="border-radius:50%"></a>
+<a href="https://github.com/manuel-greco-s"><img src="https://avatars.githubusercontent.com/manuel-greco-s?s=48" width="48" title="manuel-greco-s" style="border-radius:50%"></a>
+
+---
+
 <div align="center">
-
-| | Contributor | GitHub | Commits |
-|---|---|---|---|
-| <img src="https://github.com/EliseyRotar.png" width="36" style="border-radius:50%"> | Elisey Rotar | [@EliseyRotar](https://github.com/EliseyRotar) | project lead |
-| <img src="https://github.com/DaminelliF.png" width="36" style="border-radius:50%"> | DaminelliF | [@DaminelliF](https://github.com/DaminelliF) | 14 commits |
-| <img src="https://github.com/manuel-greco-s.png" width="36" style="border-radius:50%"> | Manuel Greco | [@manuel-greco-s](https://github.com/manuel-greco-s) | 6 commits |
-| <img src="https://github.com/Andrea-Valente08.png" width="36" style="border-radius:50%"> | Andrea Valente | [@Andrea-Valente08](https://github.com/Andrea-Valente08) | 1 commit |
-
+  <sub>© 2026 Tech Dragons Events · <a href="https://tech-events-msi.onrender.com/privacy.php">Privacy</a> · <a href="https://tech-events-msi.onrender.com/terms.php">Terms</a> · Built with PHP & ❤️</sub>
 </div>

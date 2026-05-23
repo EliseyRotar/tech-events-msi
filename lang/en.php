@@ -6,6 +6,7 @@ return [
     // ── Nav ────────────────────────────────────────────────
     'nav_archive'           => 'Archive',
     'nav_events'            => 'Events',
+    'nav_news'              => 'News',
     'nav_platform'          => 'Platform',
     'nav_contact'           => 'Contact',
     'nav_dashboard'         => 'Dashboard',
@@ -23,10 +24,10 @@ return [
     'hero_scroll'           => 'Scroll',
 
     // ── Stats bar ──────────────────────────────────────────
-    'stat_events_label'     => 'Events Managed',
-    'stat_countries_label'  => 'Countries',
-    'stat_prizes_label'     => 'Prize Pools Managed',
-    'stat_athletes_label'   => 'Registered Athletes',
+    'stat_events_label'     => 'Events Hosted',
+    'stat_teams_label'      => 'Registered Teams',
+    'stat_prizes_label'     => 'Total Prize Pool',
+    'stat_athletes_label'   => 'Active Players',
 
     // ── Scrollytelling story section ───────────────────────
     'story_section_label'   => 'The Story',
@@ -174,16 +175,16 @@ return [
     'terms_s8_body'         => 'We may update these Terms at any time. Continued use of the Platform after changes are posted constitutes your acceptance of the updated Terms. We will notify registered users of material changes by email.',
 
     // ── Register page ──────────────────────────────────────
-    'register_label'        => 'Organisation Portal',
+    'register_label'        => 'Join the Platform',
     'register_title'        => 'Create Account',
-    'register_lead'         => 'Join the platform powering professional esports worldwide.',
+    'register_lead'         => 'Free account. Compete in tournaments, register your team, and track results.',
     'register_firstname'    => 'First Name',
     'register_lastname'     => 'Last Name',
     'register_email'        => 'Email Address',
-    'register_fiscal'       => 'Fiscal Code / Government ID',
+    'register_username'     => 'Username / Gamertag',
     'register_dob'          => 'Date of Birth',
     'register_password'     => 'Password',
-    'register_submit'       => 'Initialize Account',
+    'register_submit'       => 'Create Account',
     'register_signin_prompt'=> 'Already have an account?',
     'register_signin_link'  => 'Sign in',
 
@@ -195,6 +196,8 @@ return [
     'err_min_age'           => 'You must be at least 13 years old to register.',
     'err_pswd_length'       => 'Password must be at least 8 characters.',
     'err_email_taken'       => 'This email address is already registered.',
+    'err_username_taken'    => 'This username is already taken. Please choose another.',
+    'err_invalid_username'  => 'Username must be 3–30 characters: letters, numbers, _ and - only.',
     'err_registration'      => 'Registration failed. Please try again.',
 
     // ── Login page ─────────────────────────────────────────

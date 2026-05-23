@@ -15,3 +15,8 @@
 
 # Logs
 *.log
+
+# Scratch / working images at repo root
+/Untitled.*
+/logo.jpg
+/logo-removebg-preview.png

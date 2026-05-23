@@ -1394,6 +1394,15 @@ footer {
 
 .footer-bottom-links a:hover { color: var(--text-primary); }
 
+.footer-github {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.footer-github svg { opacity: 0.7; transition: opacity 0.2s; }
+.footer-github:hover svg { opacity: 1; }
+
 /* ── Shared Section Title ────────────────────────────────── */
 h2 {
   font-family: var(--font-display);

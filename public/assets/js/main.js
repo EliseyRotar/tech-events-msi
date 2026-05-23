@@ -155,19 +155,17 @@
       start: 'top 85%',
       once: true,
       onEnter: () => {
-        gsap.fromTo(
-          { val: 0 },
-          { val: target,
-            duration: 2,
-            ease: 'power2.out',
-            onUpdate: function () {
-              const v = this.targets()[0].val;
-              el.textContent = prefix + (decimal
-                ? v.toFixed(1)
-                : Math.round(v).toLocaleString()) + suffix;
-            },
-          }
-        );
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 2,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = prefix + (decimal
+              ? obj.val.toFixed(1)
+              : Math.round(obj.val).toLocaleString()) + suffix;
+          },
+        });
       },
     });
   });

@@ -112,9 +112,66 @@ return [
     'footer_signin'         => 'Sign In',
     'footer_register_team'  => 'Register Team',
     'footer_copyright'      => '© 2026 Tech Dragons Events. All rights reserved.',
-    'footer_privacy'        => 'Privacy',
-    'footer_terms'          => 'Terms',
+    'footer_privacy'        => 'Privacy Policy',
+    'footer_terms'          => 'Terms of Service',
     'footer_status'         => 'Status',
+
+    // ── Privacy Policy page ────────────────────────────────
+    'privacy_page_title'    => 'Privacy Policy — Tech Dragons Events',
+    'privacy_title'         => 'Privacy Policy',
+    'privacy_updated'       => 'Last updated: 23 May 2026',
+    'privacy_intro'         => 'Tech Dragons Events ("we", "us", or "our") is committed to protecting your personal information. This Privacy Policy explains what data we collect, how we use it, and your rights as a user of our platform.',
+
+    'privacy_s1_title'      => '1. Information We Collect',
+    'privacy_s1_body'       => 'We collect information you provide directly when creating an account: first name, last name, email address, fiscal code / government ID, and date of birth. We also automatically collect your IP address, browser type, and usage data (pages visited, timestamps) for security and analytics purposes.',
+
+    'privacy_s2_title'      => '2. How We Use Your Information',
+    'privacy_s2_body'       => 'We use your data to: create and manage your account; authenticate your identity and enforce role-based access controls; register you for events and tournaments; send transactional emails (account verification, event confirmations); and monitor platform security and prevent fraud.',
+
+    'privacy_s3_title'      => '3. Data Sharing',
+    'privacy_s3_body'       => 'We do not sell your personal data. We may share it with trusted service providers who help us operate the platform (hosting, email delivery, database infrastructure), all of whom are bound by confidentiality agreements. We may disclose data if required by law or to protect the rights of Tech Dragons Events and its users.',
+
+    'privacy_s4_title'      => '4. Data Retention',
+    'privacy_s4_body'       => 'We retain your account data for as long as your account is active. If you request deletion, we will remove your personal data within 30 days except where retention is required by law (e.g. financial records). Aggregated, anonymised analytics data may be retained indefinitely.',
+
+    'privacy_s5_title'      => '5. Your Rights',
+    'privacy_s5_body'       => 'Depending on your jurisdiction, you may have the right to: access the personal data we hold about you; request correction of inaccurate data; request deletion of your account and associated data; object to or restrict certain processing; and data portability. To exercise any of these rights, contact us at the address below.',
+
+    'privacy_s6_title'      => '6. Cookies',
+    'privacy_s6_body'       => 'We use a single functional cookie ("lang") to remember your language preference. No third-party tracking or advertising cookies are set. You may clear this cookie at any time through your browser settings.',
+
+    'privacy_s7_title'      => '7. Contact',
+    'privacy_s7_body'       => 'For any privacy-related questions or requests, email us at techdragonevents@gmail.com. We aim to respond within 5 business days.',
+
+    // ── Terms of Service page ──────────────────────────────
+    'terms_page_title'      => 'Terms of Service — Tech Dragons Events',
+    'terms_title'           => 'Terms of Service',
+    'terms_updated'         => 'Last updated: 23 May 2026',
+    'terms_intro'           => 'By accessing or using Tech Dragons Events ("Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.',
+
+    'terms_s1_title'        => '1. Eligibility',
+    'terms_s1_body'         => 'You must be at least 13 years old to create an account. By registering, you confirm that the information you provide is accurate and that you have the legal capacity to enter into these Terms.',
+
+    'terms_s2_title'        => '2. Account Responsibilities',
+    'terms_s2_body'         => 'You are responsible for maintaining the confidentiality of your login credentials. You agree not to share your account, impersonate another user, or use automated tools to access the Platform. Any activity that occurs under your account is your responsibility.',
+
+    'terms_s3_title'        => '3. Acceptable Use',
+    'terms_s3_body'         => 'You agree not to: upload malicious code or attempt to compromise platform security; harass, abuse, or harm other users; manipulate tournament brackets or results fraudulently; use the Platform for any illegal purpose; or scrape or reproduce platform content without permission.',
+
+    'terms_s4_title'        => '4. Tournament Rules',
+    'terms_s4_body'         => 'Event organizers are responsible for defining and enforcing tournament-specific rules. Tech Dragons Events provides the infrastructure but does not adjudicate individual disputes between players or teams. Prize pool disbursement is the sole responsibility of the event organizer.',
+
+    'terms_s5_title'        => '5. Intellectual Property',
+    'terms_s5_body'         => 'All platform code, design, trademarks, and content produced by Tech Dragons Events are protected by intellectual property law. You retain ownership of any content you submit (team names, descriptions), but grant us a licence to display it on the Platform.',
+
+    'terms_s6_title'        => '6. Limitation of Liability',
+    'terms_s6_body'         => 'The Platform is provided "as is". To the maximum extent permitted by law, Tech Dragons Events is not liable for indirect, incidental, or consequential damages arising from your use of the Platform, including data loss, tournament cancellations, or third-party service outages.',
+
+    'terms_s7_title'        => '7. Governing Law',
+    'terms_s7_body'         => 'These Terms are governed by Italian law. Any dispute that cannot be resolved amicably shall be submitted to the exclusive jurisdiction of the courts of Milan, Italy.',
+
+    'terms_s8_title'        => '8. Changes to These Terms',
+    'terms_s8_body'         => 'We may update these Terms at any time. Continued use of the Platform after changes are posted constitutes your acceptance of the updated Terms. We will notify registered users of material changes by email.',
 
     // ── Register page ──────────────────────────────────────
     'register_label'        => 'Organisation Portal',

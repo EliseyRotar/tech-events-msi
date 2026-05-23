@@ -112,9 +112,66 @@ return [
     'footer_signin'         => 'Accedi',
     'footer_register_team'  => 'Registra Team',
     'footer_copyright'      => '© 2026 Tech Dragons Events. Tutti i diritti riservati.',
-    'footer_privacy'        => 'Privacy',
-    'footer_terms'          => 'Termini',
+    'footer_privacy'        => 'Privacy Policy',
+    'footer_terms'          => 'Termini di Servizio',
     'footer_status'         => 'Stato',
+
+    // ── Pagina Privacy Policy ──────────────────────────────
+    'privacy_page_title'    => 'Privacy Policy — Tech Dragons Events',
+    'privacy_title'         => 'Privacy Policy',
+    'privacy_updated'       => 'Ultimo aggiornamento: 23 maggio 2026',
+    'privacy_intro'         => 'Tech Dragons Events ("noi" o "nostro") si impegna a proteggere le tue informazioni personali. Questa Privacy Policy spiega quali dati raccogliamo, come li utilizziamo e i tuoi diritti in qualità di utente della nostra piattaforma.',
+
+    'privacy_s1_title'      => '1. Informazioni che raccogliamo',
+    'privacy_s1_body'       => 'Raccogliamo le informazioni che fornisci direttamente durante la creazione dell\'account: nome, cognome, indirizzo email, codice fiscale / documento d\'identità e data di nascita. Raccogliamo inoltre automaticamente l\'indirizzo IP, il tipo di browser e i dati di utilizzo (pagine visitate, timestamp) per finalità di sicurezza e analisi.',
+
+    'privacy_s2_title'      => '2. Come utilizziamo le tue informazioni',
+    'privacy_s2_body'       => 'Utilizziamo i tuoi dati per: creare e gestire il tuo account; autenticare la tua identità e applicare i controlli di accesso basati sui ruoli; iscriverti a eventi e tornei; inviare email transazionali (verifica account, conferme eventi); monitorare la sicurezza della piattaforma e prevenire le frodi.',
+
+    'privacy_s3_title'      => '3. Condivisione dei dati',
+    'privacy_s3_body'       => 'Non vendiamo i tuoi dati personali. Possiamo condividerli con fornitori di servizi di fiducia che ci supportano nella gestione della piattaforma (hosting, recapito email, infrastruttura database), tutti vincolati da accordi di riservatezza. Potremmo divulgare dati se richiesto dalla legge o per proteggere i diritti di Tech Dragons Events e dei suoi utenti.',
+
+    'privacy_s4_title'      => '4. Conservazione dei dati',
+    'privacy_s4_body'       => 'Conserviamo i dati del tuo account per tutto il tempo in cui è attivo. In caso di richiesta di cancellazione, rimuoveremo i tuoi dati personali entro 30 giorni, salvo obbligo di conservazione previsto dalla legge (es. registrazioni finanziarie). I dati analitici aggregati e anonimizzati possono essere conservati a tempo indeterminato.',
+
+    'privacy_s5_title'      => '5. I tuoi diritti',
+    'privacy_s5_body'       => 'A seconda della tua giurisdizione, potresti avere il diritto di: accedere ai dati personali che deteniamo su di te; richiedere la correzione di dati inesatti; richiedere la cancellazione del tuo account e dei dati associati; opporti o limitare determinati trattamenti; portabilità dei dati. Per esercitare questi diritti, contattaci all\'indirizzo sottostante.',
+
+    'privacy_s6_title'      => '6. Cookie',
+    'privacy_s6_body'       => 'Utilizziamo un unico cookie funzionale ("lang") per ricordare la tua preferenza linguistica. Non vengono impostati cookie di tracciamento o pubblicitari di terze parti. Puoi eliminare questo cookie in qualsiasi momento tramite le impostazioni del browser.',
+
+    'privacy_s7_title'      => '7. Contatti',
+    'privacy_s7_body'       => 'Per qualsiasi domanda o richiesta relativa alla privacy, scrivici a techdragonevents@gmail.com. Ci impegniamo a rispondere entro 5 giorni lavorativi.',
+
+    // ── Pagina Termini di Servizio ─────────────────────────
+    'terms_page_title'      => 'Termini di Servizio — Tech Dragons Events',
+    'terms_title'           => 'Termini di Servizio',
+    'terms_updated'         => 'Ultimo aggiornamento: 23 maggio 2026',
+    'terms_intro'           => 'Accedendo o utilizzando Tech Dragons Events ("Piattaforma"), accetti di essere vincolato dai presenti Termini di Servizio. Se non accetti, non utilizzare la Piattaforma.',
+
+    'terms_s1_title'        => '1. Requisiti di accesso',
+    'terms_s1_body'         => 'Devi avere almeno 13 anni per creare un account. Registrandoti, confermi che le informazioni fornite sono accurate e che hai la capacità legale di accettare questi Termini.',
+
+    'terms_s2_title'        => '2. Responsabilità dell\'account',
+    'terms_s2_body'         => 'Sei responsabile della riservatezza delle tue credenziali di accesso. Accetti di non condividere il tuo account, impersonare un altro utente o utilizzare strumenti automatizzati per accedere alla Piattaforma. Qualsiasi attività svolta tramite il tuo account è di tua responsabilità.',
+
+    'terms_s3_title'        => '3. Uso accettabile',
+    'terms_s3_body'         => 'Accetti di non: caricare codice malevolo o tentare di compromettere la sicurezza della piattaforma; molestare, abusare o danneggiare altri utenti; manipolare fraudolentemente gironi o risultati dei tornei; utilizzare la Piattaforma per scopi illegali; estrarre o riprodurre i contenuti della piattaforma senza autorizzazione.',
+
+    'terms_s4_title'        => '4. Regole dei tornei',
+    'terms_s4_body'         => 'Gli organizzatori degli eventi sono responsabili della definizione e dell\'applicazione delle regole specifiche del torneo. Tech Dragons Events fornisce l\'infrastruttura ma non arbitra le controversie individuali tra giocatori o team. Il pagamento dei montepremi è di esclusiva responsabilità dell\'organizzatore dell\'evento.',
+
+    'terms_s5_title'        => '5. Proprietà intellettuale',
+    'terms_s5_body'         => 'Tutto il codice, il design, i marchi e i contenuti prodotti da Tech Dragons Events sono protetti dalla legge sulla proprietà intellettuale. Mantieni la proprietà dei contenuti che invii (nomi dei team, descrizioni), ma ci concedi una licenza per visualizzarli sulla Piattaforma.',
+
+    'terms_s6_title'        => '6. Limitazione di responsabilità',
+    'terms_s6_body'         => 'La Piattaforma è fornita "così com\'è". Nella misura massima consentita dalla legge, Tech Dragons Events non è responsabile per danni indiretti, incidentali o consequenziali derivanti dall\'uso della Piattaforma, inclusa la perdita di dati, la cancellazione di tornei o le interruzioni di servizi di terze parti.',
+
+    'terms_s7_title'        => '7. Legge applicabile',
+    'terms_s7_body'         => 'I presenti Termini sono disciplinati dalla legge italiana. Qualsiasi controversia che non possa essere risolta bonariamente sarà sottoposta alla giurisdizione esclusiva del Tribunale di Milano.',
+
+    'terms_s8_title'        => '8. Modifiche ai Termini',
+    'terms_s8_body'         => 'Possiamo aggiornare i presenti Termini in qualsiasi momento. L\'uso continuato della Piattaforma dopo la pubblicazione delle modifiche costituisce accettazione dei Termini aggiornati. Informeremo gli utenti registrati delle modifiche sostanziali via email.',
 
     // ── Register page ──────────────────────────────────────
     'register_label'        => 'Portale Organizzazioni',

@@ -40,6 +40,7 @@ require_once __DIR__ . '/../../src/helpers.php';
     <meta name="keywords" content="esports, tournament, LAN, online competition, team management, prize pool, gaming events, tech dragons, torneo esports, competizione online">
     <meta name="author" content="Tech Dragons Events">
     <meta name="robots" content="index, follow">
+    <meta name="google-site-verification" content="sRhwlFc-7CJMLbBnAGhE4HyV8a5bIkPtOyQrk2OYhKc">
     <link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES) ?>">
 
     <!-- Open Graph (Facebook, LinkedIn, Discord, WhatsApp) -->

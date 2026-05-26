@@ -9,24 +9,29 @@ if (!$id) {
     exit;
 }
 
-$stm = $pdo->prepare(
-    "SELECT m.*,
-            s1.nomeSquadra AS team1Name, s1.idSquadra AS t1id,
-            s2.nomeSquadra AS team2Name, s2.idSquadra AS t2id,
-            sv.nomeSquadra AS winnerName,
-            t.nomeTorneo, t.idTorneo, t.idEvento,
-            e.nome AS eventName, g.nomeGioco
-     FROM matches m
-     LEFT JOIN squadre s1  ON s1.idSquadra = m.idSquadra1
-     LEFT JOIN squadre s2  ON s2.idSquadra = m.idSquadra2
-     LEFT JOIN squadre sv  ON sv.idSquadra = m.idVincitore
-     JOIN tornei t         ON t.idTorneo   = m.idTorneo
-     JOIN evento e         ON e.idEvento   = t.idEvento
-     LEFT JOIN giochi g    ON g.idGioco    = t.idGioco
-     WHERE m.idMatch = :id"
-);
-$stm->execute([':id' => $id]);
-$match = $stm->fetch(PDO::FETCH_ASSOC);
+try {
+    $stm = $pdo->prepare(
+        "SELECT m.*,
+                s1.nomeSquadra AS team1Name, s1.idSquadra AS t1id,
+                s2.nomeSquadra AS team2Name, s2.idSquadra AS t2id,
+                sv.nomeSquadra AS winnerName,
+                t.nomeTorneo, t.idTorneo, t.idEvento,
+                e.nome AS eventName, g.nomeGioco
+         FROM matches m
+         LEFT JOIN squadre s1  ON s1.idSquadra = m.idSquadra1
+         LEFT JOIN squadre s2  ON s2.idSquadra = m.idSquadra2
+         LEFT JOIN squadre sv  ON sv.idSquadra = m.idVincitore
+         JOIN tornei t         ON t.idTorneo   = m.idTorneo
+         JOIN evento e         ON e.idEvento   = t.idEvento
+         LEFT JOIN giochi g    ON g.idGioco    = t.idGioco
+         WHERE m.idMatch = :id"
+    );
+    $stm->execute([':id' => $id]);
+    $match = $stm->fetch(PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    header('Location: /');
+    exit;
+}
 if (!$match) {
     header('Location: /');
     exit;

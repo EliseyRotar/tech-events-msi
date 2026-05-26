@@ -13,43 +13,73 @@ if (!$idTorneo) {
     exit;
 }
 
-$stm = $pdo->prepare("SELECT t.*, e.discord_webhook FROM tornei t JOIN evento e ON e.idEvento = t.idEvento WHERE t.idTorneo = :id");
-$stm->execute([':id' => $idTorneo]);
-$tournament = $stm->fetch(PDO::FETCH_ASSOC);
+try {
+    $stm = $pdo->prepare("SELECT t.*, e.discord_webhook FROM tornei t JOIN evento e ON e.idEvento = t.idEvento WHERE t.idTorneo = :id");
+    $stm->execute([':id' => $idTorneo]);
+    $tournament = $stm->fetch(PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    // discord_webhook column not yet added — fall back
+    $stm = $pdo->prepare("SELECT t.*, NULL AS discord_webhook FROM tornei t JOIN evento e ON e.idEvento = t.idEvento WHERE t.idTorneo = :id");
+    $stm->execute([':id' => $idTorneo]);
+    $tournament = $stm->fetch(PDO::FETCH_ASSOC);
+}
 if (!$tournament) {
     header('Location: /dashboard.php');
     exit;
 }
 
-$stm = $pdo->prepare("SELECT COUNT(*) FROM matches WHERE idTorneo = :id");
-$stm->execute([':id' => $idTorneo]);
-if ($stm->fetchColumn() > 0) {
-    header('Location: /bracket.php?id=' . $idTorneo . '&msg=exists');
-    exit;
+try {
+    $stm = $pdo->prepare("SELECT COUNT(*) FROM matches WHERE idTorneo = :id");
+    $stm->execute([':id' => $idTorneo]);
+    if ($stm->fetchColumn() > 0) {
+        header('Location: /bracket.php?id=' . $idTorneo . '&msg=exists');
+        exit;
+    }
+} catch (\PDOException $e) {
+    // matches table not yet created — safe to proceed; insert will be caught below
 }
 
 // Fetch registered teams; prefer checked-in if check-in window was opened
-$hasCheckin = !empty($tournament['checkin_opens_at']);
-if ($hasCheckin) {
-    $stm = $pdo->prepare(
-        "SELECT ts.idSquadra, ts.seed, s.nomeSquadra
-         FROM tornei_squadre ts
-         JOIN squadre s ON s.idSquadra = ts.idSquadra
-         JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
-         WHERE ts.idTorneo = :id
-         ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
-    );
-} else {
-    $stm = $pdo->prepare(
-        "SELECT ts.idSquadra, ts.seed, s.nomeSquadra
-         FROM tornei_squadre ts
-         JOIN squadre s ON s.idSquadra = ts.idSquadra
-         WHERE ts.idTorneo = :id
-         ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
-    );
+$hasCheckin = !empty($tournament['checkin_opens_at'] ?? null);
+$teams = [];
+try {
+    if ($hasCheckin) {
+        $stm = $pdo->prepare(
+            "SELECT ts.idSquadra, ts.seed, s.nomeSquadra
+             FROM tornei_squadre ts
+             JOIN squadre s ON s.idSquadra = ts.idSquadra
+             JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
+             WHERE ts.idTorneo = :id
+             ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
+        );
+    } else {
+        $stm = $pdo->prepare(
+            "SELECT ts.idSquadra, ts.seed, s.nomeSquadra
+             FROM tornei_squadre ts
+             JOIN squadre s ON s.idSquadra = ts.idSquadra
+             WHERE ts.idTorneo = :id
+             ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
+        );
+    }
+    $stm->execute([':id' => $idTorneo]);
+    $teams = $stm->fetchAll(PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    // seed column or checkins table not yet added — fall back
+    try {
+        $stm = $pdo->prepare(
+            "SELECT ts.idSquadra, 0 AS seed, s.nomeSquadra
+             FROM tornei_squadre ts
+             JOIN squadre s ON s.idSquadra = ts.idSquadra
+             WHERE ts.idTorneo = :id
+             ORDER BY s.nomeSquadra ASC"
+        );
+        $stm->execute([':id' => $idTorneo]);
+        $teams = $stm->fetchAll(PDO::FETCH_ASSOC);
+    } catch (\PDOException $e2) {
+        header('Location: /bracket.php?id=' . $idTorneo . '&msg=error');
+        exit;
+    }
 }
-$stm->execute([':id' => $idTorneo]);
-$teams = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 $n = count($teams);
 if ($n < 2) {

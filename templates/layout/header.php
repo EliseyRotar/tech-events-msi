@@ -153,6 +153,7 @@ require_once __DIR__ . '/../../src/helpers.php';
         <div class="links" role="list">
             <a href="/assets/storici/storico.html" role="listitem"><?= t('nav_archive') ?></a>
             <a href="/#events" role="listitem"><?= t('nav_events') ?></a>
+            <a href="/leaderboard.php" role="listitem"><?= t('nav_leaderboard') ?></a>
             <a href="/news.php" role="listitem"><?= t('nav_news') ?></a>
             <a href="/#about" role="listitem"><?= t('nav_platform') ?></a>
             <a href="/#contact" role="listitem"><?= t('nav_contact') ?></a>
@@ -181,6 +182,7 @@ require_once __DIR__ . '/../../src/helpers.php';
 <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
     <a href="/assets/storici/storico.html"><?= t('nav_archive') ?></a>
     <a href="/#events"><?= t('nav_events') ?></a>
+    <a href="/leaderboard.php"><?= t('nav_leaderboard') ?></a>
     <a href="/news.php"><?= t('nav_news') ?></a>
     <a href="/#about"><?= t('nav_platform') ?></a>
     <a href="/#contact"><?= t('nav_contact') ?></a>

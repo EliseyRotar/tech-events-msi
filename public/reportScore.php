@@ -8,21 +8,46 @@ if (!$id) {
     exit;
 }
 
-$stm = $pdo->prepare(
-    "SELECT m.*,
-            s1.nomeSquadra AS team1Name,
-            s2.nomeSquadra AS team2Name,
-            t.nomeTorneo, t.idTorneo,
-            e.discord_webhook
-     FROM matches m
-     LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
-     LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
-     JOIN tornei t ON t.idTorneo = m.idTorneo
-     JOIN evento e ON e.idEvento = t.idEvento
-     WHERE m.idMatch = :id"
-);
-$stm->execute([':id' => $id]);
-$match = $stm->fetch(\PDO::FETCH_ASSOC);
+$match = null;
+try {
+    $stm = $pdo->prepare(
+        "SELECT m.*,
+                s1.nomeSquadra AS team1Name,
+                s2.nomeSquadra AS team2Name,
+                t.nomeTorneo, t.idTorneo,
+                e.discord_webhook
+         FROM matches m
+         LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
+         LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
+         JOIN tornei t ON t.idTorneo = m.idTorneo
+         JOIN evento e ON e.idEvento = t.idEvento
+         WHERE m.idMatch = :id"
+    );
+    $stm->execute([':id' => $id]);
+    $match = $stm->fetch(\PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    // discord_webhook column not yet added — fall back
+    try {
+        $stm = $pdo->prepare(
+            "SELECT m.*,
+                    s1.nomeSquadra AS team1Name,
+                    s2.nomeSquadra AS team2Name,
+                    t.nomeTorneo, t.idTorneo,
+                    NULL AS discord_webhook
+             FROM matches m
+             LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
+             LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
+             JOIN tornei t ON t.idTorneo = m.idTorneo
+             JOIN evento e ON e.idEvento = t.idEvento
+             WHERE m.idMatch = :id"
+        );
+        $stm->execute([':id' => $id]);
+        $match = $stm->fetch(\PDO::FETCH_ASSOC);
+    } catch (\PDOException $e2) {
+        header('Location: /dashboard.php');
+        exit;
+    }
+}
 if (!$match || in_array($match['status'], ['completed', 'bye', 'forfeit'])) {
     header('Location: /bracket.php?id=' . ($match['idTorneo'] ?? '') . '&msg=locked');
     exit;

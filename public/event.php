@@ -155,12 +155,15 @@ require_once __DIR__ . '/../templates/layout/header.php';
                         <?= (int)$t['teamCount'] ?> team<?= $t['teamCount'] != 1 ? 's' : '' ?>
                     </span>
                 </div>
-                <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:8px;">
-                    <a href="/viewTeam.php?id=<?= (int)$t['idTorneo'] ?>" class="btn-secondary" style="flex:1;text-align:center;padding:7px;font-size:12px;">
-                        View Rosters
+                <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="/bracket.php?id=<?= (int)$t['idTorneo'] ?>" class="btn-secondary" style="flex:1;text-align:center;padding:7px;font-size:12px;min-width:80px;">
+                        Bracket
+                    </a>
+                    <a href="/viewTeam.php?id=<?= (int)$t['idTorneo'] ?>" class="btn-secondary" style="flex:1;text-align:center;padding:7px;font-size:12px;min-width:80px;">
+                        Rosters
                     </a>
                     <?php if (isset($_SESSION['email'])): ?>
-                    <a href="/signTeam.php?id=<?= (int)$t['idTorneo'] ?>" class="btn-primary" style="flex:1;text-align:center;padding:7px;font-size:12px;">
+                    <a href="/signTeam.php?id=<?= (int)$t['idTorneo'] ?>" class="btn-primary" style="flex:1;text-align:center;padding:7px;font-size:12px;min-width:60px;">
                         Enter
                     </a>
                     <?php endif; ?>

@@ -7,6 +7,8 @@ return [
     'nav_archive'           => 'Archive',
     'nav_events'            => 'Events',
     'nav_leaderboard'       => 'Leaderboard',
+    'nav_guide'             => 'Guide',
+    'nav_about'             => 'About',
     'nav_news'              => 'News',
     'nav_platform'          => 'Platform',
     'nav_contact'           => 'Contact',

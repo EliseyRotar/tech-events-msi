@@ -166,8 +166,12 @@ require_once __DIR__ . '/../templates/layout/header.php';
                             </td>
                             <td>
                                 <div class="table-actions">
+                                    <a href="/bracket.php?id=<?= (int)$row['idTorneo'] ?>" class="btn-secondary" style="padding:6px 12px;font-size:12px;">Bracket</a>
                                     <a href="/viewTeam.php?id=<?= (int)$row['idTorneo'] ?>" class="btn-secondary" style="padding:6px 12px;font-size:12px;">Rosters</a>
                                     <a href="/signTeam.php?id=<?= (int)$row['idTorneo'] ?>" class="btn-primary" style="padding:6px 12px;font-size:12px;">Register Team</a>
+                                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
+                                    <a href="/scheduleMatch.php?torneo=<?= (int)$row['idTorneo'] ?>" class="btn-secondary" style="padding:6px 12px;font-size:12px;">Manage</a>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>

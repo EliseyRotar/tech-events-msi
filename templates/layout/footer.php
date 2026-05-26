@@ -10,6 +10,7 @@
                     <div class="footer-col">
                         <h4><?= t('footer_platform') ?></h4>
                         <a href="/#events"><?= t('footer_events') ?></a>
+                        <a href="/leaderboard.php"><?= t('nav_leaderboard') ?></a>
                         <a href="/#about"><?= t('footer_features') ?></a>
                         <a href="/dashboard.php"><?= t('footer_dashboard') ?></a>
                         <a href="/assets/storici/storico.html"><?= t('footer_archive') ?></a>

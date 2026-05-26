@@ -3,58 +3,64 @@ session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../src/helpers.php';
 
-// Fetch team stats from matches
-$stm = $pdo->prepare(
-    "SELECT
-        s.idSquadra,
-        s.nomeSquadra,
-        sp.nomeAzienda AS sponsorName,
-        COUNT(DISTINCT ts.idTorneo) AS tournamentsEntered,
-        COALESCE(SUM(CASE WHEN ts.placement = 1 THEN 1 ELSE 0 END), 0) AS wins,
-        COALESCE(SUM(CASE WHEN ts.placement = 2 THEN 1 ELSE 0 END), 0) AS runnerUps,
-        (SELECT COUNT(*) FROM matches m
-         WHERE (m.idSquadra1 = s.idSquadra OR m.idSquadra2 = s.idSquadra)
-         AND m.status = 'completed') AS matchesPlayed,
-        (SELECT COUNT(*) FROM matches m
-         WHERE m.idVincitore = s.idSquadra
-         AND m.status = 'completed') AS matchWins,
-        COALESCE(SUM(t.montePremi * CASE WHEN ts.placement = 1 THEN 1 ELSE 0 END), 0) AS prizeEarned
-     FROM squadre s
-     LEFT JOIN tornei_squadre ts ON ts.idSquadra = s.idSquadra
-     LEFT JOIN tornei t          ON t.idTorneo = ts.idTorneo
-     LEFT JOIN sponsor sp        ON sp.idSponsor = s.idSponsor
-     GROUP BY s.idSquadra, s.nomeSquadra, sp.nomeAzienda
-     HAVING matchesPlayed > 0 OR tournamentsEntered > 0
-     ORDER BY wins DESC, matchWins DESC, tournamentsEntered DESC"
-);
-$stm->execute();
-$teams = $stm->fetchAll(\PDO::FETCH_ASSOC);
+$teams       = [];
+$globalStats = ['totalTeams' => 0, 'totalMatches' => 0, 'completedTournaments' => 0, 'totalPrize' => 0];
+$dbReady     = false;
 
-// Compute win rates
-foreach ($teams as &$t) {
-    $t['winRate'] = $t['matchesPlayed'] > 0
-        ? round($t['matchWins'] / $t['matchesPlayed'] * 100)
-        : 0;
+try {
+    $stm = $pdo->prepare(
+        "SELECT
+            s.idSquadra,
+            s.nomeSquadra,
+            sp.nomeAzienda AS sponsorName,
+            COUNT(DISTINCT ts.idTorneo) AS tournamentsEntered,
+            COALESCE(SUM(CASE WHEN ts.placement = 1 THEN 1 ELSE 0 END), 0) AS wins,
+            COALESCE(SUM(CASE WHEN ts.placement = 2 THEN 1 ELSE 0 END), 0) AS runnerUps,
+            (SELECT COUNT(*) FROM matches m
+             WHERE (m.idSquadra1 = s.idSquadra OR m.idSquadra2 = s.idSquadra)
+             AND m.status = 'completed') AS matchesPlayed,
+            (SELECT COUNT(*) FROM matches m
+             WHERE m.idVincitore = s.idSquadra
+             AND m.status = 'completed') AS matchWins,
+            COALESCE(SUM(t.montePremi * CASE WHEN ts.placement = 1 THEN 1 ELSE 0 END), 0) AS prizeEarned
+         FROM squadre s
+         LEFT JOIN tornei_squadre ts ON ts.idSquadra = s.idSquadra
+         LEFT JOIN tornei t          ON t.idTorneo = ts.idTorneo
+         LEFT JOIN sponsor sp        ON sp.idSponsor = s.idSponsor
+         GROUP BY s.idSquadra, s.nomeSquadra, sp.nomeAzienda
+         HAVING matchesPlayed > 0 OR tournamentsEntered > 0
+         ORDER BY wins DESC, matchWins DESC, tournamentsEntered DESC"
+    );
+    $stm->execute();
+    $teams = $stm->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($teams as &$t) {
+        $t['winRate'] = $t['matchesPlayed'] > 0
+            ? round($t['matchWins'] / $t['matchesPlayed'] * 100)
+            : 0;
+    }
+    unset($t);
+
+    usort($teams, function($a, $b) {
+        if ($b['wins'] !== $a['wins']) return $b['wins'] <=> $a['wins'];
+        if ($b['matchWins'] !== $a['matchWins']) return $b['matchWins'] <=> $a['matchWins'];
+        return $b['winRate'] <=> $a['winRate'];
+    });
+
+    $statStm = $pdo->prepare(
+        "SELECT
+            (SELECT COUNT(*) FROM squadre) AS totalTeams,
+            (SELECT COUNT(*) FROM matches WHERE status = 'completed') AS totalMatches,
+            (SELECT COUNT(*) FROM tornei WHERE status = 'completed') AS completedTournaments,
+            (SELECT COALESCE(SUM(montePremi), 0) FROM tornei) AS totalPrize"
+    );
+    $statStm->execute();
+    $globalStats = $statStm->fetch(\PDO::FETCH_ASSOC);
+    $dbReady = true;
+} catch (\PDOException $e) {
+    // Migration 05 not yet applied — show empty state
+    $dbReady = false;
 }
-unset($t);
-
-// Sort by tournament wins desc, then match wins
-usort($teams, function($a, $b) {
-    if ($b['wins'] !== $a['wins']) return $b['wins'] <=> $a['wins'];
-    if ($b['matchWins'] !== $a['matchWins']) return $b['matchWins'] <=> $a['matchWins'];
-    return $b['winRate'] <=> $a['winRate'];
-});
-
-// Fetch all-time stats
-$statStm = $pdo->prepare(
-    "SELECT
-        (SELECT COUNT(*) FROM squadre) AS totalTeams,
-        (SELECT COUNT(*) FROM matches WHERE status = 'completed') AS totalMatches,
-        (SELECT COUNT(*) FROM tornei WHERE status = 'completed') AS completedTournaments,
-        (SELECT COALESCE(SUM(montePremi), 0) FROM tornei) AS totalPrize"
-);
-$statStm->execute();
-$globalStats = $statStm->fetch(\PDO::FETCH_ASSOC);
 
 $pageTitle = 'Leaderboard — Tech Dragons Events';
 require_once __DIR__ . '/../templates/layout/header.php';
@@ -74,6 +80,16 @@ require_once __DIR__ . '/../templates/layout/header.php';
             All-time rankings based on tournament victories, match wins, and prize earnings.
         </p>
     </div>
+
+    <?php if (!$dbReady): ?>
+    <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:var(--radius-lg);padding:48px;text-align:center;margin-bottom:48px;" class="reveal">
+        <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
+        <p style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px;">Match System Being Set Up</p>
+        <p style="color:var(--text-secondary);max-width:420px;margin:0 auto;">
+            The match tracking system is being activated. Rankings will appear here once the first tournaments are played.
+        </p>
+    </div>
+    <?php endif; ?>
 
     <!-- Global stats bar -->
     <div class="reveal" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:48px;">

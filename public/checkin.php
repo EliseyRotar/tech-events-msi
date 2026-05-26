@@ -27,18 +27,22 @@ $loggedIn  = isset($_SESSION['email']);
 // Find current user's team(s) in this tournament
 $myTeams = [];
 if ($loggedIn) {
-    $stm2 = $pdo->prepare(
-        "SELECT ts.idSquadra, s.nomeSquadra, m.is_captain,
-                CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS already_checked_in
-         FROM membri m
-         JOIN utenti u       ON u.idUtente  = m.idUtente
-         JOIN squadre s      ON s.idSquadra = m.idSquadra
-         JOIN tornei_squadre ts ON ts.idSquadra = m.idSquadra AND ts.idTorneo = :t
-         LEFT JOIN checkins c ON c.idTorneo = :t2 AND c.idSquadra = m.idSquadra
-         WHERE u.email = :email"
-    );
-    $stm2->execute([':t' => $id, ':t2' => $id, ':email' => $_SESSION['email']]);
-    $myTeams = $stm2->fetchAll(\PDO::FETCH_ASSOC);
+    try {
+        $stm2 = $pdo->prepare(
+            "SELECT ts.idSquadra, s.nomeSquadra, m.is_captain,
+                    CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS already_checked_in
+             FROM membri m
+             JOIN utenti u       ON u.idUtente  = m.idUtente
+             JOIN squadre s      ON s.idSquadra = m.idSquadra
+             JOIN tornei_squadre ts ON ts.idSquadra = m.idSquadra AND ts.idTorneo = :t
+             LEFT JOIN checkins c ON c.idTorneo = :t2 AND c.idSquadra = m.idSquadra
+             WHERE u.email = :email"
+        );
+        $stm2->execute([':t' => $id, ':t2' => $id, ':email' => $_SESSION['email']]);
+        $myTeams = $stm2->fetchAll(\PDO::FETCH_ASSOC);
+    } catch (\PDOException $e) {
+        $myTeams = [];
+    }
 }
 
 // Handle check-in action
@@ -79,18 +83,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $loggedIn) {
 }
 
 // All teams with check-in status
-$stm3 = $pdo->prepare(
-    "SELECT ts.idSquadra, s.nomeSquadra, ts.seed,
-            CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS checked_in,
-            c.checked_in_at
-     FROM tornei_squadre ts
-     JOIN squadre s ON s.idSquadra = ts.idSquadra
-     LEFT JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
-     WHERE ts.idTorneo = :id
-     ORDER BY checked_in DESC, ts.seed ASC, s.nomeSquadra ASC"
-);
-$stm3->execute([':id' => $id]);
-$allTeams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+$allTeams = [];
+try {
+    $stm3 = $pdo->prepare(
+        "SELECT ts.idSquadra, s.nomeSquadra, ts.seed,
+                CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS checked_in,
+                c.checked_in_at
+         FROM tornei_squadre ts
+         JOIN squadre s ON s.idSquadra = ts.idSquadra
+         LEFT JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
+         WHERE ts.idTorneo = :id
+         ORDER BY checked_in DESC, ts.seed ASC, s.nomeSquadra ASC"
+    );
+    $stm3->execute([':id' => $id]);
+    $allTeams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    // Fallback: fetch teams without new columns
+    $stm3 = $pdo->prepare(
+        "SELECT ts.idSquadra, s.nomeSquadra,
+                NULL AS seed, 0 AS checked_in, NULL AS checked_in_at
+         FROM tornei_squadre ts
+         JOIN squadre s ON s.idSquadra = ts.idSquadra
+         WHERE ts.idTorneo = :id
+         ORDER BY s.nomeSquadra ASC"
+    );
+    $stm3->execute([':id' => $id]);
+    $allTeams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+}
 
 $checkedInCount = count(array_filter($allTeams, fn($t) => $t['checked_in']));
 $totalCount     = count($allTeams);

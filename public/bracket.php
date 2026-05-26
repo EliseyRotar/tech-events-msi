@@ -112,19 +112,21 @@ require_once __DIR__ . '/../templates/layout/header.php';
                     <?php endif; ?>
                 </div>
             </div>
-            <?php if ($isAdmin): ?>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <?php if (!$bracketExists && $tournament['status'] === 'registration'): ?>
-                <form method="POST" action="/generateBracket.php" style="display:inline;">
-                    <input type="hidden" name="idTorneo" value="<?= $id ?>">
-                    <button type="submit" class="btn-primary">⚡ Generate Bracket</button>
-                </form>
-                <?php elseif ($bracketExists): ?>
-                <a href="/scheduleMatch.php?torneo=<?= $id ?>" class="btn-secondary">Manage Matches</a>
+                <?php if ($isAdmin): ?>
+                    <?php if (!$bracketExists && $tournament['status'] === 'registration'): ?>
+                    <form method="POST" action="/generateBracket.php" style="display:inline;">
+                        <input type="hidden" name="idTorneo" value="<?= $id ?>">
+                        <button type="submit" class="btn-primary">⚡ Generate Bracket</button>
+                    </form>
+                    <?php elseif ($bracketExists): ?>
+                    <a href="/scheduleMatch.php?torneo=<?= $id ?>" class="btn-secondary">Manage Matches</a>
+                    <?php endif; ?>
+                    <a href="/checkin.php?id=<?= $id ?>" class="btn-secondary">Check-ins</a>
+                <?php elseif (isset($_SESSION['email']) && in_array($tournament['status'] ?? '', ['registration', 'checkin'])): ?>
+                    <a href="/checkin.php?id=<?= $id ?>" class="btn-primary">✅ Check In Your Team</a>
                 <?php endif; ?>
-                <a href="/checkin.php?id=<?= $id ?>" class="btn-secondary">Check-ins</a>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 

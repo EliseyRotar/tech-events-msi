@@ -6,6 +6,7 @@ return [
     // ── Nav ────────────────────────────────────────────────
     'nav_archive'           => 'Archivio',
     'nav_events'            => 'Eventi',
+    'nav_leaderboard'       => 'Classifica',
     'nav_news'              => 'Notizie',
     'nav_platform'          => 'Piattaforma',
     'nav_contact'           => 'Contatto',

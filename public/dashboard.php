@@ -146,6 +146,7 @@ require_once __DIR__ . '/../templates/layout/header.php';
                             <th>Game</th>
                             <th>Prize Pool</th>
                             <th>Date</th>
+                            <th>Status</th>
                             <th style="text-align:right">Actions</th>
                         </tr>
                     </thead>
@@ -163,6 +164,17 @@ require_once __DIR__ . '/../templates/layout/header.php';
                             </td>
                             <td style="color:var(--text-secondary);font-size:13px;">
                                 <?= htmlspecialchars($row['giornoSvolgimento'], ENT_QUOTES) ?>
+                            </td>
+                            <td>
+                                <?php
+                                $tStatus = $row['status'] ?? 'registration';
+                                $tBadge  = ['registration'=>'badge-gray','checkin'=>'badge-blue','live'=>'badge-green','completed'=>'badge-gray'];
+                                $tLabel  = ['registration'=>'Registration','checkin'=>'Check-in','live'=>'Live','completed'=>'Done'];
+                                ?>
+                                <span class="badge <?= $tBadge[$tStatus] ?? 'badge-gray' ?>" style="display:inline-flex;align-items:center;gap:4px;">
+                                    <?php if ($tStatus === 'live'): ?><span class="live-dot"></span><?php endif; ?>
+                                    <?= htmlspecialchars($tLabel[$tStatus] ?? ucfirst($tStatus), ENT_QUOTES) ?>
+                                </span>
                             </td>
                             <td>
                                 <div class="table-actions">

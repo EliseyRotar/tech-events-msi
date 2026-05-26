@@ -155,7 +155,8 @@ require_once __DIR__ . '/../../src/helpers.php';
             <a href="/#events" role="listitem"><?= t('nav_events') ?></a>
             <a href="/leaderboard.php" role="listitem"><?= t('nav_leaderboard') ?></a>
             <a href="/news.php" role="listitem"><?= t('nav_news') ?></a>
-            <a href="/#about" role="listitem"><?= t('nav_platform') ?></a>
+            <a href="/guide.php" role="listitem"><?= t('nav_guide') ?></a>
+            <a href="/about.php" role="listitem"><?= t('nav_about') ?></a>
             <a href="/#contact" role="listitem"><?= t('nav_contact') ?></a>
             <?php if (isset($_SESSION['email'])): ?>
                 <a href="/dashboard.php" class="btn-secondary" style="padding:8px 18px;"><?= t('nav_dashboard') ?></a>
@@ -184,7 +185,8 @@ require_once __DIR__ . '/../../src/helpers.php';
     <a href="/#events"><?= t('nav_events') ?></a>
     <a href="/leaderboard.php"><?= t('nav_leaderboard') ?></a>
     <a href="/news.php"><?= t('nav_news') ?></a>
-    <a href="/#about"><?= t('nav_platform') ?></a>
+    <a href="/guide.php"><?= t('nav_guide') ?></a>
+    <a href="/about.php"><?= t('nav_about') ?></a>
     <a href="/#contact"><?= t('nav_contact') ?></a>
     <?php if (isset($_SESSION['email'])): ?>
         <a href="/dashboard.php"><?= t('nav_dashboard') ?></a>

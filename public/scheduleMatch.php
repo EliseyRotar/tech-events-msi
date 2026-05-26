@@ -8,12 +8,22 @@ if (!$idTorneo) {
     exit;
 }
 
-$stm = $pdo->prepare(
-    "SELECT t.*, e.nome AS eventName, e.discord_webhook
-     FROM tornei t JOIN evento e ON e.idEvento = t.idEvento
-     WHERE t.idTorneo = :id"
-);
-$stm->execute([':id' => $idTorneo]);
+try {
+    $stm = $pdo->prepare(
+        "SELECT t.*, e.nome AS eventName, e.discord_webhook
+         FROM tornei t JOIN evento e ON e.idEvento = t.idEvento
+         WHERE t.idTorneo = :id"
+    );
+    $stm->execute([':id' => $idTorneo]);
+} catch (\PDOException $e) {
+    // discord_webhook column not yet added — fall back
+    $stm = $pdo->prepare(
+        "SELECT t.*, e.nome AS eventName, NULL AS discord_webhook
+         FROM tornei t JOIN evento e ON e.idEvento = t.idEvento
+         WHERE t.idTorneo = :id"
+    );
+    $stm->execute([':id' => $idTorneo]);
+}
 $tournament = $stm->fetch(\PDO::FETCH_ASSOC);
 if (!$tournament) {
     header('Location: /dashboard.php');
@@ -43,31 +53,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enable_checkin'])) {
 }
 
 // Fetch all matches
-$stm2 = $pdo->prepare(
-    "SELECT m.*,
-            s1.nomeSquadra AS team1Name,
-            s2.nomeSquadra AS team2Name
-     FROM matches m
-     LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
-     LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
-     WHERE m.idTorneo = :id
-     ORDER BY m.round_number ASC, m.match_number ASC"
-);
-$stm2->execute([':id' => $idTorneo]);
-$matches = $stm2->fetchAll(\PDO::FETCH_ASSOC);
+$matches = [];
+try {
+    $stm2 = $pdo->prepare(
+        "SELECT m.*,
+                s1.nomeSquadra AS team1Name,
+                s2.nomeSquadra AS team2Name
+         FROM matches m
+         LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
+         LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
+         WHERE m.idTorneo = :id
+         ORDER BY m.round_number ASC, m.match_number ASC"
+    );
+    $stm2->execute([':id' => $idTorneo]);
+    $matches = $stm2->fetchAll(\PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    $matches = [];
+}
 
 // Fetch registered teams with seeds
-$stm3 = $pdo->prepare(
-    "SELECT ts.*, s.nomeSquadra,
-            CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS checked_in
-     FROM tornei_squadre ts
-     JOIN squadre s ON s.idSquadra = ts.idSquadra
-     LEFT JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
-     WHERE ts.idTorneo = :id
-     ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
-);
-$stm3->execute([':id' => $idTorneo]);
-$teams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+$teams = [];
+try {
+    $stm3 = $pdo->prepare(
+        "SELECT ts.*, s.nomeSquadra,
+                CASE WHEN c.idCheckin IS NOT NULL THEN 1 ELSE 0 END AS checked_in
+         FROM tornei_squadre ts
+         JOIN squadre s ON s.idSquadra = ts.idSquadra
+         LEFT JOIN checkins c ON c.idTorneo = ts.idTorneo AND c.idSquadra = ts.idSquadra
+         WHERE ts.idTorneo = :id
+         ORDER BY COALESCE(ts.seed, 9999) ASC, s.nomeSquadra ASC"
+    );
+    $stm3->execute([':id' => $idTorneo]);
+    $teams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    // Fallback without new columns
+    $stm3 = $pdo->prepare(
+        "SELECT ts.idTorneo, ts.idSquadra, s.nomeSquadra,
+                NULL AS seed, NULL AS placement, 0 AS eliminated, 0 AS checked_in
+         FROM tornei_squadre ts
+         JOIN squadre s ON s.idSquadra = ts.idSquadra
+         WHERE ts.idTorneo = :id
+         ORDER BY s.nomeSquadra ASC"
+    );
+    $stm3->execute([':id' => $idTorneo]);
+    $teams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
+}
 
 // Handle seed assignment
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seeds'])) {

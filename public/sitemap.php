@@ -25,10 +25,11 @@ function alts(string $base, string $path): array {
 }
 
 // ── Static pages ──────────────────────────────────────────────────
-$urls[] = url($base . '/',             $today, 'weekly',  '1.0', alts($base, '/'));
-$urls[] = url($base . '/register.php', $today, 'monthly', '0.8', alts($base, '/register.php'));
-$urls[] = url($base . '/login.php',    $today, 'monthly', '0.5', alts($base, '/login.php'));
-$urls[] = url($base . '/news.php',     $today, 'weekly',  '0.7', alts($base, '/news.php'));
+$urls[] = url($base . '/',                $today, 'weekly',  '1.0', alts($base, '/'));
+$urls[] = url($base . '/register.php',    $today, 'monthly', '0.8', alts($base, '/register.php'));
+$urls[] = url($base . '/login.php',       $today, 'monthly', '0.5', alts($base, '/login.php'));
+$urls[] = url($base . '/news.php',        $today, 'weekly',  '0.7', alts($base, '/news.php'));
+$urls[] = url($base . '/leaderboard.php', $today, 'daily',   '0.8', alts($base, '/leaderboard.php'));
 $urls[] = url($base . '/privacy.php',  '2026-05-23', 'yearly', '0.3', alts($base, '/privacy.php'));
 $urls[] = url($base . '/terms.php',    '2026-05-23', 'yearly', '0.3', alts($base, '/terms.php'));
 

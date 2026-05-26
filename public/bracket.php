@@ -23,20 +23,25 @@ if (!$tournament) {
     exit;
 }
 
-$stm2 = $pdo->prepare(
-    "SELECT m.*,
-            s1.nomeSquadra AS team1Name,
-            s2.nomeSquadra AS team2Name,
-            sv.nomeSquadra AS winnerName
-     FROM matches m
-     LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
-     LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
-     LEFT JOIN squadre sv ON sv.idSquadra = m.idVincitore
-     WHERE m.idTorneo = :id
-     ORDER BY m.round_number ASC, m.match_number ASC"
-);
-$stm2->execute([':id' => $id]);
-$allMatches = $stm2->fetchAll(PDO::FETCH_ASSOC);
+$allMatches = [];
+try {
+    $stm2 = $pdo->prepare(
+        "SELECT m.*,
+                s1.nomeSquadra AS team1Name,
+                s2.nomeSquadra AS team2Name,
+                sv.nomeSquadra AS winnerName
+         FROM matches m
+         LEFT JOIN squadre s1 ON s1.idSquadra = m.idSquadra1
+         LEFT JOIN squadre s2 ON s2.idSquadra = m.idSquadra2
+         LEFT JOIN squadre sv ON sv.idSquadra = m.idVincitore
+         WHERE m.idTorneo = :id
+         ORDER BY m.round_number ASC, m.match_number ASC"
+    );
+    $stm2->execute([':id' => $id]);
+    $allMatches = $stm2->fetchAll(PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    $allMatches = []; // matches table not yet created
+}
 
 $rounds    = [];
 $maxRound  = 0;

@@ -30,6 +30,8 @@ $urls[] = url($base . '/register.php',    $today, 'monthly', '0.8', alts($base, 
 $urls[] = url($base . '/login.php',       $today, 'monthly', '0.5', alts($base, '/login.php'));
 $urls[] = url($base . '/news.php',        $today, 'weekly',  '0.7', alts($base, '/news.php'));
 $urls[] = url($base . '/leaderboard.php', $today, 'daily',   '0.8', alts($base, '/leaderboard.php'));
+$urls[] = url($base . '/guide.php',      $today, 'monthly', '0.7', alts($base, '/guide.php'));
+$urls[] = url($base . '/about.php',      $today, 'monthly', '0.6', alts($base, '/about.php'));
 $urls[] = url($base . '/privacy.php',  '2026-05-23', 'yearly', '0.3', alts($base, '/privacy.php'));
 $urls[] = url($base . '/terms.php',    '2026-05-23', 'yearly', '0.3', alts($base, '/terms.php'));
 

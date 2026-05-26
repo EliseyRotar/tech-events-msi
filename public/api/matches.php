@@ -10,13 +10,19 @@ if (!$id) {
     exit;
 }
 
-$stm = $pdo->prepare(
-    "SELECT idMatch, punteggio1, punteggio2, status, idVincitore,
-            idSquadra1, idSquadra2, stream_url, scheduled_at
-     FROM matches WHERE idMatch = :id"
-);
-$stm->execute([':id' => $id]);
-$match = $stm->fetch(\PDO::FETCH_ASSOC);
+try {
+    $stm = $pdo->prepare(
+        "SELECT idMatch, punteggio1, punteggio2, status, idVincitore,
+                idSquadra1, idSquadra2, stream_url, scheduled_at
+         FROM matches WHERE idMatch = :id"
+    );
+    $stm->execute([':id' => $id]);
+    $match = $stm->fetch(\PDO::FETCH_ASSOC);
+} catch (\PDOException $e) {
+    http_response_code(503);
+    echo json_encode(['error' => 'unavailable', 'status' => 503]);
+    exit;
+}
 
 if (!$match) {
     http_response_code(404);

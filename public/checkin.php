@@ -65,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $loggedIn) {
                 "INSERT IGNORE INTO checkins (idTorneo, idSquadra) VALUES (:t, :s)"
             )->execute([':t' => $id, ':s' => $squadraId]);
             $msg = 'checked_in';
-            // Refresh my teams
-            if ($stm2 ?? null) {
+            // Refresh my teams list after check-in
+            if (isset($stm2)) {
                 $stm2->execute([':t' => $id, ':t2' => $id, ':email' => $_SESSION['email']]);
                 $myTeams = $stm2->fetchAll(\PDO::FETCH_ASSOC);
             }

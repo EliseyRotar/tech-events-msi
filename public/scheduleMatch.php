@@ -72,9 +72,14 @@ $teams = $stm3->fetchAll(\PDO::FETCH_ASSOC);
 // Handle seed assignment
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seeds'])) {
     foreach ($_POST['seeds'] as $squadraId => $seed) {
+        $squadraId = (int)$squadraId;
+        $seedVal   = (int)$seed;
+        if ($squadraId <= 0) {
+            continue;
+        }
         $pdo->prepare(
             "UPDATE tornei_squadre SET seed = :s WHERE idTorneo = :t AND idSquadra = :sq"
-        )->execute([':s' => (int)$seed ?: null, ':t' => $idTorneo, ':sq' => (int)$squadraId]);
+        )->execute([':s' => $seedVal > 0 ? $seedVal : null, ':t' => $idTorneo, ':sq' => $squadraId]);
     }
     header('Location: /scheduleMatch.php?torneo=' . $idTorneo . '&msg=seeds');
     exit;

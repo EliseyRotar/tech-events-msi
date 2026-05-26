@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status    = in_array($_POST['action'] ?? '', ['live', 'completed', 'forfeit']) ? $_POST['action'] : 'scheduled';
     $streamUrl = trim($_POST['stream_url'] ?? '');
     $schedAt   = !empty($_POST['scheduled_at']) ? $_POST['scheduled_at'] : null;
-    $forfeit   = $_POST['action'] ?? '';
 
     if ($streamUrl && !filter_var($streamUrl, FILTER_VALIDATE_URL)) {
         $error = 'Stream URL is not valid.';
@@ -73,6 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($next && $next['next_match_id']) {
                         $col = (int)$next['next_match_slot'] === 1 ? 'idSquadra1' : 'idSquadra2';
+                        if (!in_array($col, ['idSquadra1', 'idSquadra2'], true)) {
+                            throw new \Exception('Invalid next_match_slot value.');
+                        }
                         $pdo->prepare("UPDATE matches SET {$col} = :v WHERE idMatch = :nm")
                             ->execute([':v' => $winner, ':nm' => $next['next_match_id']]);
                     } else {

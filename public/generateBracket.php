@@ -211,8 +211,10 @@ function placeWinner(\PDO $pdo, int $idMatch): void
     if (!$m || !$m['next_match_id'] || !$m['idVincitore']) {
         return;
     }
-    $col = $m['next_match_slot'] == 1 ? 'idSquadra1' : 'idSquadra2';
-    // $col is either 'idSquadra1' or 'idSquadra2' — safe whitelist
+    $col = (int)$m['next_match_slot'] === 1 ? 'idSquadra1' : 'idSquadra2';
+    if (!in_array($col, ['idSquadra1', 'idSquadra2'], true)) {
+        return;
+    }
     $pdo->prepare("UPDATE matches SET {$col} = :v WHERE idMatch = :id")
         ->execute([':v' => $m['idVincitore'], ':id' => $m['next_match_id']]);
 }

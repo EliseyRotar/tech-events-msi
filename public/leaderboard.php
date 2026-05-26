@@ -56,8 +56,6 @@ $statStm = $pdo->prepare(
 $statStm->execute();
 $globalStats = $statStm->fetch(\PDO::FETCH_ASSOC);
 
-$maxWins = !empty($teams) ? max(array_column($teams, 'matchWins')) : 1;
-
 $pageTitle = 'Leaderboard — Tech Dragons Events';
 require_once __DIR__ . '/../templates/layout/header.php';
 ?>

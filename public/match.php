@@ -33,7 +33,6 @@ if (!$match) {
 }
 
 $isAdmin  = isset($_SESSION['admin']) && (int)$_SESSION['admin'] === 1;
-$maxRound = (int)$pdo->prepare("SELECT MAX(round_number) FROM matches WHERE idTorneo = :t")->execute([':t' => $match['idTorneo']]) ? 0 : 0;
 $stm3 = $pdo->prepare("SELECT MAX(round_number) FROM matches WHERE idTorneo = :t");
 $stm3->execute([':t' => $match['idTorneo']]);
 $maxRound = (int)$stm3->fetchColumn();

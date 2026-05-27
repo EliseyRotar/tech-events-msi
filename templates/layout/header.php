@@ -162,8 +162,14 @@ require_once __DIR__ . '/../../src/helpers.php';
             <a href="/news.php" role="listitem"><?= t('nav_news') ?></a>
             <a href="/guide.php" role="listitem"><?= t('nav_guide') ?></a>
             <a href="/about.php" role="listitem"><?= t('nav_about') ?></a>
+            <a href="/sponsors.php" role="listitem"><?= t('nav_partners') ?></a>
             <a href="/#contact" role="listitem"><?= t('nav_contact') ?></a>
             <?php if (isset($_SESSION['email'])): ?>
+                <?php if (!empty($_SESSION['username'])): ?>
+                <a href="/profile.php" class="btn-ghost" style="padding:8px 14px;font-size:13px;font-weight:600;color:var(--accent-blue);">@<?= htmlspecialchars($_SESSION['username'], ENT_QUOTES) ?></a>
+                <?php else: ?>
+                <a href="/profile.php" class="btn-ghost" style="padding:8px 14px;font-size:13px;"><?= t('nav_profile') ?></a>
+                <?php endif; ?>
                 <a href="/dashboard.php" class="btn-secondary" style="padding:8px 18px;"><?= t('nav_dashboard') ?></a>
                 <a href="/logout.php" class="btn-ghost" style="padding:8px 18px;"><?= t('nav_signout') ?></a>
             <?php else: ?>
@@ -192,8 +198,10 @@ require_once __DIR__ . '/../../src/helpers.php';
     <a href="/news.php"><?= t('nav_news') ?></a>
     <a href="/guide.php"><?= t('nav_guide') ?></a>
     <a href="/about.php"><?= t('nav_about') ?></a>
+    <a href="/sponsors.php"><?= t('nav_partners') ?></a>
     <a href="/#contact"><?= t('nav_contact') ?></a>
     <?php if (isset($_SESSION['email'])): ?>
+        <a href="/profile.php"><?= t('nav_profile') ?></a>
         <a href="/dashboard.php"><?= t('nav_dashboard') ?></a>
         <a href="/logout.php"><?= t('nav_signout') ?></a>
     <?php else: ?>

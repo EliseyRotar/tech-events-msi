@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['emailTxt'] ?? '');
     $password = trim($_POST['pswdTxt'] ?? '');
 
-    $stm = $pdo->prepare("SELECT idUtente, pswd, isAdmin, email_verified FROM utenti WHERE email = :e");
+    $stm = $pdo->prepare("SELECT idUtente, pswd, isAdmin, email_verified, nome, cognome, username FROM utenti WHERE email = :e");
     $stm->bindParam(':e', $email);
     $stm->execute();
     $credentials = $stm->fetch(PDO::FETCH_ASSOC);
@@ -21,10 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $unverifiedEmail = $email;
         } else {
             session_regenerate_id(true);
-            $_SESSION['email']  = $email;
-            $_SESSION['id']     = $credentials['idUtente'];
-            $_SESSION['accept'] = 'ACCEPT';
-            $_SESSION['admin']  = $credentials['isAdmin'];
+            $_SESSION['email']    = $email;
+            $_SESSION['id']       = $credentials['idUtente'];
+            $_SESSION['accept']   = 'ACCEPT';
+            $_SESSION['admin']    = $credentials['isAdmin'];
+            $_SESSION['nome']     = $credentials['nome'];
+            $_SESSION['cognome']  = $credentials['cognome'];
+            $_SESSION['username'] = $credentials['username'] ?? '';
             header('Location: /dashboard.php');
             exit;
         }

@@ -1,0 +1,55 @@
+1:DONE: update the readme build by and insert every contributors that there are on the github reppo there, but there is a double about manuel greco, insert only one, the most active one
+
+2:DONE: create smth with the github actions or idk some kind of bot to wake up the website, so its online 24/7, bc when its  offline and someone enters it, its displaying this:
+https://tech-events-msi.onrender.com/
+Render Logo
+Incoming HTTP request detected ...
+Service waking up ...
+
+__| |______________________________________________________________________________________________________________________________| |__
+__   ______________________________________________________________________________________________________________________________   __
+  | |                                                                                                                              | |
+  | |                                                                                                                              | |
+  | |                                                                                                                              | |
+  | |      ___       __       _______       ___           ________      ________      _____ ______       _______                   | |
+  | |     |\  \     |\  \    |\  ___ \     |\  \         |\   ____\    |\   __  \    |\   _ \  _   \    |\  ___ \                  | |
+  | |     \ \  \    \ \  \   \ \   __/|    \ \  \        \ \  \___|    \ \  \|\  \   \ \  \\\__\ \  \   \ \   __/|                 | |
+  | |      \ \  \  __\ \  \   \ \  \_|/__   \ \  \        \ \  \        \ \  \\\  \   \ \  \\|__| \  \   \ \  \_|/__               | |
+  | |       \ \  \|\__\_\  \   \ \  \_|\ \   \ \  \____    \ \  \____    \ \  \\\  \   \ \  \    \ \  \   \ \  \_|\ \              | |
+  | |        \ \____________\   \ \_______\   \ \_______\   \ \_______\   \ \_______\   \ \__\    \ \__\   \ \_______\             | |
+  | |         \|____________|    \|_______|    \|_______|    \|_______|    \|_______|    \|__|     \|__|    \|_______|             | |
+  | |                                                                                                                              | |
+  | |                                                                                                                              | |
+  | |                                                                                                                              | |
+  | |      _________    ________          ________      _______       ________       ________      _______       ________          | |
+  | |     |\___   ___\ |\   __  \        |\   __  \    |\  ___ \     |\   ___  \    |\   ___ \    |\  ___ \     |\   __  \         | |
+  | |     \|___ \  \_| \ \  \|\  \       \ \  \|\  \   \ \   __/|    \ \  \\ \  \   \ \  \_|\ \   \ \   __/|    \ \  \|\  \        | |
+  | |          \ \  \   \ \  \\\  \       \ \   _  _\   \ \  \_|/__   \ \  \\ \  \   \ \  \ \\ \   \ \  \_|/__   \ \   _  _\       | |
+  | |           \ \  \   \ \  \\\  \       \ \  \\  \|   \ \  \_|\ \   \ \  \\ \  \   \ \  \_\\ \   \ \  \_|\ \   \ \  \\  \|      | |
+  | |            \ \__\   \ \_______\       \ \__\\ _\    \ \_______\   \ \__\\ \__\   \ \_______\   \ \_______\   \ \__\\ _\      | |
+  | |             \|__|    \|_______|        \|__|\|__|    \|_______|    \|__| \|__|    \|_______|    \|_______|    \|__|\|__|     | |
+  | |                                                                                                                              | |
+  | |                                                                                                                              | |
+__| |______________________________________________________________________________________________________________________________| |__
+__   ______________________________________________________________________________________________________________________________   __
+  | |                                                                                                                              | |
+
+Allocating compute resources ...
+Preparing instance for initialization ...
+Starting the instance ...
+Environment variables injected ...
+Finalizing startup ...
+Optimizing deployment ...
+Steady hands. Clean logs. Your app is almost live ...
+Start building on Render today
+Application loading
+
+3:DONE:  also when i push to github i want the website to automatically update, like i push changes to the repo and the website updates
+
+4:DONE: in the footer of the website, the privacy and terms doesnt work, so fix them too, add them, and also create the italian version too using the i18n
+
+5:DONE: add like the link to the github repo in the website, like the footer or idk
+
+6: fix the email verification in the registration tab, the email isnt actually sending
+
+7: do a full security check, make sure its secure and that i dont have any vulnerabilities

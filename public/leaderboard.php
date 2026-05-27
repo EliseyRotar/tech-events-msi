@@ -72,21 +72,21 @@ require_once __DIR__ . '/../templates/layout/header.php';
 
     <!-- Header -->
     <div class="reveal" style="margin-bottom:48px;">
-        <span class="section-label">Global Rankings</span>
+        <span class="section-label"><?= t('lb_label') ?></span>
         <h1 style="font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;">
-            Leaderboard
+            <?= t('lb_title') ?>
         </h1>
         <p style="color:var(--text-secondary);font-size:15px;max-width:500px;">
-            All-time rankings based on tournament victories, match wins, and prize earnings.
+            <?= t('lb_sub') ?>
         </p>
     </div>
 
     <?php if (!$dbReady): ?>
     <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:var(--radius-lg);padding:48px;text-align:center;margin-bottom:48px;" class="reveal">
         <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
-        <p style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px;">Match System Being Set Up</p>
+        <p style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px;"><?= t('lb_setup_title') ?></p>
         <p style="color:var(--text-secondary);max-width:420px;margin:0 auto;">
-            The match tracking system is being activated. Rankings will appear here once the first tournaments are played.
+            <?= t('lb_setup_sub') ?>
         </p>
     </div>
     <?php endif; ?>
@@ -95,10 +95,10 @@ require_once __DIR__ . '/../templates/layout/header.php';
     <div class="reveal" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:48px;">
         <?php
         $gs = [
-            ['label' => 'Teams', 'value' => number_format((int)$globalStats['totalTeams'])],
-            ['label' => 'Matches Played', 'value' => number_format((int)$globalStats['totalMatches'])],
-            ['label' => 'Tournaments', 'value' => number_format((int)$globalStats['completedTournaments'])],
-            ['label' => 'Total Prize Pool', 'value' => '€' . number_format((float)$globalStats['totalPrize'], 0, '.', ',')],
+            ['label' => t('lb_stat_teams'),       'value' => number_format((int)$globalStats['totalTeams'])],
+            ['label' => t('lb_stat_matches'),      'value' => number_format((int)$globalStats['totalMatches'])],
+            ['label' => t('lb_stat_tournaments'),  'value' => number_format((int)$globalStats['completedTournaments'])],
+            ['label' => t('lb_stat_prize'),        'value' => '€' . number_format((float)$globalStats['totalPrize'], 0, '.', ',')],
         ];
         foreach ($gs as $stat):
         ?>
@@ -112,21 +112,21 @@ require_once __DIR__ . '/../templates/layout/header.php';
     <!-- Leaderboard table -->
     <?php if (empty($teams)): ?>
     <div style="background:var(--bg-secondary);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:80px;text-align:center;" class="reveal">
-        <p style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px;">No data yet</p>
-        <p style="color:var(--text-secondary);">Complete some tournament matches to see rankings here.</p>
+        <p style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:8px;"><?= t('lb_empty') ?></p>
+        <p style="color:var(--text-secondary);"><?= t('lb_empty_sub') ?></p>
     </div>
     <?php else: ?>
     <div class="data-table-wrap reveal">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width:50px;">Rank</th>
-                    <th>Organisation</th>
-                    <th style="text-align:center">Tournaments Won</th>
-                    <th style="text-align:center">Match Wins</th>
-                    <th style="text-align:center">Matches Played</th>
-                    <th style="text-align:center">Win Rate</th>
-                    <th style="text-align:right">Prize Earned</th>
+                    <th style="width:50px;"><?= t('lb_rank') ?></th>
+                    <th><?= t('lb_org') ?></th>
+                    <th style="text-align:center"><?= t('lb_won') ?></th>
+                    <th style="text-align:center"><?= t('lb_match_wins') ?></th>
+                    <th style="text-align:center"><?= t('lb_matches') ?></th>
+                    <th style="text-align:center"><?= t('lb_win_rate') ?></th>
+                    <th style="text-align:right"><?= t('lb_prize') ?></th>
                     <th></th>
                 </tr>
             </thead>

@@ -1,5 +1,9 @@
 Options -Indexes
 
+# Custom error pages
+ErrorDocument 404 /404.php
+ErrorDocument 403 /404.php
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

@@ -81,6 +81,26 @@ return [
     'team_title'            => 'Incontra i Fondatori',
     'team_sub'              => 'Le persone dietro Tech Dragons Events — costruiamo l\'infrastruttura che alimenta gli esports professionistici.',
 
+    // Membro: Elisey Rotar
+    'member_er_role'        => 'CEO e Fondatore',
+    'member_er_bio'         => 'Mente visionaria di Tech Dragons Events. Guida la strategia di prodotto, l\'architettura della piattaforma e il team che fa avanzare l\'infrastruttura esports professionale.',
+
+    // Membro: Francesco Daminelli
+    'member_fd_role'        => 'Ingegnere Backend e Programmatore Full-Stack',
+    'member_fd_bio'         => 'Responsabile dello sviluppo backend e dell\'architettura full-stack. Progetta i sistemi lato server, la logica del database e integra frontend e backend in modo fluido su tutta la piattaforma.',
+
+    // Membro: Andrea Valente
+    'member_av_role'        => 'Programmatore JavaScript · Addetto API',
+    'member_av_bio'         => 'Specializzato nello sviluppo JavaScript e nell\'architettura API. Costruisce e mantiene le interfacce programmatiche che alimentano le integrazioni della piattaforma e i flussi di dati in tempo reale.',
+
+    // Membro: Aimen Tafihi
+    'member_at_role'        => 'Analista di Ricerca Aziendale e Addetto alla Traduzione',
+    'member_at_bio'         => 'Conduce ricerche di mercato e analisi competitive per orientare la direzione strategica della piattaforma. Guida inoltre la localizzazione, garantendo che la piattaforma parli la lingua di ogni giocatore.',
+
+    // Membro: Manuel Greco
+    'member_mg_role'        => 'Programmatore JavaScript e Frontend Developer',
+    'member_mg_bio'         => 'Cura l\'esperienza visiva con JavaScript esperto e sviluppo frontend. Costruisce interfacce ad alte prestazioni e i sistemi interattivi che definiscono l\'aspetto e la sensazione della piattaforma.',
+
     // ── Contact section ────────────────────────────────────
     'contact_label'         => 'Partecipa',
     'contact_title'         => 'Pronto a Competere?',

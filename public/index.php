@@ -367,42 +367,12 @@ $words2 = array_filter(explode(' ', $line2));
                 <div class="card-face card-front">
                     <div class="card-avatar">ER</div>
                     <span class="card-name">Elisey Rotar</span>
-                    <span class="card-role">CEO &amp; Founder</span>
+                    <span class="card-role"><?= t('member_er_role') ?></span>
                 </div>
                 <div class="card-face card-back">
                     <span class="card-name">Elisey Rotar</span>
-                    <span class="card-role">CEO &amp; Founder</span>
-                    <p class="card-bio">Visionary behind Tech Dragons Events. Leads product strategy, platform architecture, and the team driving professional esports infrastructure forward.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <div class="profile-card-inner">
-                <div class="card-face card-front">
-                    <div class="card-avatar">AT</div>
-                    <span class="card-name">Aimen Tafihi</span>
-                    <span class="card-role">Co-Founder &amp; CTO</span>
-                </div>
-                <div class="card-face card-back">
-                    <span class="card-name">Aimen Tafihi</span>
-                    <span class="card-role">Co-Founder &amp; CTO</span>
-                    <p class="card-bio">Leads technical architecture and backend systems. Ensures the platform operates at scale across simultaneous major events with maximum reliability.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <div class="profile-card-inner">
-                <div class="card-face card-front">
-                    <div class="card-avatar">AV</div>
-                    <span class="card-name">Andrea Valente</span>
-                    <span class="card-role">Backend Engineer</span>
-                </div>
-                <div class="card-face card-back">
-                    <span class="card-name">Andrea Valente</span>
-                    <span class="card-role">Backend Engineer</span>
-                    <p class="card-bio">Designs and maintains the database architecture and server-side logic. Expert in high-performance PHP and MariaDB query optimisation.</p>
+                    <span class="card-role"><?= t('member_er_role') ?></span>
+                    <p class="card-bio"><?= t('member_er_bio') ?></p>
                 </div>
             </div>
         </div>
@@ -412,12 +382,42 @@ $words2 = array_filter(explode(' ', $line2));
                 <div class="card-face card-front">
                     <div class="card-avatar">FD</div>
                     <span class="card-name">Francesco Daminelli</span>
-                    <span class="card-role">Frontend Developer</span>
+                    <span class="card-role"><?= t('member_fd_role') ?></span>
                 </div>
                 <div class="card-face card-back">
                     <span class="card-name">Francesco Daminelli</span>
-                    <span class="card-role">Frontend Developer</span>
-                    <p class="card-bio">Crafts the visual experience — from WebGL shaders to GSAP animation systems. Turns design specs into polished, high-performance interfaces.</p>
+                    <span class="card-role"><?= t('member_fd_role') ?></span>
+                    <p class="card-bio"><?= t('member_fd_bio') ?></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-card-inner">
+                <div class="card-face card-front">
+                    <div class="card-avatar">AV</div>
+                    <span class="card-name">Andrea Valente</span>
+                    <span class="card-role"><?= t('member_av_role') ?></span>
+                </div>
+                <div class="card-face card-back">
+                    <span class="card-name">Andrea Valente</span>
+                    <span class="card-role"><?= t('member_av_role') ?></span>
+                    <p class="card-bio"><?= t('member_av_bio') ?></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-card-inner">
+                <div class="card-face card-front">
+                    <div class="card-avatar">AT</div>
+                    <span class="card-name">Aimen Tafihi</span>
+                    <span class="card-role"><?= t('member_at_role') ?></span>
+                </div>
+                <div class="card-face card-back">
+                    <span class="card-name">Aimen Tafihi</span>
+                    <span class="card-role"><?= t('member_at_role') ?></span>
+                    <p class="card-bio"><?= t('member_at_bio') ?></p>
                 </div>
             </div>
         </div>
@@ -427,12 +427,12 @@ $words2 = array_filter(explode(' ', $line2));
                 <div class="card-face card-front">
                     <div class="card-avatar">MG</div>
                     <span class="card-name">Manuel Greco</span>
-                    <span class="card-role">Operations Manager</span>
+                    <span class="card-role"><?= t('member_mg_role') ?></span>
                 </div>
                 <div class="card-face card-back">
                     <span class="card-name">Manuel Greco</span>
-                    <span class="card-role">Operations Manager</span>
-                    <p class="card-bio">Coordinates day-to-day platform operations and event logistics. Ensures smooth execution from team registration through to tournament completion.</p>
+                    <span class="card-role"><?= t('member_mg_role') ?></span>
+                    <p class="card-bio"><?= t('member_mg_bio') ?></p>
                 </div>
             </div>
         </div>

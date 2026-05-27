@@ -81,6 +81,26 @@ return [
     'team_title'            => 'Meet the Founders',
     'team_sub'              => 'The people behind Tech Dragons Events — building the infrastructure that powers professional esports.',
 
+    // Member: Elisey Rotar
+    'member_er_role'        => 'CEO & Founder',
+    'member_er_bio'         => 'Visionary behind Tech Dragons Events. Leads product strategy, platform architecture, and the team driving professional esports infrastructure forward.',
+
+    // Member: Francesco Daminelli
+    'member_fd_role'        => 'Backend Engineer & Full-Stack Programmer',
+    'member_fd_bio'         => 'Leads backend development and full-stack architecture. Designs server-side systems, database logic, and seamlessly integrates frontend with backend across the entire platform.',
+
+    // Member: Andrea Valente
+    'member_av_role'        => 'JavaScript Developer · API Specialist',
+    'member_av_bio'         => 'Specialises in JavaScript development and API architecture. Builds and maintains the programmatic interfaces that power platform integrations and real-time data flows.',
+
+    // Member: Aimen Tafihi
+    'member_at_role'        => 'Business Research Analyst & Translation Officer',
+    'member_at_bio'         => 'Conducts market research and competitive analysis to shape the platform\'s strategic direction. Also leads localisation, ensuring the platform speaks every player\'s language.',
+
+    // Member: Manuel Greco
+    'member_mg_role'        => 'JavaScript Programmer & Frontend Developer',
+    'member_mg_bio'         => 'Crafts the visual experience with expert JavaScript and frontend development. Builds high-performance interfaces and the interactive systems that define the platform\'s look and feel.',
+
     // ── Contact section ────────────────────────────────────
     'contact_label'         => 'Get Involved',
     'contact_title'         => 'Ready to Compete?',

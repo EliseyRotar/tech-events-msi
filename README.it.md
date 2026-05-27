@@ -80,10 +80,10 @@ CS2 · Valorant · Dota 2 · League of Legends · e qualsiasi titolo aggiunto da
 | Nome | Ruolo |
 |---|---|
 | [Elisey Rotar](https://github.com/EliseyRotar) | CEO & Fondatore |
-| Aimen Tafihi | Co-Fondatore & CTO |
-| Andrea Valente | Backend Engineer |
-| Francesco Daminelli | Frontend Developer |
-| Manuel Greco | Operations Manager |
+| Francesco Daminelli | Ingegnere Backend e Programmatore Full-Stack |
+| Andrea Valente | Programmatore JavaScript · Addetto API |
+| Aimen Tafihi | Analista di Ricerca Aziendale e Addetto alla Traduzione |
+| Manuel Greco | Programmatore JavaScript e Frontend Developer |
 
 ---
 
